@@ -35,6 +35,17 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    css: {
+        preprocessorOptions: {
+            less: {
+                additionalData: `
+          @import "@/styles/global/variables.less";
+          @import "@/styles/global/fonts.less";
+          @import "@/styles/global/mixins.less";
+        `,
+            },
+        },
+    },
     plugins: [plugin()],
     resolve: {
         alias: {
