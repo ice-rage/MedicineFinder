@@ -2,7 +2,9 @@
   <header class="page-header">
     <div class="page-header__container">
       <div class="page-header__logo-wrap">
-        <SvgHome class="page-header__logo"/>
+        <a href="/" class="page-header__logo" title="На главную">
+          <SvgLeaf class="page-header__logo-icon"/>
+        </a>
 
         <h4 class="page-header__logo-text">Поиск лекарств</h4>
       </div>
@@ -11,17 +13,18 @@
 </template>
 
 <script setup>
-  import SvgHome from "@/components/icons/SvgHome.vue";
+  import SvgLeaf from "@/components/icons/SvgLeaf.vue";
 </script>
 
 <style lang="less">
+
   .page-header {
     background-color: @islamic_green;
 
     &__container {
       .container();
       
-      height: 100px;
+      height: 80px;
       display: flex;
       align-items: center;
     }
@@ -32,8 +35,15 @@
     }
 
     &__logo {
+      flex-shrink: 0;
       width: 36px;
-      color: @white;
+      height: 36px;
+      font-size: 0;
+    }
+
+    &__logo-icon {
+      width: 100%;
+      height: 100%;
     }
 
     &__logo-text {
