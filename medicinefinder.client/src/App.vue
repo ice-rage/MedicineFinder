@@ -1,7 +1,5 @@
 <template>
-  <div class="app">
-    <PageHeader/>
-  </div>
+  <PageHeader/>
 </template>
 
 <script setup>

@@ -16,34 +16,32 @@
 
 <style lang="less">
   .page-header {
-    background-color: @brown;
+    background-color: @islamic_green;
 
     &__container {
       .container();
       
-      height: 60px;
+      height: 100px;
       display: flex;
       align-items: center;
     }
 
     &__logo-wrap {
       display: flex;
+      align-items: flex-end;
     }
 
     &__logo {
       width: 36px;
-      color: @light_green;
+      color: @white;
     }
 
     &__logo-text {
-      margin-left: 10px;
+      margin-left: 30px;
       color: @white;
+      font-family: @font3;
+      font-weight: 700;
       font-size: 26px;
-      font-family: @font1;
-    }
-
-    &__logo-text-red {
-      color: @dark_orange;
     }
   }
 </style>
