@@ -1,6 +1,8 @@
 <template>
-  <PageHeader/>
-  <MainBlock/>
+  <div class="app">
+    <PageHeader/>
+    <MainBlock/>
+  </div>
 </template>
 
 <script setup>
@@ -9,5 +11,7 @@
 </script>
 
 <style lang="less">
-
+  .app {
+    flex: 1 0 auto;
+  }
 </style>

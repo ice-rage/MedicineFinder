@@ -1,7 +1,10 @@
 <template>
   <main class="main-block">
-    <SearchForm class="main-block__form search-form"/>
-    <div class="main-block__buttons">
+    <SearchForm/>
+
+    <h3 class="main-block__option-title">Или</h3>
+
+    <div class="main-block__btns">
       <button type="button" class="main-block__btn">Выберите файл</button>
       <button type="button" class="main-block__btn">Сделайте снимок</button>
     </div>
@@ -17,31 +20,35 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 650px;
-    margin: 0 auto;
-    padding-top: 100px;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: rgba(@shadow_gray, 0.2) 0 7px 30px 0;
 
-    &__buttons {
+    &__option-title {
+      margin: 0 20px 40px;
+      color: @islamic_green;
+      font-family: @font3;
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 1.28;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    &__btns {
       display: flex;
       justify-content: space-between;
-      width: 370px;
+      max-width: 400px;
     }
 
     &__btn {
-      width: 170px;
-      padding: 15px;
-      border-radius: 5px;
-      box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
-      background-color: @islamic_green;
-      color: @white;
-      font-family: @font1;
-      font-weight: 400;
+      .gradient-btn();
 
-      &:hover {
-        @media (hover: hover) {
-          background-color: #56de47;
-        }
-      }
+      margin: 10px;
+      padding: 15px 20px;
+      border-radius: 5px;
     }
   }
 </style>

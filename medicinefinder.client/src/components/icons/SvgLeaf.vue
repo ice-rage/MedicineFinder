@@ -2,19 +2,19 @@
   <svg
     viewBox="0 0 512.141 512.141"
     xmlns="http://www.w3.org/2000/svg"
-    class="gradient-leaf"
+    class="leaf"
   >
     <defs>
       <linearGradient
         id="gradient"
-        class="gradient-leaf__gradient"
+        class="leaf__gradient gradient"
         x1="0%"
         y1="0%"
         x2="100%"
         y2="100%"
       >
-        <stop class="gradient-leaf__start" offset="0%"/>
-        <stop class="gradient-leaf__end" offset="100%"/>
+        <stop class="gradient__start-color" offset="0%"/>
+        <stop class="gradient__end-color" offset="100%"/>
       </linearGradient>
     </defs>
     <path
@@ -25,27 +25,29 @@
 </template>
 
 <style lang="less">
-  .gradient-leaf {
-    &__start,
-    &__end {
-      transition: 0.4s;
-    }
-
-    &__start {
-      stop-color: @dandelion;
-    }
-
-    &__end {
-      stop-color: @white;
-    }
-
+  .leaf {
     &:hover {
       @media (hover: hover) {
-        .gradient-leaf__start,
-        .gradient-leaf__end {
+        .gradient__start-color,
+        .gradient__end-color {
           stop-color: @white;
         }
       }
+    }
+  }
+
+  .gradient {
+    &__start-color,
+    &__end-color {
+      transition: 0.4s;
+    }
+
+    &__start-color {
+      stop-color: @dandelion;
+    }
+
+    &__end-color {
+      stop-color: @white;
     }
   }
 </style>

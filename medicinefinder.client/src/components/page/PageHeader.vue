@@ -20,6 +20,7 @@
 
   .page-header {
     background-color: @islamic_green;
+    box-shadow: rgba(@black, 0.2) 0 5px 15px 0;
 
     &__container {
       .container();
@@ -48,8 +49,7 @@
 
     &__logo-text {
       margin-left: 30px;
-      color: @white;
-      font-family: @font3;
+      font-family: @font2;
       font-weight: 700;
       font-size: 26px;
     }
