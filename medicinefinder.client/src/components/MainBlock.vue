@@ -9,28 +9,18 @@
       <button 
         type="button" 
         class="main-block__btn"
-        :isWebCameraOn="isWebCameraOn"
-        @click="toggleWebCamera()"
       >
         Сделайте снимок
       </button>
     </div>
 
-    <WebCamera v-if="isWebCameraOn === true"/>
+    <WebCamera/>
   </main>
 </template>
 
 <script setup>
-  import { ref } from "vue";
-
   import SearchForm from "./blocks/SearchForm.vue";
   import WebCamera from "./blocks/WebCamera.vue";
-
-  let isWebCameraOn = ref(false);
-
-  function toggleWebCamera() {
-    isWebCameraOn.value = !isWebCameraOn.value;
-  }
 </script>
 
 <style lang="less">

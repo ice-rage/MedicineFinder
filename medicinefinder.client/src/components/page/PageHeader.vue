@@ -19,7 +19,8 @@
 <style lang="less">
 
   .page-header {
-    background-color: @islamic_green;
+    .green-gradient();
+    
     box-shadow: rgba(@black, 0.2) 0 5px 15px 0;
 
     &__container {

@@ -14,9 +14,10 @@
   }
 }
 
-.gradient-btn {
+.gradient-btn(@gradient_direction: right) {
+  .green-gradient(@gradient_direction);
+
   box-shadow: rgba(@shadow_gray, 0.2) 0 5px 30px 0;
-  background-image: linear-gradient(to right, @indian_green 0%, @light_lime 51%, @islamic_green 100%);
   background-size: 200% auto;
   transition: 0.5s;
 
@@ -24,4 +25,13 @@
     background-position: right center;
     text-decoration: none;
   }
+}
+
+.green-gradient(@direction: right) {
+  background-image: linear-gradient(
+    to @direction, 
+    @indian_green 0%, 
+    @light_lime 51%, 
+    @islamic_green 100%
+  );
 }
