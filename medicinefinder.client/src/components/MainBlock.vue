@@ -19,8 +19,8 @@
 </template>
 
 <script setup>
-  import SearchForm from "./blocks/SearchForm.vue";
-  import WebCamera from "./blocks/WebCamera.vue";
+  import SearchForm from "@/components/SearchForm.vue";
+  import WebCamera from "@/components/WebCamera.vue";
 </script>
 
 <style lang="less">
@@ -28,7 +28,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 600px;
+    max-width: 1200px;
     margin: 50px auto;
     padding: 30px;
     border-radius: 5px;
@@ -54,7 +54,7 @@
     &__btn {
       .gradient-btn();
 
-      margin: 10px;
+      margin: 0 10px;
       padding: 15px 20px;
       border-radius: 5px;
     }

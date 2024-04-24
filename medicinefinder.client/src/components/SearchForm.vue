@@ -23,7 +23,7 @@
 <style lang="less">
   .search-form {
     display: flex;
-    width: 100%;
+    max-width: 600px;
     height: 50px;
     margin-bottom: 40px;
     outline: 0;
