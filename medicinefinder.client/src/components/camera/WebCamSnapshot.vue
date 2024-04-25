@@ -70,6 +70,11 @@
       
       border-radius: 10px;
       background-color: @gray;
+      transition: filter 0.3s;
+
+      &:hover {
+        filter: brightness(50%);
+      }
     }
 
     &__reshoot-btn {

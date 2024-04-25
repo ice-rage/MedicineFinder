@@ -28,7 +28,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 50px auto;
     padding: 30px;
     border-radius: 5px;
