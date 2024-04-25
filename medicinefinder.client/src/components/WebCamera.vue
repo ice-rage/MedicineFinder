@@ -1,7 +1,7 @@
 <template>
   <div class="web-camera">
-    <!-- <WebCamVideo class="web-camera__video"/> -->
-    <WebCamSnapshot class="web-camera__snapshot"/>
+    <WebCamVideo class="web-camera__video"/>
+    <!-- <WebCamSnapshot class="web-camera__snapshot"/> -->
 
     <button type="button" class="web-camera__stop-btn">Выключить камеру</button>
   </div>
@@ -10,8 +10,8 @@
 <script setup>
   import { onMounted } from "vue";
   
-  // import WebCamVideo from "@/components/camera/WebCamVideo.vue";
-  import WebCamSnapshot from "@/components/camera/WebCamSnapshot.vue";
+  import WebCamVideo from "@/components/camera/WebCamVideo.vue";
+  // import WebCamSnapshot from "@/components/camera/WebCamSnapshot.vue";
   
   onMounted(() => captureStream());
 
@@ -34,7 +34,6 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 30px 0;
 
     &__stop-btn {
       position: relative;

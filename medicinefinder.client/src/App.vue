@@ -1,13 +1,13 @@
 <template>
   <div class="app">
     <PageHeader/>
-    <MainBlock/>
+    <MainForm/>
   </div>
 </template>
 
 <script setup>
   import PageHeader from "@/components/page/PageHeader.vue";
-  import MainBlock from "@/components/MainBlock.vue";
+  import MainForm from "@/components/MainForm.vue";
 </script>
 
 <style lang="less">

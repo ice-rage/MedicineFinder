@@ -55,12 +55,8 @@
       padding: 15px 20px;
       border-radius: 0 10px 0 7px;
       background-color: transparent;
+      font-weight: 500;
       transition: 0.5s ease;
-
-      &--disabled {
-        color: @light_gray;
-        pointer-events: none;
-      }
 
       &:hover {
         background-color: @dusty_gray;

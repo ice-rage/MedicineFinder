@@ -80,45 +80,58 @@
   }
 
   .search-btn {
-    .gradient-btn();
-
     position: relative;
     max-width: 50px;
+    padding: 0;
     border-radius: 0 4px 4px 0;
-    color: @white;
+    background: @indian_green;
+    transition: background 0.3s;
 
-    &:hover .search-btn__circle {
-      top: 1px;
-      width: 25px;
-      height: 5px;
-      border-width: 0;
-      background-color: @white;
-      border-radius: 20px;
-    }
+    &:hover {
+      &::before {
+        content: "";
+        position: absolute; 
+        top: 0; 
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: radial-gradient(ellipse at left, @light_lime, @indian_green);
+      }
 
-    &:hover .search-btn__stick {
-      top: 45%;
-      left: 10px;
-      width: 25px;
-      margin-top: -9px;
-      transform: rotateZ(0);
-    }
+      .search-btn__circle {
+        top: 1px;
+        width: 25px;
+        height: 5px;
+        border-width: 0;
+        background-color: @white;
+        border-radius: 20px;
+      }
 
-    &:hover .search-btn__stick:before,
-    &:hover .search-btn__stick:after {
-      right: -5px;
-      width: 15px;
-      background-color: @white;
-    }
+      .search-btn__stick {
+        top: 45%;
+        left: 10px;
+        width: 25px;
+        margin-top: -9px;
+        transform: rotateZ(0);
+      }
 
-    &:hover .search-btn__stick:before {
-      bottom: 5px;
-      transform: rotateZ(55deg);
-    }
+      .search-btn__stick:before,
+      .search-btn__stick:after {
+        right: -5px;
+        width: 15px;
+        background-color: @white;
+      }
 
-    &:hover .search-btn__stick:after {
-      bottom: -5px;
-      transform: rotateZ(-55deg);
+      .search-btn__stick:before {
+        bottom: 5px;
+        transform: rotateZ(55deg);
+      }
+
+      .search-btn__stick:after {
+        bottom: -5px;
+        transform: rotateZ(-55deg);
+      }
     }
 
     &__circle {
