@@ -1,11 +1,8 @@
 <template>
   <div class="webcam-snapshot">
-    <canvas id="js-snapshotCanvas" class="webcam-snapshot__canvas"></canvas>
-
     <div class="webcam-snapshot__picture-wrapper">
       <picture class="webcam-snapshot__picture">
         <img
-          id="js-snapshotImage"
           alt="Снимок" 
           class="webcam-snapshot__image"
         />
@@ -14,7 +11,13 @@
       <button 
         type="button" 
         title="Переснять" 
-        class="webcam-snapshot__reshoot-btn">
+        class="webcam-snapshot__renew-btn">
+      </button>
+
+      <button 
+        type="button" 
+        title="Удалить" 
+        class="webcam-snapshot__remove-btn">
       </button>
     </div>
     
@@ -39,11 +42,12 @@
     &__picture-wrapper {
       position: relative;
       display: flex;
-      max-width: 500px;
+      max-width: 520px;
 
       &:hover {
-        .webcam-snapshot__reshoot-btn {
-          top: 0;
+        .webcam-snapshot__renew-btn,
+        .webcam-snapshot__remove-btn {
+          top: 10px;
           opacity: 1;
         }
       }
@@ -53,7 +57,6 @@
       .green-gradient();
       .responsive-parent(@padding-top: 75%);
 
-      margin: 0 auto 20px;
       padding: 10px;
       border-radius: 10px;
       background-origin: border-box;
@@ -77,16 +80,25 @@
       }
     }
 
-    &__reshoot-btn {
+    &__renew-btn {
       position: absolute;
-      top: -40px;
-      right: 0;
-      height: 40px;
-      width: 40px;
-      margin: 5px 10px;
+      top: -25px;
+      right: 25px;
+      height: 28px;
+      width: 28px;
       background-color: transparent;
       transition: 0.5s;
       opacity: 0;
+
+      &:hover {
+        &::before {
+          border-color: transparent @dandelion @dandelion;
+        }
+
+        &:after {
+          border-color: transparent transparent transparent @dandelion;
+        }
+      }
 
       &::before,
       &::after {
@@ -94,26 +106,62 @@
         position: absolute;
         box-sizing: border-box;
         display: block;
-        margin: 0;
-        padding: 0;
       }
 
       &::before {
-        height: 30px;
-        width: 30px;
+        height: 28px;
+        width: 28px;
         border: 5px solid;
-        border-color: transparent @dandelion @dandelion @dandelion;
+        border-color: transparent @white @white;
         border-radius: 50%;
-        transform: rotate(45deg);
+        transform: rotate(65deg);
       }
 
       &::after {
         position: absolute;
         height: 0;
         width: 0;
-        border: 12px solid;
-        border-color: transparent transparent transparent @dandelion;
-        transform: translate(0.8rem, -0.6rem);
+        border: 10px solid;
+        border-color: transparent transparent transparent @white;
+        transform: rotate(30deg) translate(0.8rem, -0.7rem);
+      }
+    }
+
+    &__remove-btn {
+      position: absolute;
+      top: -25px;
+      right: 45px;
+      height: 30px;
+      width: 30px;
+      background-color: transparent;
+      transition: 0.5s;
+      opacity: 0;
+
+      &:hover {
+        &::before,
+        &::after {
+          background-color: @dandelion;
+        }
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 27px;
+        left: 0;
+        display: block;
+        width: 30px;
+        height: 5px;
+        background-color: @white;
+      }
+
+      &::before {
+        transform: rotate(45deg);
+      }
+
+      &::after {
+        transform: rotate(-45deg);
       }
     }
   }

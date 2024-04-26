@@ -10,6 +10,8 @@
         Сделать снимок
       </button>
     </div>
+
+    <button type="button" class="webcam-video__toggle-btn">Остановить</button>
   </div>
 </template>
 
@@ -28,7 +30,7 @@
       .responsive-parent(@padding-top: 75%);
 
       max-width: 500px;
-      margin: 0 auto 20px;
+      margin: 0 auto;
       padding: 10px;
       border-radius: 10px;
       background-origin: border-box;
@@ -61,6 +63,46 @@
       &:hover {
         background-color: @dusty_gray;
         color: @dandelion;
+      }
+    }
+
+    &__toggle-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto 0;
+      padding: 0;
+      border: 3px solid @islamic_green;
+      border-radius: 50%;
+      font-size: 0;
+      transition: 0.5s;
+      animation: flicker 2s ease infinite;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: calc(50% - 13px);
+        left: calc(50% - 13px);
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background-color: @islamic_green;
+      }
+
+      &:hover {
+        @media(hover: hover) {
+          .gradient-btn(@gradient_direction: left);
+
+          width: 180px;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          animation: none;
+
+          &::before {
+            opacity: 0;
+          }
+        }
       }
     }
   }

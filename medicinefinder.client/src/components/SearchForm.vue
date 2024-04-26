@@ -11,7 +11,11 @@
       </span>
     </label>
 
-    <button type="submit" class="search-form__search-btn search-btn">
+    <button 
+      type="submit" 
+      title="Искать" 
+      class="search-form__search-btn search-btn"
+    >
       <div class="search-btn__circle"></div>
       <span class="search-btn__stick"></span>
     </button>
@@ -25,7 +29,7 @@
     display: flex;
     max-width: 600px;
     height: 50px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     outline: 0;
     border-radius: 4px;
     box-shadow: rgba(@shadow_gray, 0.2) 0 5px 30px 0;
@@ -84,10 +88,25 @@
     max-width: 50px;
     padding: 0;
     border-radius: 0 4px 4px 0;
-    background: @indian_green;
-    transition: background 0.3s;
+    background: rgba(@indian_green, 1);
+    transition: all 0.3s ease-in-out;
+
+    &::before {
+      content: "";  
+      position: absolute;
+      top: 0; 
+      left: 0;  
+      display: block;
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at left, @light_lime, @indian_green);
+      z-index: -100;
+    }
 
     &:hover {
+      background: rgba(255, 0, 0, 0);
+
       &::before {
         content: "";
         position: absolute; 
@@ -96,15 +115,14 @@
         width: 100%;
         height: 100%;
         border-radius: inherit;
-        background: radial-gradient(ellipse at left, @light_lime, @indian_green);
       }
 
       .search-btn__circle {
         top: 1px;
-        width: 25px;
         height: 5px;
-        border-width: 0;
-        background-color: @white;
+        width: 25px;
+        border-color: transparent;
+        background-color: @dandelion;
         border-radius: 20px;
       }
 
@@ -118,9 +136,9 @@
 
       .search-btn__stick:before,
       .search-btn__stick:after {
-        right: -5px;
+        right: -7px;
         width: 15px;
-        background-color: @white;
+        background-color: @dandelion;
       }
 
       .search-btn__stick:before {
@@ -144,7 +162,8 @@
       border: 5px solid @white;
       border-radius: 50%;
       background-color: transparent;
-      transition: 0.5s ease all;
+      background-clip: padding-box;
+      transition: 0.3s ease-in-out;
     }
 
     &__stick {
@@ -157,7 +176,7 @@
       border-radius: 15px;
       background-color: transparent;
       transform: rotateZ(52deg);
-      transition: 0.5s ease all;
+      transition: 0.3s ease all;
 
       &::before,
       &::after {

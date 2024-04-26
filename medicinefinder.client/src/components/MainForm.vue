@@ -39,6 +39,7 @@
     box-shadow: rgba(@shadow_gray, 0.2) 0 7px 30px 0;
 
     &__option-title {
+      margin: 20px 0;
       color: @islamic_green;
       font-family: @font3;
       font-weight: 600;
@@ -52,7 +53,6 @@
       display: flex;
       justify-content: space-between;
       max-width: 400px;
-      margin: 40px 0;
     }
 
     &__option-btn {
@@ -63,15 +63,18 @@
 
     &__search-btn {
       position: relative;
-      max-width: 500px;
+      max-width: 520px;
       border-radius: 0 0 5px 5px;
       background-color: @indian_green;
       box-shadow: rgba(@black, 0.3) 0 5px 15px;
       font-weight: 600;
       font-size: 20px;
+      transition: color 0.3s;
       overflow: hidden;
 
       &:hover {
+        color: @dandelion;
+
         &::before {
           content: "";
           position: absolute;
