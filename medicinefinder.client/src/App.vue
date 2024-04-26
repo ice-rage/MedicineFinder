@@ -1,7 +1,7 @@
 <template>
   <div class="app">
-    <PageHeader/>
-    <MainForm/>
+    <PageHeader class="app__page-header"/>
+    <MainForm class="app__main-form"/>
   </div>
 </template>
 

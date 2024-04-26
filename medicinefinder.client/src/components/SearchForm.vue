@@ -29,7 +29,6 @@
     display: flex;
     max-width: 600px;
     height: 50px;
-    margin-bottom: 20px;
     outline: 0;
     border-radius: 4px;
     box-shadow: rgba(@shadow_gray, 0.2) 0 5px 30px 0;

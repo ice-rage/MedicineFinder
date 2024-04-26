@@ -1,11 +1,14 @@
 <template>
   <form class="main-form">
-    <SearchForm/>
+    <SearchForm class="main-form__search-form"/>
 
     <h3 class="main-form__option-title">Или</h3>
 
     <div class="main-form__option-btns">
-      <button type="button" class="main-form__option-btn">Выберите файл</button>
+      <button type="button" class="main-form__option-btn">
+        Выберите файл
+      </button>
+      
       <button 
         type="button" 
         class="main-form__option-btn"
@@ -14,8 +17,12 @@
       </button>
     </div>
 
-    <SelectedImage/>
-    <!-- <WebCamera/> -->
+    <WebCamera class="main-form__web-camera"/>
+    <!-- <ProcessedImage 
+      imageAlt="Загруженное изображение" 
+      renewBtnTitle="Выбрать другое"
+      class="main-form__processed-image"
+    /> -->
 
     <button type="submit" class="main-form__search-btn">Искать</button>
   </form>
@@ -23,8 +30,8 @@
 
 <script setup>
   import SearchForm from "@/components/SearchForm.vue";
-  import SelectedImage from "@/components/SelectedImage.vue";
-  // import WebCamera from "@/components/WebCamera.vue";
+  // import ProcessedImage from "@/components/ProcessedImage.vue";
+  import WebCamera from "@/components/camera/WebCamera.vue";
 </script>
 
 <style lang="less">
@@ -37,6 +44,10 @@
     padding: 30px;
     border-radius: 5px;
     box-shadow: rgba(@shadow_gray, 0.2) 0 7px 30px 0;
+
+    &__search-form {
+      margin-bottom: 20px;
+    }
 
     &__option-title {
       margin: 20px 0;
@@ -59,6 +70,11 @@
       .gradient-btn();
 
       margin: 0 10px;
+    }
+
+    &__web-camera,
+    &__processed-image {
+      margin: 30px 0;
     }
 
     &__search-btn {
@@ -84,11 +100,11 @@
           height: 100%;
           background-image: linear-gradient(
             120deg,
-            rgba(@white, 0) 30%, /* Прозрачность начала блика */
-            rgba(@white, 0.8), /* Цвет блика */
-            rgba(@white, 0) 70% /* Прозрачность конца блика */
+            rgba(@white, 0) 30%,
+            rgba(@white, 0.8),
+            rgba(@white, 0) 70%
           );
-          animation: shine 1.5s infinite linear; /* Анимация блика */
+          animation: shine 1.5s infinite linear;
         }
       }
     }

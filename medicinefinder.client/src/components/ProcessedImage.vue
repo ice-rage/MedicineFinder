@@ -1,44 +1,38 @@
 <template>
-  <div class="selected-image">
-    <div class="selected-image__picture-wrapper">
-      <picture class="selected-image__picture">
+  <div class="processed-image">
+    <div class="processed-image__picture-wrapper">
+      <picture class="processed-image__picture">
         <img
-          alt="Выбранное изображение" 
-          class="selected-image__image"
+          :alt="imageAlt"
+          class="processed-image__image"
         />
       </picture>
       
       <button 
         type="button" 
-        title="Выбрать другое" 
-        class="selected-image__renew-btn">
+        :title="renewBtnTitle"
+        class="processed-image__renew-btn">
       </button>
 
       <button 
         type="button" 
         title="Удалить" 
-        class="selected-image__remove-btn">
+        class="processed-image__remove-btn">
       </button>
     </div>
-    
   </div>
 </template>
 
 <script setup>
-
+  const props = defineProps(["imageAlt", "renewBtnTitle"]);
 </script>
 
 <style lang="less">
-  .selected-image {
+  .processed-image {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin: 30px 0;
-
-    &__canvas {
-      display: none;
-    }
 
     &__picture-wrapper {
       position: relative;
@@ -46,8 +40,8 @@
       max-width: 520px;
 
       &:hover {
-        .selected-image__renew-btn,
-        .selected-image__remove-btn {
+        .processed-image__renew-btn,
+        .processed-image__remove-btn {
           top: 10px;
           opacity: 1;
         }

@@ -1,15 +1,19 @@
 <template>
   <div class="web-camera">
-    <!-- <WebCamVideo class="web-camera__video"/> -->
-    <WebCamSnapshot class="web-camera__snapshot"/>
+    <WebCamVideo class="web-camera__video"/>
+    <!-- <ProcessedImage 
+      imageAlt="Снимок" 
+      renewBtnTitle="Переснять"
+      class="web-camera__snapshot"
+    /> -->
   </div>
 </template>
 
 <script setup>
   import { onMounted } from "vue";
   
-  // import WebCamVideo from "@/components/camera/WebCamVideo.vue";
-  import WebCamSnapshot from "@/components/camera/WebCamSnapshot.vue";
+  import WebCamVideo from "@/components/camera/WebCamVideo.vue";
+  // import ProcessedImage from "@/components/ProcessedImage.vue";
   
   onMounted(() => captureStream());
 
@@ -32,6 +36,5 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 30px 0;
   }
 </style>
