@@ -22,8 +22,10 @@
   transition: 0.5s;
 
   &:hover {
-    background-position: right center;
-    text-decoration: none;
+    @media(hover: hover) {
+      background-position: right center;
+      text-decoration: none;
+    }
   }
 }
 

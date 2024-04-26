@@ -17,12 +17,12 @@
       </button>
     </div>
 
-    <WebCamera class="main-form__web-camera"/>
-    <!-- <ProcessedImage 
+    <!-- <WebCamera class="main-form__web-camera"/> -->
+    <ProcessedImage 
       imageAlt="Загруженное изображение" 
       renewBtnTitle="Выбрать другое"
       class="main-form__processed-image"
-    /> -->
+    />
 
     <button type="submit" class="main-form__search-btn">Искать</button>
   </form>
@@ -30,12 +30,13 @@
 
 <script setup>
   import SearchForm from "@/components/SearchForm.vue";
-  // import ProcessedImage from "@/components/ProcessedImage.vue";
-  import WebCamera from "@/components/camera/WebCamera.vue";
+  import ProcessedImage from "@/components/ProcessedImage.vue";
+  // import WebCamera from "@/components/camera/WebCamera.vue";
 </script>
 
 <style lang="less">
   .main-form {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,8 +46,22 @@
     border-radius: 5px;
     box-shadow: rgba(@shadow_gray, 0.2) 0 7px 30px 0;
 
+    @media @bw1170 {
+      max-width: 73.5%;
+    }
+
+    @media @bw768 {
+      max-width: 87.5%;
+      margin: 30px auto;
+      padding: 25px;
+    }
+
     &__search-form {
       margin-bottom: 20px;
+
+      @media @bw768 {
+        margin-bottom: 10px;
+      }
     }
 
     &__option-title {
@@ -58,6 +73,11 @@
       line-height: 1.28;
       text-align: center;
       text-transform: uppercase;
+
+      @media @bw768 {
+        margin: 10px 0 20px;
+        font-size: 18px;
+      }
     }
 
     &__option-btns {
@@ -68,13 +88,19 @@
 
     &__option-btn {
       .gradient-btn();
+      
+      & + & {
+        margin-left: 20px;
 
-      margin: 0 10px;
+        @media @bw768 {
+          
+        }
+      }
     }
 
     &__web-camera,
     &__processed-image {
-      margin: 30px 0;
+      margin: 20px 0;
     }
 
     &__search-btn {
@@ -88,23 +114,33 @@
       transition: color 0.3s;
       overflow: hidden;
 
-      &:hover {
-        color: @dandelion;
+      @media @bw1170 {
+        font-size: 18px;
+      }
 
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100px;
-          width: 100px;
-          height: 100%;
-          background-image: linear-gradient(
-            120deg,
-            rgba(@white, 0) 30%,
-            rgba(@white, 0.8),
-            rgba(@white, 0) 70%
-          );
-          animation: shine 1.5s infinite linear;
+      @media @bw768 {
+        font-size: 15px;
+      }
+
+      &:hover {
+        @media(hover: hover) {
+          color: @dandelion;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100px;
+            width: 100px;
+            height: 100%;
+            background-image: linear-gradient(
+              120deg,
+              rgba(@white, 0) 30%,
+              rgba(@white, 0.8),
+              rgba(@white, 0) 70%
+            );
+            animation: shine 1.5s infinite linear;
+          }
         }
       }
     }

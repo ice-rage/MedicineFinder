@@ -9,6 +9,14 @@ body {
   font-family: @font1;
   font-weight: 400;
   font-size: 16px;
+
+  @media @bw1170 {
+    font-size: 14px;
+  }
+
+  @media @bw768 {
+    font-size: 12px;
+  }
 }
 
 a {
@@ -29,4 +37,8 @@ button {
   text-decoration: none;
   transition: background-color, color 0.4s;
   cursor: pointer;
+
+  @media @bw768 {
+    padding: 10px 15px;
+  }
 }

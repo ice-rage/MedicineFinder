@@ -6,8 +6,12 @@
         id="js-videoElement" 
         class="webcam-video__video-element"
       ></video>
-      <button type="button" class="webcam-video__grab-btn">
-        Сделать снимок
+      <button
+        type="button" 
+        title="Сделать снимок" 
+        class="webcam-video__grab-btn grab-btn"
+      >
+        <SvgCamera class="grab-btn__icon"/>
       </button>
     </div>
 
@@ -16,7 +20,7 @@
 </template>
 
 <script setup>
-
+  import SvgCamera from "@/components/icons/SvgCamera.vue";
 </script>
 
 <style lang="less">
@@ -35,6 +39,10 @@
       border-radius: 10px;
       background-origin: border-box;
       background-clip: border-box;
+
+      @media @bw768 {
+        padding: 0;
+      }    
     }
 
     &__video-element {
@@ -53,17 +61,6 @@
       position: absolute;
       left: 10px;
       bottom: 10px;
-      width: fit-content;
-      padding: 15px 20px;
-      border-radius: 0 10px 0 7px;
-      background-color: transparent;
-      font-weight: 500;
-      transition: 0.5s ease;
-
-      &:hover {
-        background-color: @dusty_gray;
-        color: @dandelion;
-      }
     }
 
     &__toggle-btn {
@@ -78,13 +75,18 @@
       transition: 0.5s;
       animation: flicker 2s ease infinite;
 
+      @media @bw768 {
+        width: 30px;
+        height: 30px;
+      }
+
       &::before {
         content: "";
         position: absolute;
-        top: calc(50% - 13px);
-        left: calc(50% - 13px);
-        width: 26px;
-        height: 26px;
+        top: 17.5%;
+        left: 17.5%;
+        width: 65%;
+        height: 65%;
         border-radius: 50%;
         background-color: @islamic_green;
       }
@@ -104,6 +106,34 @@
           }
         }
       }
+    }
+  }
+
+  .grab-btn {
+    width: 56px;
+    height: 56px;
+    padding: 15px;
+    border-radius: 0 10px 0 7px;
+    background-color: transparent;
+    color: @white;
+    transition: 0.5s ease;
+
+    @media @bw768 {
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+    }
+
+    &:hover {
+      @media(hover: hover) {
+        background-color: @dusty_gray;
+        color: @dandelion;
+      }
+    }
+
+    &__icon {
+      width: 100%;
+      height: 100%;
     }
   }
 </style>

@@ -26,9 +26,13 @@
     &__container {
       .container();
       
-      height: 80px;
       display: flex;
       align-items: center;
+      height: 80px;
+
+      @media @bw768 {
+        height: 60px;
+      }
     }
 
     &__logo-wrap {
@@ -41,6 +45,11 @@
       width: 36px;
       height: 36px;
       font-size: 0;
+
+      @media @bw768 {
+        width: 24px;
+        height: 24px;
+      }
     }
 
     &__logo-icon {
@@ -53,6 +62,15 @@
       font-family: @font2;
       font-weight: 700;
       font-size: 26px;
+
+      @media @bw1170 {
+        font-size: 23px;
+      }
+
+      @media @bw768 {
+        margin-left: 20px;
+        font-size: 20px;
+      }
     }
   }
 </style>
