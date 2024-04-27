@@ -6,14 +6,23 @@
 
     <div class="main-form__option-btns">
       <button type="button" class="main-form__option-btn">
-        Выберите файл
+        <SvgImage 
+          width="24" 
+          height="24" 
+          class="main-form__option-btn-icon"/>
+        Выбрать файл
       </button>
       
       <button 
         type="button" 
         class="main-form__option-btn"
       >
-        Сделайте снимок
+        <SvgCamera
+          width="24"
+          height="24"
+          class="main-form__option-btn-icon"
+        />
+        Сделать снимок
       </button>
     </div>
 
@@ -32,6 +41,8 @@
   import SearchForm from "@/components/SearchForm.vue";
   import ProcessedImage from "@/components/ProcessedImage.vue";
   // import WebCamera from "@/components/camera/WebCamera.vue";
+  import SvgImage from "@/components/icons/SvgImage.vue";
+  import SvgCamera from "@/components/icons/SvgCamera.vue";
 </script>
 
 <style lang="less">
@@ -80,17 +91,34 @@
       display: flex;
       justify-content: space-between;
       max-width: 400px;
+
+      @media @bw768 {
+        max-width: 150px;
+      }
     }
 
     &__option-btn {
       .gradient-btn();
+
+      @media @bw768 {
+        padding: 10px;
+        font-size: 0;
+      }
       
       & + & {
         margin-left: 20px;
 
         @media @bw768 {
-          
+          margin-left: 25px;
         }
+      }
+    }
+
+    &__option-btn-icon {
+      display: none;
+
+      @media @bw768 {
+        display: flex;
       }
     }
 
