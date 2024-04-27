@@ -1,7 +1,9 @@
 <template>
   <section class="resulting-info">
+    <hr class="resulting-info__content-separator">
+
     <div class="resulting-info__content content">
-      <h1 class="resulting-info__title">
+      <h1>
         Аспирин (Aspirin)
       </h1>
 
@@ -265,8 +267,16 @@
 
 <style lang="less">
   .resulting-info {
-    &__content {
-      margin-top: 50px;
+    &__content-separator {
+      margin: 40px 0 20px;
+      padding: 0;
+      height: 6px;
+      border: none;
+      background: linear-gradient(
+        to right, 
+        @islamic_green 0%, 
+        @light_lime 50%, 
+        @white 100%);
     }
   }
 </style>
