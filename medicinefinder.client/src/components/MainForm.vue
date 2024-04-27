@@ -57,15 +57,11 @@
     }
 
     &__search-form {
-      margin-bottom: 20px;
-
-      @media @bw768 {
-        margin-bottom: 10px;
-      }
+      margin-bottom: 10px;
     }
 
     &__option-title {
-      margin: 20px 0;
+      margin: 20px 0 30px;
       color: @islamic_green;
       font-family: @font3;
       font-weight: 600;
@@ -100,7 +96,7 @@
 
     &__web-camera,
     &__processed-image {
-      margin: 20px 0;
+      margin: 30px 0;
     }
 
     &__search-btn {
