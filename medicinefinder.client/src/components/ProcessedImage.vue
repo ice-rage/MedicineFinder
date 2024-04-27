@@ -74,6 +74,7 @@
       
       border-radius: 10px;
       background-color: @gray;
+      color: @white;
       transition: filter 0.3s;
 
       &:hover {

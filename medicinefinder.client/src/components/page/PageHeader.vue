@@ -59,6 +59,7 @@
 
     &__logo-text {
       margin-left: 30px;
+      color: @white;
       font-family: @font2;
       font-weight: 700;
       font-size: 26px;

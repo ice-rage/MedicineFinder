@@ -26,12 +26,12 @@
       </button>
     </div>
 
-    <!-- <WebCamera class="main-form__web-camera"/> -->
-    <ProcessedImage 
+    <WebCamera class="main-form__web-camera"/>
+    <!-- <ProcessedImage 
       imageAlt="Загруженное изображение" 
       renewBtnTitle="Выбрать другое"
       class="main-form__processed-image"
-    />
+    /> -->
 
     <button type="submit" class="main-form__search-btn">Искать</button>
   </form>
@@ -39,8 +39,8 @@
 
 <script setup>
   import SearchForm from "@/components/SearchForm.vue";
-  import ProcessedImage from "@/components/ProcessedImage.vue";
-  // import WebCamera from "@/components/camera/WebCamera.vue";
+  // import ProcessedImage from "@/components/ProcessedImage.vue";
+  import WebCamera from "@/components/camera/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
 </script>
