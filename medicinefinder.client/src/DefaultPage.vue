@@ -13,6 +13,29 @@
           Абзац текста, содержащий <b>жирный</b> текст, <i>курсив</i>
           и <a href="https://yandex.ru/" target="_blank">ссылку</a>
         </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">Шапка таблицы</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Строка 1 Ячейка 1</td>
+              <td>Строка 1 Ячейка 2</td>
+            </tr>
+            <tr>
+              <td>Строка 2 Ячейка 1</td>
+              <td>Строка 2 Ячейка 2</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2">Подвал таблицы</th>
+            </tr>
+          </tfoot>
+        </table>
         
         <ul>
           <li>Элемент списка 1</li>

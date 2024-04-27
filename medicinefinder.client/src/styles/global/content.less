@@ -55,6 +55,38 @@
     font-size: 16px;
   }
 
+  table {
+    max-width: 750px;
+    margin: 5px 0;
+    border: 1px solid @light_gray;
+    border-collapse: collapse;
+
+    @media @bw1170 {
+      font-size: 14px;
+    }
+
+    @media @bw768 {
+      font-size: 12px;
+    }
+  }
+
+  th,
+  td {
+    width: auto;
+    height: 50px;
+    padding: 0 10px;
+  }
+
+  th {
+    color: @indian_green;
+    font-weight: 600;
+  }
+
+  td {
+    min-width: 50px;
+    border: 1px solid @light_gray;
+  }
+
   ol,
   ul {
     margin: 25px 0;

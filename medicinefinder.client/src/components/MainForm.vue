@@ -34,6 +34,8 @@
     /> -->
 
     <button type="submit" class="main-form__search-btn">Искать</button>
+
+    <ResultingInfo class="main-form__resulting-info"/>
   </form>
 </template>
 
@@ -43,6 +45,7 @@
   import WebCamera from "@/components/camera/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
+  import ResultingInfo from "@/components/ResultingInfo.vue";
 </script>
 
 <style lang="less">
@@ -123,7 +126,8 @@
     }
 
     &__web-camera,
-    &__processed-image {
+    &__processed-image,
+    &__resulting-info {
       margin: 30px 0;
     }
 
