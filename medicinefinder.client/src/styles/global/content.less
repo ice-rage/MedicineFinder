@@ -1,19 +1,14 @@
 .content {
   color: @black;
   font-family: @font1;
-  font-size: 16px;
   font-weight: 400;
   font-style: normal;
   line-height: 1.375;
   word-wrap: break-word;
 
   h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 1.3em 0 0.8em;
+  h2 {
+    margin: 1.3rem 0 0.8rem;
     color: @indian_green;
     font-family: @font1;
     font-weight: 700;
@@ -28,46 +23,34 @@
   }
 
   h1 {
-    font-size: 32px;
+    font-size: 22px;
+
+    @media @bw1170 {
+      font-size: 20px;
+    }
+
+    @media @bw768 {
+      font-size: 18px;
+    }
   }
 
   h2 {
-    font-size: 28px;
-  }
-
-  h3 {
-    font-size: 24px;
-  }
-
-  h4 {
     font-size: 20px;
-  }
 
-  h5 {
-    font-size: 18px;
+    @media @bw1170 {
+      font-size: 18px;
+    }
 
     @media @bw768 {
       font-size: 16px;
     }
   }
 
-  h6 {
-    font-size: 16px;
-  }
-
   table {
     max-width: 750px;
-    margin: 5px 0;
+    margin: 0 0 15px;
     border: 1px solid @light_gray;
     border-collapse: collapse;
-
-    @media @bw1170 {
-      font-size: 14px;
-    }
-
-    @media @bw768 {
-      font-size: 12px;
-    }
   }
 
   th,
@@ -92,10 +75,6 @@
     margin: 25px 0;
     font-family: @font1;
 
-    @media @bw768 {
-      font-size: 14px;
-    }
-
     &:first-child {
       margin-top: 0;
     }
@@ -117,11 +96,10 @@
     position: relative;
     box-sizing: border-box;
     margin: 10px 0 6px;
-    padding-left: 14px;
+    padding-left: 20px;
 
-    @media @bw450 {
-      margin: 9px 0 5px;
-      padding-left: 10px;
+    @media @bw768 {
+      padding-left: 15px;
     }
 
     &::before {
@@ -146,10 +124,6 @@
     counter-increment: li;
     margin: 5px 0 10px;
     padding-left: 5px;
-
-    @media @bw450 {
-      margin: 5px 0;
-    }
 
     &::before {
       content: counter(li) + ". ";
@@ -177,7 +151,6 @@
 
     @media @bw768 {
       margin-bottom: 18px;
-      font-size: 14px;
     }
   }
 

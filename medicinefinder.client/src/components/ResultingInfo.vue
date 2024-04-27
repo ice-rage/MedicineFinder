@@ -265,5 +265,8 @@
 
 <style lang="less">
   .resulting-info {
+    &__content {
+      margin-top: 50px;
+    }
   }
 </style>

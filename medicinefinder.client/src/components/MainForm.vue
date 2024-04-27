@@ -54,7 +54,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 800px;
+    max-width: 62.5%;
     margin: 50px auto;
     padding: 30px;
     border-radius: 5px;
@@ -126,8 +126,7 @@
     }
 
     &__web-camera,
-    &__processed-image,
-    &__resulting-info {
+    &__processed-image {
       margin: 30px 0;
     }
 
