@@ -319,11 +319,19 @@
       color: @islamic_green;
       font-weight: 500;
       text-align: justify;
+
+      @media @bw768 {
+        margin-bottom: 18px;
+      }
     }
 
     &__parentheses {
       color: @pearl;
       font-size: 13px;
+
+      @media @bw768 {
+        font-size: 11px;
+      }
     }
   }
 </style>
