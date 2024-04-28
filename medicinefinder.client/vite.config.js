@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
-import plugin from '@vitejs/plugin-vue';
+import vue from '@vitejs/plugin-vue';
 import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
@@ -46,7 +46,7 @@ export default defineConfig({
             },
         },
     },
-    plugins: [plugin()],
+    plugins: [vue()],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
