@@ -2,29 +2,26 @@
   <div class="processed-image">
     <div class="processed-image__picture-wrapper">
       <picture class="processed-image__picture">
-        <img
-          :alt="imageAlt"
-          class="processed-image__image"
-        />
+        <img :src="imageSrc" :alt="imageAlt" class="processed-image__image"/>
       </picture>
 
-      <button 
-        type="button" 
-        title="Удалить" 
-        class="processed-image__remove-btn">
-      </button>
+      <button
+        type="button"
+        title="Удалить"
+        class="processed-image__remove-btn"
+      ></button>
 
-      <button 
-        type="button" 
+      <button
+        type="button"
         :title="renewBtnTitle"
-        class="processed-image__renew-btn">
-      </button>
+        class="processed-image__renew-btn"
+      ></button>
     </div>
   </div>
 </template>
 
 <script setup>
-  const props = defineProps(["imageAlt", "renewBtnTitle"]);
+  const props = defineProps(["imageSrc", "imageAlt", "renewBtnTitle"]);
 </script>
 
 <style lang="less">
@@ -34,13 +31,17 @@
     align-items: center;
     width: 100%;
 
+    &__image-input {
+      display: none;
+    }
+
     &__picture-wrapper {
       position: relative;
       display: flex;
       max-width: 520px;
 
       &:hover {
-        @media(hover: hover) {
+        @media (hover: hover) {
           .processed-image__renew-btn,
           .processed-image__remove-btn {
             top: 10px;
@@ -66,19 +67,19 @@
 
     &__image {
       .responsive-child(
-        @top: 10px;
-        @left: 10px;
-        @width: calc(100% - 20px);
-        @height: calc(100% - 20px)
-      );
-      
+          @top: 10px;
+          @left: 10px;
+          @width: calc(100% - 20px);
+          @height: calc(100% - 20px)
+        );
+
       border-radius: 10px;
       background-color: @gray;
       color: @white;
       transition: filter 0.3s;
 
       &:hover {
-        @media(hover: hover) {
+        @media (hover: hover) {
           filter: brightness(50%);
         }
       }
@@ -101,7 +102,7 @@
       }
 
       &:hover {
-        @media(hover: hover) {
+        @media (hover: hover) {
           &::before,
           &::after {
             background-color: @dandelion;
@@ -153,7 +154,7 @@
       }
 
       &:hover {
-        @media(hover: hover) {
+        @media (hover: hover) {
           &::before {
             border-color: transparent @dandelion @dandelion;
           }

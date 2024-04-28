@@ -5,11 +5,16 @@
     <h3 class="main-form__option-title">Или</h3>
 
     <div class="main-form__option-btns">
-      <button type="button" class="main-form__option-btn">
+      <button 
+        type="button" 
+        class="main-form__option-btn"
+        @click="selectImageFile()"
+      >
         <SvgImage 
           width="24" 
           height="24" 
-          class="main-form__option-btn-icon"/>
+          class="main-form__option-btn-icon"
+        />
         Выбрать файл
       </button>
       
@@ -26,26 +31,70 @@
       </button>
     </div>
 
-    <WebCamera class="main-form__web-camera"/>
-    <!-- <ProcessedImage 
-      imageAlt="Загруженное изображение" 
-      renewBtnTitle="Выбрать другое"
-      class="main-form__processed-image"
+    <input 
+      ref="imageInput"
+      type="file"
+      class="processed-image__image-input"
+      accept="image/png, image/tiff, image/jpeg"
+      @change="loadImageFile($event)"
+    />
+
+    <!-- <WebCamera 
+      class="main-form__web-camera" 
+      v-if="isWebCamVisible"
     /> -->
+    <ProcessedImage
+      :imageSrc="loadedImageUrl"
+      imageAlt="Загруженное изображение"
+      class="main-form__processed-image"
+      renewBtnTitle="Выбрать другое"
+    />
 
-    <button type="submit" class="main-form__search-btn">Искать</button>
+    <!-- <button 
+      type="submit" 
+      class="main-form__search-btn"
+      v-if="isImageVisible"
+    >
+      Искать
+    </button> -->
 
-    <ResultingInfo class="main-form__resulting-info"/>
+    <!-- <ResultingInfo class="main-form__resulting-info"/> -->
   </form>
 </template>
 
 <script setup>
+  import { ref } from "vue";
+
   import SearchForm from "@/components/SearchForm.vue";
-  // import ProcessedImage from "@/components/ProcessedImage.vue";
-  import WebCamera from "@/components/camera/WebCamera.vue";
+  import ProcessedImage from "@/components/ProcessedImage.vue";
+  // import WebCamera from "@/components/camera/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
-  import ResultingInfo from "@/components/ResultingInfo.vue";
+
+  // const isImageVisible = ref(false);
+  // const isWebCamVisible = ref(false);
+
+  const imageInput = ref();
+  const loadedImageUrl = ref();
+
+  function selectImageFile() {
+    imageInput.value.click();
+  }
+
+  function loadImageFile(event) {
+    const imageFiles = event.target.files; 
+
+    if (FileReader && imageFiles && imageFiles.length) {
+      const fileReader = new FileReader();
+      const imageFile = imageFiles[0];
+
+      fileReader.onload = e => {
+        loadedImageUrl.value = e.target.result;
+      }
+
+      fileReader.readAsDataURL(imageFile);
+    }
+  }
 </script>
 
 <style lang="less">
