@@ -2,26 +2,38 @@
   <div class="processed-image">
     <div class="processed-image__picture-wrapper">
       <picture class="processed-image__picture">
-        <img :src="imageSrc" :alt="imageAlt" class="processed-image__image"/>
+        <img 
+          ref="image" 
+          :src="imageSrc" 
+          :alt="imageAlt" 
+          class="processed-image__image"/>
       </picture>
 
       <button
         type="button"
         title="Удалить"
         class="processed-image__remove-btn"
+        @click="removeImage()"
       ></button>
 
       <button
         type="button"
         :title="renewBtnTitle"
         class="processed-image__renew-btn"
+        @click="$emit('selectAnotherImageEvent')"
       ></button>
     </div>
   </div>
 </template>
 
 <script setup>
+  import { ref } from "vue";
+
   const props = defineProps(["imageSrc", "imageAlt", "renewBtnTitle"]);
+
+  const image = ref();
+
+  const removeImage = () => image.value?.setAttribute("src", "");
 </script>
 
 <style lang="less">

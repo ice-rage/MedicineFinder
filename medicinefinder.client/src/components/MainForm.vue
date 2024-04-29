@@ -48,6 +48,7 @@
       imageAlt="Загруженное изображение"
       class="main-form__processed-image"
       renewBtnTitle="Выбрать другое"
+      @selectAnotherImageEvent="selectImageFile()"
     />
 
     <!-- <button 
@@ -82,17 +83,21 @@
   }
 
   function loadImageFile(event) {
-    const imageFiles = event.target.files; 
+    const selectedFiles = event.target.files; 
 
-    if (FileReader && imageFiles && imageFiles.length) {
+    if (FileReader && selectedFiles && selectedFiles.length) {
       const fileReader = new FileReader();
-      const imageFile = imageFiles[0];
+      const selectedFile = selectedFiles[0];
 
-      fileReader.onload = e => {
-        loadedImageUrl.value = e.target.result;
+      fileReader.onload = () => {
+        loadedImageUrl.value = fileReader.result;
       }
 
-      fileReader.readAsDataURL(imageFile);
+      fileReader.onerror = () => {
+        console.log(`Произошла ошибка: ${fileReader.error}`);
+      }
+
+      fileReader.readAsDataURL(selectedFile);
     }
   }
 </script>
