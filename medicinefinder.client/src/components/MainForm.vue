@@ -31,25 +31,22 @@
       </button>
     </div>
 
-    <input 
+    <!-- <input 
       ref="imageInput"
       type="file"
       class="processed-image__image-input"
       accept="image/png, image/tiff, image/jpeg"
       @change="loadImageFile($event)"
-    />
-
-    <!-- <WebCamera 
-      class="main-form__web-camera" 
-      v-if="isWebCamVisible"
     /> -->
-    <ProcessedImage
+
+    <WebCamera class="main-form__web-camera"/>
+    <!-- <ProcessedImage
       :imageSrc="loadedImageUrl"
       imageAlt="Загруженное изображение"
       class="main-form__processed-image"
       renewBtnTitle="Выбрать другое"
       @selectAnotherImageEvent="selectImageFile()"
-    />
+    /> -->
 
     <!-- <button 
       type="submit" 
@@ -67,8 +64,8 @@
   import { ref } from "vue";
 
   import SearchForm from "@/components/SearchForm.vue";
-  import ProcessedImage from "@/components/ProcessedImage.vue";
-  // import WebCamera from "@/components/camera/WebCamera.vue";
+  // import ProcessedImage from "@/components/ProcessedImage.vue";
+  import WebCamera from "@/components/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
 
@@ -76,30 +73,30 @@
   // const isWebCamVisible = ref(false);
 
   const imageInput = ref();
-  const loadedImageUrl = ref();
+  // const loadedImageUrl = ref();
 
   function selectImageFile() {
     imageInput.value.click();
   }
 
-  function loadImageFile(event) {
-    const selectedFiles = event.target.files; 
+  // function loadImageFile(event) {
+  //   const selectedFiles = event.target.files; 
 
-    if (FileReader && selectedFiles && selectedFiles.length) {
-      const fileReader = new FileReader();
-      const selectedFile = selectedFiles[0];
+  //   if (FileReader && selectedFiles && selectedFiles.length) {
+  //     const fileReader = new FileReader();
+  //     const selectedFile = selectedFiles[0];
 
-      fileReader.onload = () => {
-        loadedImageUrl.value = fileReader.result;
-      }
+  //     fileReader.onload = () => {
+  //       loadedImageUrl.value = fileReader.result;
+  //     }
 
-      fileReader.onerror = () => {
-        console.log(`Произошла ошибка: ${fileReader.error}`);
-      }
+  //     fileReader.onerror = () => {
+  //       console.log(`Произошла ошибка: ${fileReader.error}`);
+  //     }
 
-      fileReader.readAsDataURL(selectedFile);
-    }
-  }
+  //     fileReader.readAsDataURL(selectedFile);
+  //   }
+  // }
 </script>
 
 <style lang="less">
