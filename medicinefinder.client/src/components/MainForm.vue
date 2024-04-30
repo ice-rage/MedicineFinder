@@ -42,27 +42,10 @@
       </button>
     </div>
 
-    <input 
-      ref="imageInput"
-      type="file"
-      class="processed-image__image-input"
-      accept="image/png, image/tiff, image/jpeg"
-      @change="uploadImageFile($event)"
-    />
-
-    <ImageUploader 
+    <ImageLoader 
       class="main-form__image-uploader" 
-      v-if="isImageUploaderVisible"/>
-
-    <!-- <ProcessedImage
-      :imageSrc="uploadedImageUrl"
-      imageAlt="Загруженное изображение"
-      renewBtnTitle="Выбрать другое"
-      class="main-form__processed-image"
-      @removeImageEvent="isImageUploaded = false"
-      @renewImageEvent="selectImageFile()"
-      v-if="isImageComponentVisible"
-    /> -->
+      v-if="isImageUploaderVisible"
+    />
 
     <WebCamera 
       class="main-form__web-camera"
@@ -84,7 +67,7 @@
   import { defineComponent, ref } from "vue";
 
   import SearchForm from "@/components/SearchForm.vue";
-  import ImageUploader from "@/components/ImageUploader.vue";
+  import ImageLoader from "@/components/ImageLoader.vue";
   import WebCamera from "@/components/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
@@ -99,7 +82,7 @@
   export default defineComponent({
     components: {
       SearchForm,
-      ImageUploader,
+      ImageLoader,
       SvgImage,
       WebCamera,
       SvgCamera,
@@ -107,8 +90,6 @@
     setup() {
       const isImageUploaderVisible = ref(false);
       const isWebCameraVisible = ref(false);
-      const imageInput = ref();
-      const uploadedImageUrl = ref();
 
       const toggleChildComponents = (firstComponentToggle, 
         secondComponentToggle) => {
@@ -121,37 +102,12 @@
         return firstComponentToggle.value;
       }
 
-      const selectImageFile = () => imageInput.value.click();
-
-      const uploadImageFile = (event) => {
-        const selectedFiles = event.target.files; 
-
-        if (FileReader && selectedFiles && selectedFiles.length) {
-          const fileReader = new FileReader();
-          const selectedFile = selectedFiles[0];
-
-          fileReader.onload = () => {
-            uploadedImageUrl.value = fileReader.result;
-          }
-
-          fileReader.onerror = () => {
-            console.log(`Произошла ошибка: ${fileReader.error}`);
-          }
-
-          fileReader.readAsDataURL(selectedFile);
-        }
-      }
-
       return {
         ...toAccessChildComponentRefs({
           isImageUploaderVisible,
           isWebCameraVisible,
         }),
-        imageInput,
-        uploadedImageUrl,
         toggleChildComponents,
-        selectImageFile,
-        uploadImageFile,
       };
     }
   });
