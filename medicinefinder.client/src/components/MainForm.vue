@@ -7,8 +7,13 @@
     <div class="main-form__option-btns">
       <button 
         type="button" 
-        class="main-form__option-btn"
-        @click="selectImageFile()"
+        :class="isImageUploaderVisible 
+          ? 'main-form__option-btn--active' 
+          : 'main-form__option-btn'"
+        @click="toggleChildComponents(
+          accessChildComponentRefs.isImageUploaderVisible,
+          accessChildComponentRefs.isWebCameraVisible
+        )"
       >
         <SvgImage 
           width="24" 
@@ -20,7 +25,13 @@
       
       <button 
         type="button" 
-        class="main-form__option-btn"
+        :class="isWebCameraVisible 
+          ? 'main-form__option-btn--active' 
+          : 'main-form__option-btn'"
+        @click="toggleChildComponents(
+          accessChildComponentRefs.isWebCameraVisible,
+          accessChildComponentRefs.isImageUploaderVisible,
+        )"
       >
         <SvgCamera
           width="24"
@@ -31,27 +42,36 @@
       </button>
     </div>
 
-    <!-- <input 
+    <input 
       ref="imageInput"
       type="file"
       class="processed-image__image-input"
       accept="image/png, image/tiff, image/jpeg"
-      @change="loadImageFile($event)"
+      @change="uploadImageFile($event)"
+    />
+
+    <ImageUploader 
+      class="main-form__image-uploader" 
+      v-if="isImageUploaderVisible"/>
+
+    <!-- <ProcessedImage
+      :imageSrc="uploadedImageUrl"
+      imageAlt="Загруженное изображение"
+      renewBtnTitle="Выбрать другое"
+      class="main-form__processed-image"
+      @removeImageEvent="isImageUploaded = false"
+      @renewImageEvent="selectImageFile()"
+      v-if="isImageComponentVisible"
     /> -->
 
-    <WebCamera class="main-form__web-camera"/>
-    <!-- <ProcessedImage
-      :imageSrc="loadedImageUrl"
-      imageAlt="Загруженное изображение"
-      class="main-form__processed-image"
-      renewBtnTitle="Выбрать другое"
-      @selectAnotherImageEvent="selectImageFile()"
-    /> -->
+    <WebCamera 
+      class="main-form__web-camera"
+      v-if="isWebCameraVisible"
+      />
 
     <!-- <button 
       type="submit" 
       class="main-form__search-btn"
-      v-if="isImageVisible"
     >
       Искать
     </button> -->
@@ -60,43 +80,81 @@
   </form>
 </template>
 
-<script setup>
-  import { ref } from "vue";
+<script>
+  import { defineComponent, ref } from "vue";
 
   import SearchForm from "@/components/SearchForm.vue";
-  // import ProcessedImage from "@/components/ProcessedImage.vue";
+  import ImageUploader from "@/components/ImageUploader.vue";
   import WebCamera from "@/components/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
 
-  // const isImageVisible = ref(false);
-  // const isWebCamVisible = ref(false);
+  const toAccessChildComponentRefs = refs => ({
+    ...refs,
+    accessChildComponentRefs: {
+      ...refs
+    }
+  });
 
-  const imageInput = ref();
-  // const loadedImageUrl = ref();
+  export default defineComponent({
+    components: {
+      SearchForm,
+      ImageUploader,
+      SvgImage,
+      WebCamera,
+      SvgCamera,
+    },
+    setup() {
+      const isImageUploaderVisible = ref(false);
+      const isWebCameraVisible = ref(false);
+      const imageInput = ref();
+      const uploadedImageUrl = ref();
 
-  function selectImageFile() {
-    imageInput.value.click();
-  }
+      const toggleChildComponents = (firstComponentToggle, 
+        secondComponentToggle) => {
+        firstComponentToggle.value = !firstComponentToggle.value;
 
-  // function loadImageFile(event) {
-  //   const selectedFiles = event.target.files; 
+        if (secondComponentToggle.value) {
+          secondComponentToggle.value = false;
+        }
 
-  //   if (FileReader && selectedFiles && selectedFiles.length) {
-  //     const fileReader = new FileReader();
-  //     const selectedFile = selectedFiles[0];
+        return firstComponentToggle.value;
+      }
 
-  //     fileReader.onload = () => {
-  //       loadedImageUrl.value = fileReader.result;
-  //     }
+      const selectImageFile = () => imageInput.value.click();
 
-  //     fileReader.onerror = () => {
-  //       console.log(`Произошла ошибка: ${fileReader.error}`);
-  //     }
+      const uploadImageFile = (event) => {
+        const selectedFiles = event.target.files; 
 
-  //     fileReader.readAsDataURL(selectedFile);
-  //   }
-  // }
+        if (FileReader && selectedFiles && selectedFiles.length) {
+          const fileReader = new FileReader();
+          const selectedFile = selectedFiles[0];
+
+          fileReader.onload = () => {
+            uploadedImageUrl.value = fileReader.result;
+          }
+
+          fileReader.onerror = () => {
+            console.log(`Произошла ошибка: ${fileReader.error}`);
+          }
+
+          fileReader.readAsDataURL(selectedFile);
+        }
+      }
+
+      return {
+        ...toAccessChildComponentRefs({
+          isImageUploaderVisible,
+          isWebCameraVisible,
+        }),
+        imageInput,
+        uploadedImageUrl,
+        toggleChildComponents,
+        selectImageFile,
+        uploadImageFile,
+      };
+    }
+  });
 </script>
 
 <style lang="less">
@@ -108,7 +166,7 @@
     max-width: 62.5%;
     margin: 50px auto;
     padding: 30px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: rgba(@shadow_gray, 0.2) 0 7px 30px 0;
 
     @media @bw1170 {
@@ -151,20 +209,27 @@
       }
     }
 
-    &__option-btn {
-      .gradient-btn();
-
+    &__option-btn,
+    &__option-btn--active {
       @media @bw768 {
         padding: 10px;
         font-size: 0;
       }
-      
-      & + & {
+
+      & + button {
         margin-left: 20px;
 
         @media @bw768 {
           margin-left: 25px;
         }
+      }
+    }
+
+    &__option-btn {
+      .gradient-btn();
+
+      &--active {
+        background-color: @indian_green;
       }
     }
 
@@ -177,7 +242,7 @@
     }
 
     &__web-camera,
-    &__processed-image {
+    &__image-uploader {
       margin: 30px 0;
     }
 

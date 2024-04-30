@@ -19,7 +19,9 @@
       <button 
         type="button" 
         ref="toggleBtn"
-        class="web-camera__toggle-btn"
+        :class="currentWebCamState === 'stop' 
+          ? 'web-camera__toggle-btn web-camera__toggle-btn--stop' 
+          : 'web-camera__toggle-btn'"
         :disabled="webCamStates[currentWebCamState]['toggleBtnDisabled']"
         @click="toggleWebCameraVideo()"  
       >{{ webCamStates[currentWebCamState]['toggleBtnText'] }}</button>
@@ -28,8 +30,10 @@
     <ProcessedImage
       :imageSrc="snapshotUrl"
       imageAlt="Снимок"
+      renewBtnTitle="Переснять"
       class="web-camera__processed-image"
-      @showParentComponentEvent="showComponent()"
+      @removeImageEvent="toggleView(false)"
+      @renewImageEvent="reshoot()"
       v-if="isFrameCaptured"
     />
   </div>
@@ -40,12 +44,12 @@
   import SvgCamera from "@/components/icons/SvgCamera.vue";
   import ProcessedImage from "@/components/ProcessedImage.vue";
 
-  const isFrameCaptured = ref(false);
   const video = ref();
   const toggleBtn = ref();
   const webCamPermissionStatus = ref();
   const canvas = ref();
   const snapshotUrl = ref();
+  const isFrameCaptured = ref(false);
 
   const webCamStates = reactive({
     play: {
@@ -79,8 +83,6 @@
 
     startWebCameraVideo();
   });
-
-  const showComponent = () => isFrameCaptured.value = false;
 
   const checkWebCameraPermission = permissionState => {
     webCamPermissionStatus.value = permissionState;
@@ -144,8 +146,16 @@
 
       snapshotUrl.value = canvas.value.toDataURL("image/png");
 
-      isFrameCaptured.value = true;
+      stopWebCameraVideo();
+      toggleView(true);
     }
+  }
+
+  const toggleView = (value) => isFrameCaptured.value = value;
+
+  const reshoot = () => {
+    toggleView(false);
+    startWebCameraVideo();
   }
 </script>
 
@@ -223,6 +233,7 @@
         background-color: @islamic_green;
       }
 
+      &--stop,
       &:hover,
       &:disabled {
         width: 220px;
@@ -246,7 +257,8 @@
         }
       }
 
-      &:hover {
+      &:hover,
+      &--stop {
         @media(hover: hover) {
           .gradient-btn(@gradient_direction: left);
         }
