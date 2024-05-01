@@ -5,12 +5,17 @@
         type="text"
         class="search-form__textbox"
         placeholder=""
+        @input="activateSearchBtn()"
       />
-      <span class="search-form__textbox-placeholder">Введите название...</span>
+      <span class="search-form__textbox-placeholder">
+        Введите название...
+      </span>
     </label>
 
     <button 
-      type="submit" 
+      ref="searchBtn"
+      type="submit"
+      spellcheck="false"
       title="Искать" 
       class="search-form__search-btn search-btn"
     >
@@ -20,20 +25,24 @@
   </form>
 </template>
 
-<script setup></script>
+<script setup>
+  import { ref } from "vue";
+
+  const searchBtn = ref();
+
+  const activateSearchBtn = () => {
+    searchBtn.value.classList.add("search-btn--active");
+  }
+</script>
 
 <style lang="less">
   .search-form {
     display: flex;
     max-width: 600px;
-    height: 50px;
+    height: 40px;
     outline: 0;
     border-radius: 4px;
     box-shadow: rgba(@shadow_gray, 0.2) 0 5px 30px 0;
-
-    @media @bw1170 {
-      height: 40px;
-    }
 
     @media @bw768 {
       height: 30px;
@@ -50,7 +59,10 @@
       border-right: 0;
       border-radius: 3px 0 0 4px;
       background-color: @white;
-      font-size: 16px;
+
+      @media @bw768 {
+        padding: 0 10px;
+      }
 
       &:focus-within {
         border-width: 3px;
@@ -58,6 +70,8 @@
     }
 
     &__textbox {
+      line-height: 1.375;
+
       &:focus + .search-form__textbox-placeholder,
       &:not(:placeholder-shown) + .search-form__textbox-placeholder {
         color: @islamic_green;
@@ -78,8 +92,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      padding: 15px 15px 20px;
+      padding: 8px 12px 12px;
       color: @black;
+      line-height: normal;
       transition: 0.4s;
       transition-timing-function: ease;
       transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -87,45 +102,42 @@
       pointer-events: none;
 
       @media @bw1170 {
-        padding: 10px 5px 15px 10px;
         font-size: 14px;
       }
 
       @media @bw768 {
-        padding: 6px 10px 12px 5px;
+        padding: 5px 8px 12px;
         font-size: 12px;
       }
     }
+  }
 
-    .search-btn {
-      position: relative;
-      max-width: 50px;
-      padding: 0;
-      border-radius: 0 4px 4px 0;
-      background: rgba(@indian_green, 1);
-      transition: all 0.3s ease-in-out;
+  .search-btn {
+    position: relative;
+    max-width: 40px;
+    padding: 0;
+    border-radius: 0 4px 4px 0;
+    background: rgba(@indian_green, 1);
+    transition: all 0.3s ease-in-out;
 
-      @media @bw1170 {
-        max-width: 40px;
-      }
+    @media @bw768 {
+      max-width: 30px;
+    }
 
-      @media @bw768 {
-        max-width: 30px;
-      }
+    &::before {
+      content: "";  
+      position: absolute;
+      top: 0; 
+      left: 0;  
+      display: block;
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at left, @light_lime, @indian_green);
+      z-index: -100;
+    }
 
-      &::before {
-        content: "";  
-        position: absolute;
-        top: 0; 
-        left: 0;  
-        display: block;
-        height: 100%;
-        width: 100%;
-        border-radius: inherit;
-        background: radial-gradient(ellipse at left, @light_lime, @indian_green);
-        z-index: -100;
-      }
-
+    &--active,
     &:hover {
       @media(hover: hover) {
         background: rgba(255, 0, 0, 0);
@@ -142,19 +154,15 @@
 
         .search-btn__circle {
           top: 1px;
-          width: 25px;
-          height: 5px;
+          left: 6px;
+          width: 20px;
+          height: 4px;
           border-color: transparent;
           background-color: @dandelion;
-          border-radius: 20px;
-
-          @media @bw1170 {
-            width: 20px;
-            height: 4px;
-            border-radius: 16px;
-          }
+          border-radius: 16px;
 
           @media @bw768 {
+            left: 5px;
             width: 15px;
             height: 3px;
             border-radius: 12px;
@@ -163,48 +171,22 @@
 
         .search-btn__stick {
           top: 45%;
-          left: 10px;
-          width: 25px;
-          margin-top: -9px;
+          margin-top: -7px;
           transform: rotateZ(0);
 
-          @media @bw1170 {
-            left: 8px;
-            width: 20px;
-            margin-top: -7px;
-          }
-
           @media @bw768 {
-            left: 6px;
-            width: 15px;
             margin-top: -5px;
           }
         }
 
         .search-btn__stick:before,
         .search-btn__stick:after {
-          right: -7px;
-          width: 15px;
           background-color: @dandelion;
-
-          @media @bw1170 {
-            right: -6px;
-            width: 12px;
-          }
-
-          @media @bw768 {
-            right: -4px;
-            width: 9px;
-          }
         }
 
         .search-btn__stick:before {
-          bottom: 5px;
-          transform: rotateZ(55deg);
-
-          @media @bw1170 {
-            bottom: 4px;
-          }
+          bottom: 4px;
+          transform: rotateZ(60deg);
 
           @media @bw768 {
             bottom: 3px;
@@ -212,12 +194,8 @@
         }
 
         .search-btn__stick:after {
-          bottom: -5px;
-          transform: rotateZ(-55deg);
-
-          @media @bw1170 {
-            bottom: -4px;
-          }
+          bottom: -4px;
+          transform: rotateZ(-60deg);
 
           @media @bw768 {
             bottom: -3px;
@@ -228,24 +206,15 @@
 
     &__circle {
       position: relative;
-      top: -5px;
-      left: 10px;
-      width: 15px;
-      height: 15px;
-      margin-top: 0;
-      border: 5px solid @white;
+      top: -4px;
+      left: 8px;
+      width: 12px;
+      height: 12px;
+      border: 4px solid @white;
       border-radius: 50%;
       background-color: transparent;
       background-clip: padding-box;
       transition: 0.3s ease-in-out;
-
-      @media @bw1170 {
-        top: -4px;
-        left: 8px;
-        width: 12px;
-        height: 12px;
-        border-width: 4px;
-      }
 
       @media @bw768 {
         top: -3px;
@@ -258,23 +227,15 @@
 
     &__stick {
       position: absolute;
-      top: 25px;
-      left: 38px;
+      top: 20px;
+      left: 30px;
       display: block;
-      width: 5px;
-      height: 15px;
-      border-radius: 15px;
+      width: 4px;
+      height: 12px;
+      border-radius: 12px;
       background-color: transparent;
       transform: rotateZ(52deg);
       transition: 0.3s ease all;
-
-      @media @bw1170 {
-        top: 20px;
-        left: 30px;
-        width: 4px;
-        height: 12px;
-        border-radius: 12px;
-      }
 
       @media @bw768 {
         top: 15px;
@@ -290,18 +251,12 @@
         position: absolute;
         bottom: 0;
         right: 0;
-        width: 15px;
-        height: 5px;
-        border-radius: 10px;
+        width: 12px;
+        height: 4px;
+        border-radius: 8px;
         background-color: @white;
         transform: rotateZ(0);
         transition: 0.5s ease all;
-
-        @media @bw1170 {
-          width: 12px;
-          height: 4px;
-          border-radius: 8px;
-        }
 
         @media @bw768 {
           width: 9px;
@@ -311,5 +266,4 @@
       }
     }
   }
-}
 </style>

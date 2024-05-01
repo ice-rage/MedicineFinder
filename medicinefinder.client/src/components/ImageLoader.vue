@@ -2,40 +2,35 @@
   <div class="image-loader">
     <div class="image-loader__container" v-show="loadedImageUrl === ''">
       <div 
-        ref="dragArea" 
-        class="image-loader__drag-area drag-area"
-        @dragover="enterdragArea($event)"
-        @dragleave="leavedragArea($event)"
+        :class="dragText 
+          ? 'image-loader__drag-area drag-area drag-area--active' 
+          : 'image-loader__drag-area drag-area'"
+        @dragover="enterDragArea($event)"
+        @dragleave="leaveDragArea($event)"
         @drop="dropFile($event)"
       >
         <div class="drag-area__icon-wrapper">
           <i class="drag-area__icon fas fa-images"></i>
         </div>
 
-        <span 
-          class="drag-area__select-btn"
-          @click="openFileDialog()"
-        >
+        <span class="drag-area__select-btn" @click="openFileDialog()">
           Выберите изображение
         </span>
 
-        <span 
-          ref="dragText" 
-          class="drag-area__drag-text"
-        >
-          или перетащите файл сюда
+        <span class="drag-area__drag-text">
+          {{ dragText ? dragText : 'или перетащите файл сюда' }}
         </span>
 
         <input 
           ref="imageInput"
           type="file"
           class="drag-area__image-input"
-          accept="image/jpeg, image/jpg, image/png"
+          accept="image/jpeg, image/png"
           @change="selectFile($event)"
         />
 
         <span class="drag-area__supported-formats">
-          Поддерживаемые форматы: JPEG, JPG, PNG
+          Поддерживаемые форматы: JPEG, PNG
         </span>
       </div>
     </div>
@@ -43,10 +38,11 @@
     <ProcessedImage
       :imageSrc="loadedImageUrl"
       imageAlt="Загруженное изображение"
+      :imageName="fileName"
       renewBtnTitle="Выбрать другое"
       class="image-loader__processed-image"
-      @renewImageEvent="selectImageFile()"
-      @removeImageEvent="loadedImageUrl = ''"
+      @renewImageEvent="openFileDialog()"
+      @removeImageEvent="resetView()"
       v-if="loadedImageUrl !== ''"
     />
   </div>
@@ -54,37 +50,48 @@
 
 <script setup>
   import { ref } from "vue";
+  import toastr from "toastr";
   import ProcessedImage from "@/components/ProcessedImage.vue";
+
+  toastr.options = {
+    "positionClass": "toast-bottom-left",
+  };
+
+  const emit = defineEmits(["toggleSearchBtnEvent"]);
   
-  const dragArea = ref();
   const dragText = ref();
   const imageInput = ref();
   const loadedImageUrl = ref("");
+  const fileName = ref("");
+  const isImageLoaded = ref(false);
 
-  const enterdragArea = (event) => {
+  const enterDragArea = (event) => {
     event.preventDefault();
-    dragArea.value.classList.add("drag-area--active");
-    dragText.value.textContent = "Отпустите для загрузки";
-    console.log("File is inside the drag area");
+    dragText.value = "Отпустите для загрузки";
   }
 
-  const leavedragArea = () => {
-    dragArea.value.classList.remove("drag-area--active");
-    console.log("File left the drag area");
-    dragText.value.textContent = "или перетащите файл сюда";
-  }
+  const leaveDragArea = () => clearDragText();
+
+  const clearDragText = () => dragText.value = "";
 
   const dropFile = (event) => {
     event.preventDefault();
-    console.log("File is dropped in drag area");
 
-    dragArea.value.classList.add("drag-area--active");
-
-    const success = loadFile(event.dataTransfer.files);
-  
-    if (!success) {
-      dragArea.value.classList.remove("drag-area--active");
+    if (!checkImageLoading(event.dataTransfer.files)) {
+      clearDragText();
     }
+  }
+
+  const checkImageLoading = (selectedFiles) => {
+    isImageLoaded.value = loadFile(selectedFiles);
+
+    if (isImageLoaded.value) {
+      emit("toggleSearchBtnEvent", isImageLoaded.value);
+
+      return true;
+    }
+
+    return false;
   }
 
   const loadFile = (selectedFiles) => {
@@ -92,25 +99,26 @@
       const fileReader = new FileReader();
       const selectedFile = selectedFiles[0];
 
-      let validExtensions = ["image/jpeg", "image/jpg", "image/png"];
+      let validExtensions = ["image/jpeg", "image/png"];
 
       let selectedFileExtension = selectedFile.type;
-      console.log(`File extension: ${selectedFileExtension}`);
 
       if (validExtensions.includes(selectedFileExtension)) {
-        fileReader.onload = () => {
-          loadedImageUrl.value = fileReader.result;
-        }
+        fileName.value = selectedFile.name;
+
+        fileReader.onload = () => loadedImageUrl.value = fileReader.result;
 
         fileReader.onerror = () => {
           console.log(`Произошла ошибка: ${fileReader.error}`);
+
+          return false;
         }
 
         fileReader.readAsDataURL(selectedFile);
 
         return true;
       } else {
-        alert("Можно загружать только изображения");
+        toastr.error("Файлы данного формата запрещены", "Ошибка загрузки");
 
         return false;
       }
@@ -120,7 +128,15 @@
   const openFileDialog = () => imageInput.value.click();
 
   const selectFile = (event) => {
-    loadFile(event.target.files);
+    checkImageLoading(event.target.files);
+  };
+
+  const resetView = () => {
+    loadedImageUrl.value = "";
+    fileName.value = "";
+    isImageLoaded.value = false;
+    clearDragText();
+    emit("toggleSearchBtnEvent", isImageLoaded.value);
   }
 </script>
 

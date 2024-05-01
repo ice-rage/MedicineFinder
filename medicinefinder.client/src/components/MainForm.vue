@@ -7,11 +7,11 @@
     <div class="main-form__option-btns">
       <button 
         type="button" 
-        :class="isImageUploaderVisible 
+        :class="isImageLoaderVisible 
           ? 'main-form__option-btn--active' 
           : 'main-form__option-btn'"
         @click="toggleChildComponents(
-          accessChildComponentRefs.isImageUploaderVisible,
+          accessChildComponentRefs.isImageLoaderVisible,
           accessChildComponentRefs.isWebCameraVisible
         )"
       >
@@ -30,7 +30,7 @@
           : 'main-form__option-btn'"
         @click="toggleChildComponents(
           accessChildComponentRefs.isWebCameraVisible,
-          accessChildComponentRefs.isImageUploaderVisible,
+          accessChildComponentRefs.isImageLoaderVisible,
         )"
       >
         <SvgCamera
@@ -43,21 +43,22 @@
     </div>
 
     <ImageLoader 
-      class="main-form__image-uploader" 
-      v-if="isImageUploaderVisible"
-    />
+      class="main-form__image-uploader"
+      @toggleSearchBtnEvent="toggleSearchBtn" 
+      v-if="isImageLoaderVisible"/>
 
     <WebCamera 
       class="main-form__web-camera"
-      v-if="isWebCameraVisible"
-      />
+      @toggleSearchBtnEvent="toggleSearchBtn"
+      v-if="isWebCameraVisible"/>
 
-    <!-- <button 
+    <button 
       type="submit" 
       class="main-form__search-btn"
+      v-if="hasImageToProcess"
     >
       Искать
-    </button> -->
+    </button>
 
     <!-- <ResultingInfo class="main-form__resulting-info"/> -->
   </form>
@@ -88,8 +89,9 @@
       SvgCamera,
     },
     setup() {
-      const isImageUploaderVisible = ref(false);
+      const isImageLoaderVisible = ref(false);
       const isWebCameraVisible = ref(false);
+      const hasImageToProcess = ref(false);
 
       const toggleChildComponents = (firstComponentToggle, 
         secondComponentToggle) => {
@@ -99,15 +101,23 @@
           secondComponentToggle.value = false;
         }
 
+        hasImageToProcess.value = false;
+
         return firstComponentToggle.value;
       }
 
+      const toggleSearchBtn = (toggleValue) => {
+        hasImageToProcess.value = toggleValue;
+      }
+
       return {
+        hasImageToProcess,
         ...toAccessChildComponentRefs({
-          isImageUploaderVisible,
+          isImageLoaderVisible,
           isWebCameraVisible,
         }),
         toggleChildComponents,
+        toggleSearchBtn,
       };
     }
   });

@@ -9,6 +9,8 @@
           class="processed-image__image"/>
       </picture>
 
+      <span class="processed-image__image-name">{{ imageName }}</span>
+
       <button
         type="button"
         title="Удалить"
@@ -29,7 +31,7 @@
 <script setup>
   import { ref } from "vue";
 
-  defineProps(["imageSrc", "imageAlt", "renewBtnTitle"]);
+  defineProps(["imageSrc", "imageAlt", "imageName", "renewBtnTitle"]);
 
   const emit = defineEmits(["removeImageEvent", "renewImageEvent"]);
 
@@ -63,22 +65,30 @@
 
       &:hover {
         @media (hover: hover) {
+          .processed-image__remove-btn,
           .processed-image__renew-btn,
-          .processed-image__remove-btn {
-            top: 10px;
+          .processed-image__image-name {
             opacity: 1;
+          }
 
+          .processed-image__remove-btn,
+          .processed-image__renew-btn {
+            top: 10px;
+            
             @media @bw768 {
               top: 8px;
             }
           }
+
+          .processed-image__image-name {
+            top: 20px;
+
+            @media @bw768 {
+              top: 15px;
+            }
+          }
         }
       }
-    }
-
-    &__default-icon {
-      width: 36px;
-      height: 36px;
     }
 
     &__picture {
@@ -109,6 +119,16 @@
           filter: brightness(50%);
         }
       }
+    }
+
+    &__image-name {
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      color: @white;
+      font-size: 20px;
+      opacity: 0;
+      transition: 0.5s;
     }
 
     &__remove-btn {

@@ -44,6 +44,8 @@
   import SvgCamera from "@/components/icons/SvgCamera.vue";
   import ProcessedImage from "@/components/ProcessedImage.vue";
 
+  const emit = defineEmits(["toggleSearchBtnEvent"]);
+
   const video = ref();
   const toggleBtn = ref();
   const webCamPermissionStatus = ref();
@@ -108,7 +110,7 @@
       currentWebCamState.value = "play";
     })
     .catch(function(error) {
-      console.log(`Ошибка доступа к веб-камере: ${error}`);
+      console.log(`Произошла ошибка: ${error}`);
       currentWebCamState.value = "unavailable";
     });
   }
@@ -151,7 +153,10 @@
     }
   }
 
-  const toggleView = (value) => isFrameCaptured.value = value;
+  const toggleView = (value) => {
+    isFrameCaptured.value = value;
+    emit("toggleSearchBtnEvent", isFrameCaptured.value);
+  }
 
   const reshoot = () => {
     toggleView(false);
