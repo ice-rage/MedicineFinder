@@ -60,7 +60,7 @@
       Искать
     </button>
 
-    <!-- <ResultingInfo class="main-form__resulting-info"/> -->
+    <ResultingInfo class="main-form__resulting-info"/>
   </form>
 </template>
 
@@ -72,6 +72,7 @@
   import WebCamera from "@/components/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
+import ResultingInfo from "./ResultingInfo.vue";
 
   const toAccessChildComponentRefs = refs => ({
     ...refs,
@@ -87,6 +88,7 @@
       SvgImage,
       WebCamera,
       SvgCamera,
+      ResultingInfo,
     },
     setup() {
       const isImageLoaderVisible = ref(false);

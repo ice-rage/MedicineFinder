@@ -22,6 +22,19 @@
     <p class="resulting-info__paragraph">БАЙЕР АГ
       <span class="resulting-info__parentheses">(Германия)</span>
     </p>
+    <p>Организация, принимающая
+      <br/>
+      претензии потребителей 
+      <br/>
+      АО &quot;БАЙЕР&quot;
+      <br/>
+      107113 Москва,
+      <br/>
+      ул. 3-я Рыбинская, д. 18, стр. 2
+      <br/>
+      Тел.: +7 (495) 231-12-00
+      <br/>E-mail: ru.communications@bayer.com
+    </p>
 
     <h2 class="resulting-info__section-title">Код АТХ</h2>
     <p class="resulting-info__paragraph">N02BA01
