@@ -43,6 +43,13 @@
       </span>
     </p>
 
+    <h2 class="resulting-info__section-title">Стандарт качества</h2>
+    <p  class="resulting-info__paragraph">Ph. Eur
+      <span class="resulting-info__parentheses">
+        (Европейская фармакопея)
+      </span>
+    </p>
+
     <h2 class="resulting-info__section-title">Активное вещество</h2>
     <p class="resulting-info__paragraph">Ацетилсалициловая кислота
       <span class="resulting-info__parentheses">
