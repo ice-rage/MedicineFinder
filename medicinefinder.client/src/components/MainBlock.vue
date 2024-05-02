@@ -1,15 +1,17 @@
 <template>
-  <form class="main-form">
-    <SearchForm class="main-form__search-form"/>
+  <div class="main-block">
+    <SearchBox 
+      class="main-block__search-form"
+      @show-result-event="showResult"/>
 
-    <h3 class="main-form__option-title">Или</h3>
+    <h3 class="main-block__option-title">Или</h3>
 
-    <div class="main-form__option-btns">
+    <div class="main-block__option-btns">
       <button 
         type="button" 
         :class="isImageLoaderVisible 
-          ? 'main-form__option-btn--active' 
-          : 'main-form__option-btn'"
+          ? 'main-block__option-btn--active' 
+          : 'main-block__option-btn'"
         @click="toggleChildComponents(
           accessChildComponentRefs.isImageLoaderVisible,
           accessChildComponentRefs.isWebCameraVisible
@@ -18,7 +20,7 @@
         <SvgImage 
           width="24" 
           height="24" 
-          class="main-form__option-btn-icon"
+          class="main-block__option-btn-icon"
         />
         Выбрать файл
       </button>
@@ -26,8 +28,8 @@
       <button 
         type="button" 
         :class="isWebCameraVisible 
-          ? 'main-form__option-btn--active' 
-          : 'main-form__option-btn'"
+          ? 'main-block__option-btn--active' 
+          : 'main-block__option-btn'"
         @click="toggleChildComponents(
           accessChildComponentRefs.isWebCameraVisible,
           accessChildComponentRefs.isImageLoaderVisible,
@@ -36,43 +38,46 @@
         <SvgCamera
           width="24"
           height="24"
-          class="main-form__option-btn-icon"
+          class="main-block__option-btn-icon"
         />
         Сделать снимок
       </button>
     </div>
 
     <ImageLoader 
-      class="main-form__image-uploader"
+      class="main-block__image-uploader"
       @toggleSearchBtnEvent="toggleSearchBtn" 
       v-if="isImageLoaderVisible"/>
 
     <WebCamera 
-      class="main-form__web-camera"
+      class="main-block__web-camera"
       @toggleSearchBtnEvent="toggleSearchBtn"
       v-if="isWebCameraVisible"/>
 
     <button 
-      type="submit" 
-      class="main-form__search-btn"
+      type="button" 
+      class="main-block__search-btn"
       v-if="hasImageToProcess"
     >
       Искать
     </button>
 
-    <ResultingInfo class="main-form__resulting-info"/>
-  </form>
+    <ResultingInfo 
+      class="main-block__resulting-info"
+      :data="medicineInfo"
+      v-if="medicineInfo"/>
+  </div>
 </template>
 
 <script>
   import { defineComponent, ref } from "vue";
 
-  import SearchForm from "@/components/SearchForm.vue";
+  import SearchBox from "@/components/SearchBox.vue";
   import ImageLoader from "@/components/ImageLoader.vue";
   import WebCamera from "@/components/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
-import ResultingInfo from "./ResultingInfo.vue";
+  import ResultingInfo from "./ResultingInfo.vue";
 
   const toAccessChildComponentRefs = refs => ({
     ...refs,
@@ -83,7 +88,7 @@ import ResultingInfo from "./ResultingInfo.vue";
 
   export default defineComponent({
     components: {
-      SearchForm,
+      SearchBox,
       ImageLoader,
       SvgImage,
       WebCamera,
@@ -94,6 +99,7 @@ import ResultingInfo from "./ResultingInfo.vue";
       const isImageLoaderVisible = ref(false);
       const isWebCameraVisible = ref(false);
       const hasImageToProcess = ref(false);
+      const medicineInfo = ref();
 
       const toggleChildComponents = (firstComponentToggle, 
         secondComponentToggle) => {
@@ -112,21 +118,27 @@ import ResultingInfo from "./ResultingInfo.vue";
         hasImageToProcess.value = toggleValue;
       }
 
+      function showResult(data) {
+        medicineInfo.value = data;
+      }
+
       return {
         hasImageToProcess,
+        medicineInfo,
         ...toAccessChildComponentRefs({
           isImageLoaderVisible,
           isWebCameraVisible,
         }),
         toggleChildComponents,
         toggleSearchBtn,
+        showResult,
       };
     }
   });
 </script>
 
 <style lang="less">
-  .main-form {
+  .main-block {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

@@ -1,14 +1,14 @@
 <template>
   <div class="app">
     <PageHeader class="app__page-header"/>
-    <MainForm class="app__main-form"/>
+    <MainBlock class="app__main-form"/>
     <!-- <DefaultPage class="app__default-page"/> -->
   </div>
 </template>
 
 <script setup>
   import PageHeader from "@/components/page/PageHeader.vue";
-  import MainForm from "@/components/MainForm.vue";
+  import MainBlock from "@/components/MainBlock.vue";
   // import DefaultPage from "@/DefaultPage.vue";
 </script>
 

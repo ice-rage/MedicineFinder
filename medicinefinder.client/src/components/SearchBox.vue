@@ -1,9 +1,10 @@
 <template>
-  <form class="search-form">
+  <div class="search-form">
     <label class="search-form__textbox-wrapper">
       <input
         ref="textbox"
         type="text"
+        spellcheck="false"
         class="search-form__textbox"
         placeholder=""
         @keyup="isRequestEmpty = !/\S/.test(textbox.value)"
@@ -15,25 +16,44 @@
 
     <button 
       ref="searchBtn"
-      type="submit"
-      spellcheck="false"
+      type="button"
       title="Искать" 
       :class="isRequestEmpty 
         ? 'search-form__search-btn search-btn' 
         : 'search-form__search-btn search-btn search-btn--active'"
+      @click="fetchMedicineData(textbox.value)"
     >
       <div class="search-btn__circle"></div>
       <span class="search-btn__stick"></span>
     </button>
-  </form>
+  </div>
 </template>
 
 <script setup>
   import { ref } from "vue";
+  import axios from "axios";
+
+  const emit = defineEmits(["showResultEvent"]);
 
   const textbox = ref();
   const isRequestEmpty = ref(true);
   const searchBtn = ref();
+
+  async function fetchMedicineData(medicineName) {
+    try {
+      const url = `medicinefinder/${medicineName}`;
+      const response = await axios.get(url);
+      const data = response.data;
+      
+      if (data && data.products && data.products.length) {
+        console.log("Данные успешно получены");
+        console.log(data);
+        emit("showResultEvent", data);
+      }
+    } catch(error) {
+      console.log(`Ошибка при получении данных: ${error}`);
+    }
+  }
 </script>
 
 <style lang="less">
