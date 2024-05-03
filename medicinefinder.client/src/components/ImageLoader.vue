@@ -83,46 +83,56 @@
   }
 
   const checkImageLoading = (selectedFiles) => {
-    isImageLoaded.value = loadFile(selectedFiles);
-
-    if (isImageLoaded.value) {
-      emit("toggleSearchBtnEvent", isImageLoaded.value);
+    loadFile(selectedFiles).then(function(data) {
+      loadedImageUrl.value = data;
+      isImageLoaded.value = true;
+      console.log(`Данные внутри ImageLoader: ${loadedImageUrl.value}`);
+      emit("toggleSearchBtnEvent", loadedImageUrl.value, isImageLoaded.value);
 
       return true;
-    }
+    }, function(error) {
+      console.log(error);
 
-    return false;
+      return false;
+    });
+    // isImageLoaded.value = loadFile(selectedFiles);
+
+    // if (isImageLoaded.value) {
+    //   console.log(loadedImageUrl.value);
+    //   emit("toggleSearchBtnEvent", isImageLoaded.value);
+
+    //   return true;
+    // }
+
+    // return false;
   }
 
   const loadFile = (selectedFiles) => {
-    if (FileReader && selectedFiles && selectedFiles.length) {
-      const fileReader = new FileReader();
-      const selectedFile = selectedFiles[0];
+    return new Promise(function(resolve, reject) {
+      if (FileReader && selectedFiles && selectedFiles.length) {
+        const fileReader = new FileReader();
+        const selectedFile = selectedFiles[0];
 
-      let validExtensions = ["image/jpeg", "image/png"];
+        let validExtensions = ["image/jpeg", "image/png"];
 
-      let selectedFileExtension = selectedFile.type;
+        let selectedFileExtension = selectedFile.type;
 
-      if (validExtensions.includes(selectedFileExtension)) {
-        fileName.value = selectedFile.name;
+        if (validExtensions.includes(selectedFileExtension)) {
+          fileName.value = selectedFile.name;
 
-        fileReader.onload = () => loadedImageUrl.value = fileReader.result;
+          fileReader.onload = () => resolve(fileReader.result);
 
-        fileReader.onerror = () => {
-          console.log(`Произошла ошибка: ${fileReader.error}`);
+          fileReader.onerror = () => {
+            reject(`Произошла ошибка: ${fileReader.error}`);
+          }
 
-          return false;
+          fileReader.readAsDataURL(selectedFile);
+        } else {
+          reject(toastr.error("Файлы данного формата запрещены", 
+            "Ошибка загрузки"));
         }
-
-        fileReader.readAsDataURL(selectedFile);
-
-        return true;
-      } else {
-        toastr.error("Файлы данного формата запрещены", "Ошибка загрузки");
-
-        return false;
       }
-    }
+    });
   }
 
   const openFileDialog = () => imageInput.value.click();

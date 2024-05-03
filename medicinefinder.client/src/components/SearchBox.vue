@@ -33,7 +33,8 @@
   import { ref } from "vue";
   import axios from "axios";
 
-  const emit = defineEmits(["showResultEvent"]);
+  const emit = defineEmits(["showResultEvent", 
+    "showErrorMessageEvent"]);
 
   const textbox = ref();
   const isRequestEmpty = ref(true);
@@ -45,13 +46,9 @@
       const response = await axios.get(url);
       const data = response.data;
       
-      if (data && data.products && data.products.length) {
-        console.log("Данные успешно получены");
-        console.log(data);
-        emit("showResultEvent", data);
-      }
+      emit("showResultEvent", data);
     } catch(error) {
-      console.log(`Ошибка при получении данных: ${error}`);
+      console.log(error.response.status);
     }
   }
 </script>

@@ -2,7 +2,8 @@
   <div class="main-block">
     <SearchBox 
       class="main-block__search-form"
-      @show-result-event="showResult"/>
+      @showResultEvent="showResult"
+    />
 
     <h3 class="main-block__option-title">Или</h3>
 
@@ -57,6 +58,7 @@
     <button 
       type="button" 
       class="main-block__search-btn"
+      @click="searchMedicineByImage()"
       v-if="hasImageToProcess"
     >
       Искать
@@ -66,18 +68,25 @@
       class="main-block__resulting-info"
       :data="medicineInfo"
       v-if="medicineInfo"/>
+
+    <ErrorMessage
+      :errorCode="errorCode" 
+      class="main-block__error-message" 
+      v-if="hasError"/>
   </div>
 </template>
 
 <script>
-  import { defineComponent, ref } from "vue";
+  import { defineComponent, reactive, ref, computed } from "vue";
+  import axios from "axios";
 
   import SearchBox from "@/components/SearchBox.vue";
   import ImageLoader from "@/components/ImageLoader.vue";
   import WebCamera from "@/components/WebCamera.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
-  import ResultingInfo from "./ResultingInfo.vue";
+  import ResultingInfo from "@/components/ResultingInfo.vue";
+  import ErrorMessage from "@/components/ErrorMessage.vue";
 
   const toAccessChildComponentRefs = refs => ({
     ...refs,
@@ -94,12 +103,21 @@
       WebCamera,
       SvgCamera,
       ResultingInfo,
+      ErrorMessage,
     },
     setup() {
+      const errorCode = ref("");
       const isImageLoaderVisible = ref(false);
       const isWebCameraVisible = ref(false);
       const hasImageToProcess = ref(false);
+      const imageToProcess = reactive({});
       const medicineInfo = ref();
+
+      const hasError = computed(() => errorCode.value !== "");
+
+      const setError = (code) => errorCode.value = code;
+
+      const clearError = () => errorCode.value = "";
 
       const toggleChildComponents = (firstComponentToggle, 
         secondComponentToggle) => {
@@ -114,24 +132,44 @@
         return firstComponentToggle.value;
       }
 
-      const toggleSearchBtn = (toggleValue) => {
+      const toggleSearchBtn = (loadedImage, toggleValue) => {
         hasImageToProcess.value = toggleValue;
+        imageToProcess.value = loadedImage;
+        console.log(`Данные внутри MainBlock :${imageToProcess.value}`);
       }
 
-      function showResult(data) {
+      const showResult = (data) => {
         medicineInfo.value = data;
       }
 
+      function searchMedicineByImage() {
+        console.log(`Внутри вызова функции поиска: ${imageToProcess.value}`);
+        
+        axios.post('medicinefinder/uploadimage', { imageToProcess })
+          .then(response => {
+            console.log(`Ответ сервера: ${response.data}`);
+          })
+          .catch(error => {
+            console.log(`Произошла ошибка: ${error.message}`);
+          });
+      }
+
       return {
+        errorCode,
         hasImageToProcess,
+        imageToProcess,
         medicineInfo,
         ...toAccessChildComponentRefs({
           isImageLoaderVisible,
           isWebCameraVisible,
         }),
+        hasError,
+        setError,
+        clearError,
         toggleChildComponents,
         toggleSearchBtn,
         showResult,
+        searchMedicineByImage,
       };
     }
   });
@@ -266,6 +304,11 @@
           }
         }
       }
+    }
+
+    &__resulting-info,
+    &__error-message {
+      margin-top: 40px;
     }
   }
 </style>

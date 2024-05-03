@@ -5,11 +5,11 @@
     <div class="resulting-info__title">
       <span 
         class="resulting-info__inner-title" 
-        v-html="data.products[0].rusName">
+        v-html="data.rusName">
       </span>
       (<span 
         class="resulting-info__inner-title" 
-        v-html="data.products[0].engName">
+        v-html="data.engName">
       </span>)
     </div>
 
@@ -17,113 +17,115 @@
       Владелец регистрационного удостоверения
     </h2>
     <p class="resulting-info__paragraph">
-      {{ data.products[0].companies[0].company.name }}
+      {{ data.companies[0].company.name }}
       <span class="resulting-info__parentheses">
-        ({{ data.products[0].companies[0].company.country.rusName }})
+        ({{ data.companies[0].company.country.rusName }})
       </span>
     </p>
 
     <h2 class="resulting-info__section-title">Произведено</h2>
     <p class="resulting-info__paragraph">
-      {{ data.products[0].companies[1]
-        ? data.products[0].companies[1].company.gddbName
+      {{ data.companies[1]
+        ? data.companies[1].company.gddbName
         : "" }}
       <span class="resulting-info__parentheses">
-        ({{ data.products[0].companies[1]
-          ? data.products[0].companies[1].company.country.rusName
+        ({{ data.companies[1]
+          ? data.companies[1].company.country.rusName
           : "" }})
       </span>
     </p>
 
     <h2 class="resulting-info__section-title">Контакты для обращений</h2>
-    <div v-html="data.products[0].document.companies[0] 
-      ? data.products[0].document.companies[0].shortAddress 
+    <div v-html="data.document.companies[0] 
+      ? data.document.companies[0].rusAddress 
       : ''"></div>
 
     <h2 class="resulting-info__section-title">Код АТХ</h2>
     <p class="resulting-info__paragraph">
-      {{ data.products[0].atcCodes[0].code }}
+      {{ data.atcCodes[0].code }}
       <span class="resulting-info__parentheses">
-        ({{ data.products[0].atcCodes[0].rusName }})
+        ({{ data.atcCodes[0].rusName }})
       </span>
     </p>
 
     <h2 class="resulting-info__section-title">Стандарт качества</h2>
     <p  class="resulting-info__paragraph">
-      {{ data.products[0].moleculeNames[0].molecule.gnParent.gnParent }}
+      {{ data.moleculeNames[0].molecule.gnParent.gnParent }}
       <span class="resulting-info__parentheses">
-        ({{ data.products[0].moleculeNames[0].molecule.gnParent.description }})
+        ({{ data.moleculeNames[0].molecule.gnParent.description }})
       </span>
     </p>
 
     <h2 class="resulting-info__section-title">Активные вещества</h2>
     <p class="resulting-info__paragraph">
-      {{ data.products[0].moleculeNames[0].molecule.rusName }}
+      {{ data.moleculeNames[0].molecule.rusName }}
       <span class="resulting-info__parentheses">
-        ({{ data.products[0].moleculeNames[0].molecule.latName }})
+        ({{ data.moleculeNames[0].molecule.latName }})
       </span>
     </p>
 
     <div class="resulting-info__content content">
       <h2>Лекарственные формы</h2>
       <ul>
-        <li>{{ data.products[0].zipInfo }}</li>
+        <li>{{ data.zipInfo }}</li>
+        <li>{{ data.childrens[0].zipInfo }}</li>
       </ul>
 
       <h2>Форма выпуска, упаковка и состав препарата Аспирин</h2>
 
-      <div v-html="data.products[0].composition"></div>
+      <div v-html="data.composition"></div>
+      <div v-html="data.childrens[0].composition"></div>
 
       <h2>Клинико-фармакологическая группа</h2>
-      <p>{{ data.products[0].clPhGroups[0].name }}</p>
+      <p>{{ data.clPhGroups[0].name }}</p>
 
       <h2>Фармако-терапевтическая группа</h2>
-      <p>{{ data.products[0].phthgroups[0].code }}</p>
+      <p>{{ data.phthgroups[0].code }}</p>
 
       <h2>Фармакологическое действие</h2>
-      <div v-html="data.products[0].document.phInfluence"></div>
+      <div v-html="data.document.phInfluence"></div>
 
       <h2>Показания препарата Аспирин</h2>
-      <div v-html="data.products[0].document.indication"></div>
+      <div v-html="data.document.indication"></div>
 
       <h2>Режим дозирования</h2>
-      <div v-html="data.products[0].document.dosage"></div>
+      <div v-html="data.document.dosage"></div>
 
       <h2>Побочное действие</h2>
-      <div v-html="data.products[0].document.sideEffects"></div>
+      <div v-html="data.document.sideEffects"></div>
 
       <h2>Противопоказания к применению</h2>
-      <div v-html="data.products[0].document.contraIndication"></div>
+      <div v-html="data.document.contraIndication"></div>
 
       <h2>Применение при беременности и кормлении грудью</h2>
-      <div v-html="data.products[0].document.lactation"></div>
+      <div v-html="data.document.lactation"></div>
 
       <h2>Применение при нарушениях функции печени</h2>
-      <div v-html="data.products[0].document.hepatoInsuf"></div>
+      <div v-html="data.document.hepatoInsuf"></div>
 
       <h2>Применение при нарушениях функции почек</h2>
-      <div v-html="data.products[0].document.renalInsuf"></div>
+      <div v-html="data.document.renalInsuf"></div>
 
       <h2>Применение у детей</h2>
-      <div v-html="data.products[0].document.childInsuf"></div>
+      <div v-html="data.document.childInsuf"></div>
 
       <h2>Особые указания</h2>
-      <div v-html="data.products[0].document.specialInstruction"></div>
+      <div v-html="data.document.specialInstruction"></div>
 
       <h2>Передозировка</h2>
-      <div v-html="data.products[0].document.overDosage"></div>
+      <div v-html="data.document.overDosage"></div>
 
       <h2>Лекарственное взаимодействие</h2>
-      <div v-html="data.products[0].document.interaction"></div>
+      <div v-html="data.document.interaction"></div>
 
       <h2>Условия хранения препарата Аспирин</h2>
-      <div v-html="data.products[0].document.storageCondition"></div>
+      <div v-html="data.document.storageCondition"></div>
 
       <h2>Срок годности препарата Аспирин</h2>
-      <div v-html="data.products[0].document.storageTime"></div>
+      <div v-html="data.document.storageTime"></div>
 
       <h2>Условия реализации</h2>
-      <div v-html="data.products[0].document.pharmDelivery"></div>
+      <div v-html="data.document.pharmDelivery"></div>
     </div>
   </section>
 </template>
@@ -137,7 +139,7 @@
 <style lang="less">
   .resulting-info {
     &__content-separator {
-      margin: 40px 0 20px;
+      margin-bottom: 20px;
       padding: 0;
       height: 6px;
       border: none;

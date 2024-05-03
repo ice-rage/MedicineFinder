@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineFinder.Server", "Me
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "medicinefinder.client", "medicinefinder.client\medicinefinder.client.esproj", "{766EC5B0-12B2-41F4-927B-931C204B2113}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85E07348-4D7E-4F9F-BBFC-1DD19E94B239}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
