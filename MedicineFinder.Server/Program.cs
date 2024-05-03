@@ -1,4 +1,5 @@
-using System.Net.Http.Headers;
+using MedicineFinder.Server.Interfaces;
+using MedicineFinder.Server.Services;
 
 namespace MedicineFinder.Server
 {
@@ -8,34 +9,22 @@ namespace MedicineFinder.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddHttpClient<VidalClient>(client =>
-            //{
-            //    client.BaseAddress = new Uri(builder.Configuration["VidalApi"]);
-            //    client.DefaultRequestHeaders.Add("x-token", "5HnGnVMkMx5e");
-            //});
+            builder.Services.AddHttpClient<IVidalService, VidalService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["VidalApi"]);
+                client.DefaultRequestHeaders.Add("x-token", "5HnGnVMkMx5e");
+            });
 
             builder.Services.AddControllers();
 
             var app = builder.Build();
 
-            //var vidalClient = app.Services.GetRequiredService<VidalClient>();
-
-            //var medicineInfo = await vidalClient.GetMedicineInfo("Аспирин");
-
-            //if (medicineInfo.success)
-            //{
-            //    Console.WriteLine("Данные успешно получены");
-            //}
-
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
-            // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
