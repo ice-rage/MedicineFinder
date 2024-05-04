@@ -2,6 +2,7 @@
   <div class="main-block">
     <SearchBox 
       class="main-block__search-form"
+      @dataLoadingEvent="showLoader"
       @showResultEvent="showResult"
     />
 
@@ -58,27 +59,31 @@
     <button 
       type="button" 
       class="main-block__search-btn"
-      @click="searchMedicineByImage()"
+      @click="uploadImage()"
       v-if="hasImageToProcess"
     >
       Искать
     </button>
 
+    <div class="main-block__loader" v-if="isDataLoading"></div>
+
     <ResultingInfo 
       class="main-block__resulting-info"
       :data="medicineInfo"
-      v-if="medicineInfo"/>
+      v-if="medicineInfo && !isDataLoading"/>
 
     <ErrorMessage
-      :errorCode="errorCode" 
+      :message="errorMessage" 
       class="main-block__error-message" 
       v-if="hasError"/>
   </div>
 </template>
 
 <script>
-  import { defineComponent, reactive, ref, computed } from "vue";
+  import { defineComponent, ref, computed } from "vue";
   import axios from "axios";
+  import config from "@/configs";
+  import _ from "lodash";
 
   import SearchBox from "@/components/SearchBox.vue";
   import ImageLoader from "@/components/ImageLoader.vue";
@@ -110,10 +115,19 @@
       const isImageLoaderVisible = ref(false);
       const isWebCameraVisible = ref(false);
       const hasImageToProcess = ref(false);
-      const imageToProcess = reactive({});
-      const medicineInfo = ref();
+      const imageToProcess = ref();
+      const isDataLoading = ref(false);
+      const medicineInfo = ref(null);
 
       const hasError = computed(() => errorCode.value !== "");
+
+      const errorMessage = computed(() => {
+        console.log(errorCode.value);
+
+        return errorCode.value !== "" 
+          ? _.find(config.errors, { code: errorCode.value }).message
+          : "";
+      });
 
       const setError = (code) => errorCode.value = code;
 
@@ -135,28 +149,64 @@
       const toggleSearchBtn = (loadedImage, toggleValue) => {
         hasImageToProcess.value = toggleValue;
         imageToProcess.value = loadedImage;
-        console.log(`Данные внутри MainBlock :${imageToProcess.value}`);
       }
 
-      const showResult = (data) => {
-        medicineInfo.value = data;
+      const showLoader = () => {
+        isDataLoading.value = true;
+        errorCode.value = "";
       }
 
-      function searchMedicineByImage() {
-        console.log(`Внутри вызова функции поиска: ${imageToProcess.value}`);
-        
-        axios.post('medicinefinder/uploadimage', { imageToProcess })
+      const showResult = (serverResponse) => {
+        medicineInfo.value = null;
+        isDataLoading.value = false;
+
+        if (serverResponse.status >= 400) {
+          setError(serverResponse.status.toString());
+        } else {
+          medicineInfo.value = serverResponse.data;
+        }
+      }
+
+      const uploadImage = () => {
+        isDataLoading.value = true;
+
+        axios
+          .post("medicinefinder", { image: imageToProcess.value })
           .then(response => {
-            console.log(`Ответ сервера: ${response.data}`);
+            isDataLoading.value = false;
+            medicineInfo.value = response.data;
           })
           .catch(error => {
-            console.log(`Произошла ошибка: ${error.message}`);
+            console.log(`Произошла ошибка: ${error}`);
+            setError(error.response.status.toString());
+            isDataLoading.value = false;
           });
+
+      //   fetch("medicinefinder", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ 
+      //       image: imageToProcess.value,
+      //     }),
+      //   })
+      //     .then(response => {
+      //       console.log("Изображение успешно отправлено на сервер");
+      //       return response.json();
+      //     })
+      //     .then(jsonData => {
+      //       console.log("Успешно получены данные о препарате");
+      //       isDataLoading.value = false;
+      //       medicineInfo.value = jsonData;
+      //     }).catch(error => console.log(`Произошла ошибка: ${error}`));
+      // };
       }
 
       return {
         errorCode,
         hasImageToProcess,
+        isDataLoading,
         imageToProcess,
         medicineInfo,
         ...toAccessChildComponentRefs({
@@ -164,12 +214,14 @@
           isWebCameraVisible,
         }),
         hasError,
+        errorMessage,
         setError,
         clearError,
         toggleChildComponents,
         toggleSearchBtn,
+        showLoader,
         showResult,
-        searchMedicineByImage,
+        uploadImage,
       };
     }
   });
@@ -304,6 +356,18 @@
           }
         }
       }
+    }
+
+    &__loader {
+      width: 40px;
+      height: 40px;
+      margin: 30px;
+      border: 7px dotted @islamic_green;
+      border-radius: 50%;
+      display: inline-block;
+      position: relative;
+      box-sizing: border-box;
+      animation: rotate 2s linear infinite;
     }
 
     &__resulting-info,

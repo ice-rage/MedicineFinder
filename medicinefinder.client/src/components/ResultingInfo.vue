@@ -68,13 +68,13 @@
       <h2>Лекарственные формы</h2>
       <ul>
         <li>{{ data.zipInfo }}</li>
-        <li>{{ data.childrens[0].zipInfo }}</li>
+        <li>{{ data.childrens.length ? data.childrens[0].zipInfo : "" }}</li>
       </ul>
 
       <h2>Форма выпуска, упаковка и состав препарата Аспирин</h2>
 
       <div v-html="data.composition"></div>
-      <div v-html="data.childrens[0].composition"></div>
+      <div v-html="data.childrens.length ? data.childrens[0].composition: ''"></div>
 
       <h2>Клинико-фармакологическая группа</h2>
       <p>{{ data.clPhGroups[0].name }}</p>

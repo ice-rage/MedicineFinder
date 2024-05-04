@@ -86,7 +86,6 @@
     loadFile(selectedFiles).then(function(data) {
       loadedImageUrl.value = data;
       isImageLoaded.value = true;
-      console.log(`Данные внутри ImageLoader: ${loadedImageUrl.value}`);
       emit("toggleSearchBtnEvent", loadedImageUrl.value, isImageLoaded.value);
 
       return true;
@@ -95,16 +94,6 @@
 
       return false;
     });
-    // isImageLoaded.value = loadFile(selectedFiles);
-
-    // if (isImageLoaded.value) {
-    //   console.log(loadedImageUrl.value);
-    //   emit("toggleSearchBtnEvent", isImageLoaded.value);
-
-    //   return true;
-    // }
-
-    // return false;
   }
 
   const loadFile = (selectedFiles) => {

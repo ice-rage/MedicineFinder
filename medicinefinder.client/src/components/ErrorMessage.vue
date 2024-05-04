@@ -1,11 +1,11 @@
 <template>
   <div class="error-message">
-    <div class="error-message__text">{{ errorCode }}</div>
+    <div class="error-message__text">{{ message }}</div>
   </div>
 </template>
 
 <script setup>
-  defineProps(["errorCode"]);
+  defineProps(["message"]);
 </script>
 
 <style lang="less">

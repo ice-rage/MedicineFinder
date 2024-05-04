@@ -33,23 +33,26 @@
   import { ref } from "vue";
   import axios from "axios";
 
-  const emit = defineEmits(["showResultEvent", 
+  const emit = defineEmits([
+    "dataLoadingEvent", 
+    "showResultEvent", 
     "showErrorMessageEvent"]);
 
   const textbox = ref();
   const isRequestEmpty = ref(true);
   const searchBtn = ref();
 
-  async function fetchMedicineData(medicineName) {
-    try {
-      const url = `medicinefinder/${medicineName}`;
-      const response = await axios.get(url);
-      const data = response.data;
+  function fetchMedicineData(medicineName) {
+    emit("dataLoadingEvent");
+
+    axios
+      .get(`medicinefinder/${medicineName}`)
+      .then(response => emit("showResultEvent", response))
+      .catch(error => emit("showResultEvent", error.response));
       
-      emit("showResultEvent", data);
-    } catch(error) {
-      console.log(error.response.status);
-    }
+    // fetch(`medicinefinder/${medicineName}`)
+    //   .then(response => emit("showResultEvent", response))
+    //   .catch(error => console.log(`Произошла ошибка: ${error}`));
   }
 </script>
 

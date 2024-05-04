@@ -9,6 +9,9 @@ namespace MedicineFinder.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+
             builder.Services.AddHttpClient<IVidalService, VidalService>(client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration["VidalApi"]);
