@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using MedicineFinder.Server.Interfaces;
-using MedicineFinder.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Tesseract;
@@ -48,35 +47,36 @@ namespace MedicineFinder.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImage(ImageFile imageFile)
+        public async Task<IActionResult> UploadImage([FromForm]string encodedImage)
         {
-            var originalString = imageFile.Image;
-            var onlyContentString = originalString[(originalString.LastIndexOf(",") + 1)..];
-            var result = Convert.FromBase64String(onlyContentString);
+            var contentString = encodedImage[(encodedImage.LastIndexOf(',') + 1)..];
+            var decodedImage = Convert.FromBase64String(contentString);
 
             _logger.LogInformation("{DT}: изображение успешно получено", 
                         DateTime.UtcNow.ToLongTimeString());
 
-            var recognizedText = RecognizeText(result);
+            var words = RecognizeText(decodedImage);
             var statusCodes = new List<int?>();
             
-            foreach (var word in recognizedText)
+            foreach (var word in words)
             {
                 var response = await GetMedicineInfo(word);
                 var statusCode = ((IStatusCodeActionResult)response).StatusCode;
-
-                statusCodes.Add(statusCode);
 
                 if (statusCode == 200)
                 {
                     _logger.LogInformation(
                         "{DT}: успешно получен результат по тексту на изображении", 
                         DateTime.UtcNow.ToLongTimeString());
+                    
                     return Ok(((OkObjectResult)response).Value);
                 }
+
+                statusCodes.Add(statusCode);
             }
 
-            if (statusCodes.Any(statusCode => statusCode == 400)) {
+            if (statusCodes.Any(statusCode => statusCode == 400)) 
+            {
                 return BadRequest();
             }
 
@@ -87,10 +87,10 @@ namespace MedicineFinder.Server.Controllers
             return NotFound();
         }
 
-        private IEnumerable<string> RecognizeText(byte[] decodedImage)
+        private static List<string> RecognizeText(byte[] imageBytes)
         {
             var engine = new TesseractEngine("./tessdata", "rus", EngineMode.Default);
-            var image = Pix.LoadFromMemory(decodedImage);
+            var image = Pix.LoadFromMemory(imageBytes);
             var page = engine.Process(image);
             var text = page
                 .GetText()
@@ -98,18 +98,16 @@ namespace MedicineFinder.Server.Controllers
                 .ToList();
             text.RemoveAll(string.IsNullOrWhiteSpace);
 
-            var words = text.ToArray();
-
-            for (var i = 0; i < words.Length; i++)
+            for (var i = 0; i < text.Count; i++) 
             {
-                words[i] = Regex.Replace(words[i], "[^а-яА-Я0-9]", string.Empty);
+                text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]", string.Empty);
             }
             
             image.Dispose();
             page.Dispose();
             engine.Dispose();
 
-            return words;
+            return text;
         }
     }
 }

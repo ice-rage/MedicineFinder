@@ -2,12 +2,11 @@
   <div class="search-form">
     <label class="search-form__textbox-wrapper">
       <input
-        ref="textbox"
+        v-model="text"
         type="text"
         spellcheck="false"
         class="search-form__textbox"
         placeholder=""
-        @keyup="isRequestEmpty = !/\S/.test(textbox.value)"
       />
       <span class="search-form__textbox-placeholder">
         Введите название...
@@ -21,7 +20,7 @@
       :class="isRequestEmpty 
         ? 'search-form__search-btn search-btn' 
         : 'search-form__search-btn search-btn search-btn--active'"
-      @click="fetchMedicineData(textbox.value)"
+      @click="fetchMedicineData(text)"
     >
       <div class="search-btn__circle"></div>
       <span class="search-btn__stick"></span>
@@ -30,7 +29,7 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
+  import { ref, computed } from "vue";
   import axios from "axios";
 
   const emit = defineEmits([
@@ -38,9 +37,10 @@
     "showResultEvent", 
     "showErrorMessageEvent"]);
 
-  const textbox = ref();
-  const isRequestEmpty = ref(true);
+  const text = ref("");
   const searchBtn = ref();
+
+  const isRequestEmpty = computed(() => !/\S{3,}/.test(text.value));
 
   function fetchMedicineData(medicineName) {
     emit("dataLoadingEvent");
@@ -49,10 +49,6 @@
       .get(`medicinefinder/${medicineName}`)
       .then(response => emit("showResultEvent", response))
       .catch(error => emit("showResultEvent", error.response));
-      
-    // fetch(`medicinefinder/${medicineName}`)
-    //   .then(response => emit("showResultEvent", response))
-    //   .catch(error => console.log(`Произошла ошибка: ${error}`));
   }
 </script>
 

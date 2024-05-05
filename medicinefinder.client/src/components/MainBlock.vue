@@ -170,8 +170,11 @@
       const uploadImage = () => {
         isDataLoading.value = true;
 
+        const uploadingData = new FormData();
+        uploadingData.append("encodedImage", imageToProcess.value);
+
         axios
-          .post("medicinefinder", { image: imageToProcess.value })
+          .post("medicinefinder", uploadingData)
           .then(response => {
             isDataLoading.value = false;
             medicineInfo.value = response.data;
@@ -181,26 +184,6 @@
             setError(error.response.status.toString());
             isDataLoading.value = false;
           });
-
-      //   fetch("medicinefinder", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ 
-      //       image: imageToProcess.value,
-      //     }),
-      //   })
-      //     .then(response => {
-      //       console.log("Изображение успешно отправлено на сервер");
-      //       return response.json();
-      //     })
-      //     .then(jsonData => {
-      //       console.log("Успешно получены данные о препарате");
-      //       isDataLoading.value = false;
-      //       medicineInfo.value = jsonData;
-      //     }).catch(error => console.log(`Произошла ошибка: ${error}`));
-      // };
       }
 
       return {
