@@ -2,59 +2,40 @@
   <div class="main-block">
     <SearchBox 
       class="main-block__search-form"
-      @dataLoadingEvent="showLoader"
+      @showDataLoadingEvent="showDataLoading"
       @showResultEvent="showResult"
     />
 
     <h3 class="main-block__option-title">Или</h3>
 
     <div class="main-block__option-btns">
-      <button 
-        type="button" 
-        :class="isImageLoaderVisible 
-          ? 'main-block__option-btn--active' 
-          : 'main-block__option-btn'"
-        @click="toggleChildComponents(
-          accessChildComponentRefs.isImageLoaderVisible,
-          accessChildComponentRefs.isWebCameraVisible
-        )"
-      >
-        <SvgImage 
-          width="24" 
-          height="24" 
-          class="main-block__option-btn-icon"
-        />
-        Выбрать файл
-      </button>
-      
-      <button 
-        type="button" 
-        :class="isWebCameraVisible 
-          ? 'main-block__option-btn--active' 
-          : 'main-block__option-btn'"
-        @click="toggleChildComponents(
-          accessChildComponentRefs.isWebCameraVisible,
-          accessChildComponentRefs.isImageLoaderVisible,
-        )"
-      >
-        <SvgCamera
-          width="24"
-          height="24"
-          class="main-block__option-btn-icon"
-        />
-        Сделать снимок
-      </button>
+      <OptionButton
+        class="main-block__option-btn"
+        v-model="isImageLoaderVisible"
+        :icon="SvgImage"
+        :text="'Выберите файл'"
+      />
+      <OptionButton
+        class="main-block__option-btn"
+        v-model="isWebCameraVisible"
+        :icon="SvgCamera"
+        :text="'Сделайте снимок'"
+      />
     </div>
 
     <ImageLoader 
       class="main-block__image-uploader"
-      @toggleSearchBtnEvent="toggleSearchBtn" 
-      v-if="isImageLoaderVisible"/>
+      @hideSiblingEvent="isWebCameraVisible = false"
+      @toggleSearchBtnEvent="toggleSearchBtn"
+      v-if="isImageLoaderVisible"
+    />
 
     <WebCamera 
       class="main-block__web-camera"
+      @hideSiblingEvent="isImageLoaderVisible = false"
       @toggleSearchBtnEvent="toggleSearchBtn"
-      v-if="isWebCameraVisible"/>
+      v-if="isWebCameraVisible"
+    />
 
     <button 
       type="button" 
@@ -70,7 +51,7 @@
     <ResultingInfo 
       class="main-block__resulting-info"
       :data="medicineInfo"
-      v-if="medicineInfo && !isDataLoading"/>
+      v-if="medicineInfo && !isDataLoading && !hasError"/>
 
     <ErrorMessage
       :message="errorMessage" 
@@ -79,8 +60,8 @@
   </div>
 </template>
 
-<script>
-  import { defineComponent, ref, computed } from "vue";
+<script setup>
+  import { ref, computed } from "vue";
   import axios from "axios";
   import config from "@/configs";
   import _ from "lodash";
@@ -88,126 +69,64 @@
   import SearchBox from "@/components/SearchBox.vue";
   import ImageLoader from "@/components/ImageLoader.vue";
   import WebCamera from "@/components/WebCamera.vue";
+  import OptionButton from "@/components//templates/OptionButton.vue";
   import SvgImage from "@/components/icons/SvgImage.vue";
   import SvgCamera from "@/components/icons/SvgCamera.vue";
   import ResultingInfo from "@/components/ResultingInfo.vue";
   import ErrorMessage from "@/components/ErrorMessage.vue";
 
-  const toAccessChildComponentRefs = refs => ({
-    ...refs,
-    accessChildComponentRefs: {
-      ...refs
-    }
-  });
+  const errorCode = ref("");
+  const isImageLoaderVisible = ref();
+  const isWebCameraVisible = ref();
+  const hasImageToProcess = ref();
+  const imageToProcess = ref();
+  const isDataLoading = ref();
+  const medicineInfo = ref();
 
-  export default defineComponent({
-    components: {
-      SearchBox,
-      ImageLoader,
-      SvgImage,
-      WebCamera,
-      SvgCamera,
-      ResultingInfo,
-      ErrorMessage,
-    },
-    setup() {
-      const errorCode = ref("");
-      const isImageLoaderVisible = ref(false);
-      const isWebCameraVisible = ref(false);
-      const hasImageToProcess = ref(false);
-      const imageToProcess = ref();
-      const isDataLoading = ref(false);
-      const medicineInfo = ref(null);
+  const hasError = computed(() => errorCode.value !== "");
 
-      const hasError = computed(() => errorCode.value !== "");
+  const errorMessage = computed(() => errorCode.value !== "" 
+    ? _.find(config.errors, { code: errorCode.value }).message
+    : "");
 
-      const errorMessage = computed(() => {
-        console.log(errorCode.value);
+  const setError = (code) => errorCode.value = code;
 
-        return errorCode.value !== "" 
-          ? _.find(config.errors, { code: errorCode.value }).message
-          : "";
-      });
+  const clearError = () => errorCode.value = "";
 
-      const setError = (code) => errorCode.value = code;
+  const toggleSearchBtn = (loadedImage, toggleValue) => {
+    hasImageToProcess.value = toggleValue;
+    imageToProcess.value = loadedImage;
+  }
+      
+  const showDataLoading = () => {
+    isDataLoading.value = true;
+    clearError();
+  }
 
-      const clearError = () => errorCode.value = "";
+  const showResult = (promise) => {
+    promise
+      .then(response => {
+        medicineInfo.value = response.data;
+      }, error => setError(error.response.status.toString()))
+      .then(() => isDataLoading.value = false);
+  }
 
-      const toggleChildComponents = (firstComponentToggle, 
-        secondComponentToggle) => {
-        firstComponentToggle.value = !firstComponentToggle.value;
+  const uploadImage = () => {
+    showDataLoading();
 
-        if (secondComponentToggle.value) {
-          secondComponentToggle.value = false;
-        }
+    const uploadingData = new FormData();
+    uploadingData.append("encodedImage", imageToProcess.value);
 
-        hasImageToProcess.value = false;
-
-        return firstComponentToggle.value;
-      }
-
-      const toggleSearchBtn = (loadedImage, toggleValue) => {
-        hasImageToProcess.value = toggleValue;
-        imageToProcess.value = loadedImage;
-      }
-
-      const showLoader = () => {
-        isDataLoading.value = true;
-        errorCode.value = "";
-      }
-
-      const showResult = (serverResponse) => {
-        medicineInfo.value = null;
-        isDataLoading.value = false;
-
-        if (serverResponse.status >= 400) {
-          setError(serverResponse.status.toString());
-        } else {
-          medicineInfo.value = serverResponse.data;
-        }
-      }
-
-      const uploadImage = () => {
-        isDataLoading.value = true;
-
-        const uploadingData = new FormData();
-        uploadingData.append("encodedImage", imageToProcess.value);
-
-        axios
-          .post("medicinefinder", uploadingData)
+    showResult(new Promise((resolve, reject) => {
+      axios
+        .post("medicinefinder", uploadingData)
           .then(response => {
-            isDataLoading.value = false;
-            medicineInfo.value = response.data;
-          })
-          .catch(error => {
-            console.log(`Произошла ошибка: ${error}`);
-            setError(error.response.status.toString());
-            isDataLoading.value = false;
+            resolve(response);
+          }, error =>  {
+            reject(error);
           });
-      }
-
-      return {
-        errorCode,
-        hasImageToProcess,
-        isDataLoading,
-        imageToProcess,
-        medicineInfo,
-        ...toAccessChildComponentRefs({
-          isImageLoaderVisible,
-          isWebCameraVisible,
-        }),
-        hasError,
-        errorMessage,
-        setError,
-        clearError,
-        toggleChildComponents,
-        toggleSearchBtn,
-        showLoader,
-        showResult,
-        uploadImage,
-      };
-    }
-  });
+    }));
+  }
 </script>
 
 <style lang="less">
@@ -259,38 +178,6 @@
 
       @media @bw768 {
         max-width: 150px;
-      }
-    }
-
-    &__option-btn,
-    &__option-btn--active {
-      @media @bw768 {
-        padding: 10px;
-        font-size: 0;
-      }
-
-      & + button {
-        margin-left: 20px;
-
-        @media @bw768 {
-          margin-left: 25px;
-        }
-      }
-    }
-
-    &__option-btn {
-      .gradient-btn();
-
-      &--active {
-        background-color: @indian_green;
-      }
-    }
-
-    &__option-btn-icon {
-      display: none;
-
-      @media @bw768 {
-        display: flex;
       }
     }
 

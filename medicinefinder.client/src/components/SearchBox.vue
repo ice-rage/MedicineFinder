@@ -32,23 +32,25 @@
   import { ref, computed } from "vue";
   import axios from "axios";
 
-  const emit = defineEmits([
-    "dataLoadingEvent", 
-    "showResultEvent", 
-    "showErrorMessageEvent"]);
+  const emit = defineEmits(["showDataLoadingEvent", "showResultEvent"]);
 
   const text = ref("");
   const searchBtn = ref();
 
   const isRequestEmpty = computed(() => !/\S{3,}/.test(text.value));
 
-  function fetchMedicineData(medicineName) {
-    emit("dataLoadingEvent");
+  const fetchMedicineData = (medicineName) => {
+    emit("showDataLoadingEvent");
 
-    axios
-      .get(`medicinefinder/${medicineName}`)
-      .then(response => emit("showResultEvent", response))
-      .catch(error => emit("showResultEvent", error.response));
+    emit("showResultEvent", new Promise((resolve, reject) => {
+      axios
+        .get(`medicinefinder/${medicineName}`)
+        .then(response => {
+          resolve(response);
+        }, error => {
+          reject(error);
+        });
+    }));
   }
 </script>
 

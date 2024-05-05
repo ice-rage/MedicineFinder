@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import toastr from "toastr";
   import ProcessedImage from "@/components/ProcessedImage.vue";
 
@@ -57,13 +57,15 @@
     "positionClass": "toast-bottom-left",
   };
 
-  const emit = defineEmits(["toggleSearchBtnEvent"]);
+  const emit = defineEmits(["hideSiblingEvent", "toggleSearchBtnEvent"]);
   
   const dragText = ref();
   const imageInput = ref();
   const loadedImageUrl = ref("");
   const fileName = ref("");
   const isImageLoaded = ref(false);
+
+  onMounted(() => emit("hideSiblingEvent"));
 
   const enterDragArea = (event) => {
     event.preventDefault();
@@ -83,16 +85,18 @@
   }
 
   const checkImageLoading = (selectedFiles) => {
-    loadFile(selectedFiles).then(function(data) {
-      loadedImageUrl.value = data;
-      isImageLoaded.value = true;
-      emit("toggleSearchBtnEvent", loadedImageUrl.value, isImageLoaded.value);
+    loadFile(selectedFiles)
+      .then(function(data) {
+        loadedImageUrl.value = data;
+        isImageLoaded.value = true;
 
-      return true;
-    }, function(error) {
-      console.log(error);
+        emit("toggleSearchBtnEvent", loadedImageUrl.value, isImageLoaded.value);
 
-      return false;
+        return true;
+      },  function(error) {
+        console.log(error);
+
+        return false;
     });
   }
 
@@ -134,7 +138,9 @@
     loadedImageUrl.value = "";
     fileName.value = "";
     isImageLoaded.value = false;
+
     clearDragText();
+    
     emit("toggleSearchBtnEvent", isImageLoaded.value);
   }
 </script>

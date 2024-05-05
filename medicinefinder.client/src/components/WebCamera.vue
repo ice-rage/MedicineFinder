@@ -44,7 +44,7 @@
   import SvgCamera from "@/components/icons/SvgCamera.vue";
   import ProcessedImage from "@/components/ProcessedImage.vue";
 
-  const emit = defineEmits(["toggleSearchBtnEvent"]);
+  const emit = defineEmits(["hideSiblingEvent", "toggleSearchBtnEvent"]);
 
   const video = ref();
   const toggleBtn = ref();
@@ -74,6 +74,8 @@
   const currentWebCamState = ref("play");
 
   onMounted(() => {
+    emit("hideSiblingEvent");
+
     navigator.permissions
     .query({ name: "camera" })
     .then((permissionStatus) => {

@@ -26,7 +26,7 @@
     <h2 class="resulting-info__section-title">Произведено</h2>
     <p class="resulting-info__paragraph">
       {{ data.companies[1]
-        ? data.companies[1].company.gddbName
+        ? data.companies[1].company.name
         : "" }}
       <span class="resulting-info__parentheses">
         ({{ data.companies[1]
@@ -50,9 +50,9 @@
 
     <h2 class="resulting-info__section-title">Стандарт качества</h2>
     <p  class="resulting-info__paragraph">
-      {{ data.moleculeNames[0].molecule.gnParent.gnParent }}
+      {{ data.moleculeNames[0].molecule.GNParent.GNParent }}
       <span class="resulting-info__parentheses">
-        ({{ data.moleculeNames[0].molecule.gnParent.description }})
+        ({{ data.moleculeNames[0].molecule.GNParent.description }})
       </span>
     </p>
 
@@ -77,7 +77,7 @@
       <div v-html="data.childrens.length ? data.childrens[0].composition: ''"></div>
 
       <h2>Клинико-фармакологическая группа</h2>
-      <p>{{ data.clPhGroups[0].name }}</p>
+      <p>{{ data.ClPhGroups[0].name }}</p>
 
       <h2>Фармако-терапевтическая группа</h2>
       <p>{{ data.phthgroups[0].code }}</p>

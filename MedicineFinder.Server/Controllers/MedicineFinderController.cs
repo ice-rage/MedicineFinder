@@ -10,6 +10,8 @@ namespace MedicineFinder.Server.Controllers
     [Route("[controller]")]
     public class MedicineFinderController : Controller
     {
+        private const int MaxRequestPerSecond = 4;
+
         private readonly IVidalService _vidalService;
 
         private readonly ILogger _logger;
@@ -28,20 +30,20 @@ namespace MedicineFinder.Server.Controllers
             {
                 var result = await _vidalService.GetMedicineInfo(medicineName);
 
-                if (result != null && result.products.Count != 0) {
+                if (result != null && result.Products.Count != 0) {
                     _logger.LogInformation("{DT}: данные по запросу успешно получены", 
                         DateTime.UtcNow.ToLongTimeString());
-                    return Ok(result.products[0]);
+                    return Ok(result.Products[0]);
                 }
 
                 _logger.LogInformation("{DT}: не удалось найти данные по запросу", 
                         DateTime.UtcNow.ToLongTimeString());
                 return NotFound();
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException exception)
             {
-                _logger.LogInformation("{DT}: неизвестная ошибка сервера", 
-                        DateTime.UtcNow.ToLongTimeString());
+                _logger.LogInformation("{DT}: неизвестная ошибка сервера: {message}",
+                    DateTime.UtcNow.ToLongTimeString(), exception.Message);
                 return BadRequest();
             }
         }
@@ -101,6 +103,11 @@ namespace MedicineFinder.Server.Controllers
             for (var i = 0; i < text.Count; i++) 
             {
                 text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]", string.Empty);
+            }
+
+            if (text.Count > MaxRequestPerSecond)
+            {
+                text.RemoveRange(MaxRequestPerSecond - 1, text.Count - MaxRequestPerSecond);
             }
             
             image.Dispose();
