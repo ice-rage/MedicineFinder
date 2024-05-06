@@ -148,8 +148,8 @@
       canvas.value.height = imageHeight;
       context.drawImage(video.value, 0, 0, imageWidth, imageHeight);
 
-      snapshotUrl.value = canvas.value.toDataURL("image/png");
-
+      snapshotUrl.value = canvas.value.toDataURL("image/jpeg");
+      
       stopWebCameraVideo();
       toggleView(true);
     }
@@ -157,7 +157,7 @@
 
   const toggleView = (value) => {
     isFrameCaptured.value = value;
-    emit("toggleSearchBtnEvent", isFrameCaptured.value);
+    emit("toggleSearchBtnEvent", snapshotUrl.value, isFrameCaptured.value);
   }
 
   const reshoot = () => {

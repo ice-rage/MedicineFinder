@@ -98,6 +98,7 @@
   const toggleSearchBtn = (loadedImage, toggleValue) => {
     imageToProcess.value = loadedImage;
     hasImageToProcess.value = toggleValue;
+    clearError();
   }
       
   const showDataLoading = () => {

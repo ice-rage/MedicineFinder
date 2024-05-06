@@ -24,7 +24,7 @@
     </p>
 
     <h2 class="resulting-info__section-title">Произведено</h2>
-    <p class="resulting-info__paragraph">
+    <p class="resulting-info__paragraph" v-if="data.companies[1]">
       {{ data.companies[1]
         ? data.companies[1].company.name
         : "" }}
@@ -36,31 +36,43 @@
     </p>
 
     <h2 class="resulting-info__section-title">Контакты для обращений</h2>
-    <div v-html="data.document.companies[0] 
+    <div v-html="data.document.companies.length
       ? data.document.companies[0].rusAddress 
       : ''"></div>
 
-    <h2 class="resulting-info__section-title">Код АТХ</h2>
-    <p class="resulting-info__paragraph">
-      {{ data.atcCodes[0].code }}
+    <h2 class="resulting-info__section-title">Коды АТХ</h2>
+    <p
+      class="resulting-info__paragraph"
+      v-for="atcCode in atcCodes" 
+      :key="atcCode.code"
+    >
+      {{ atcCode.code }}
       <span class="resulting-info__parentheses">
-        ({{ data.atcCodes[0].rusName }})
+        ({{ atcCode.rusName }})
       </span>
     </p>
 
     <h2 class="resulting-info__section-title">Стандарт качества</h2>
-    <p  class="resulting-info__paragraph">
-      {{ data.moleculeNames[0].molecule.GNParent.GNParent }}
+    <p
+      class="resulting-info__paragraph"
+      v-for="moleculeName in moleculeNames"
+      :key="moleculeName.id"
+    >
+      {{ moleculeName.molecule.GNParent.GNParent }}
       <span class="resulting-info__parentheses">
-        ({{ data.moleculeNames[0].molecule.GNParent.description }})
+        ({{ moleculeName.molecule.GNParent.description }})
       </span>
     </p>
 
     <h2 class="resulting-info__section-title">Активные вещества</h2>
-    <p class="resulting-info__paragraph">
-      {{ data.moleculeNames[0].molecule.rusName }}
+    <p 
+      class="resulting-info__paragraph"
+      v-for="moleculeName in moleculeNames"
+      :key="moleculeName.id"
+      >
+      {{ moleculeName.molecule.rusName }}
       <span class="resulting-info__parentheses">
-        ({{ data.moleculeNames[0].molecule.latName }})
+        ({{moleculeName.molecule.latName }})
       </span>
     </p>
 
@@ -68,24 +80,39 @@
       <h2>Лекарственные формы</h2>
       <ul>
         <li>{{ data.zipInfo }}</li>
-        <li>{{ data.childrens.length ? data.childrens[0].zipInfo : "" }}</li>
+        <li v-for="children in childrens" :key="children.id">
+          {{ children.zipInfo }}
+        </li>
       </ul>
 
-      <h2>Форма выпуска, упаковка и состав препарата Аспирин</h2>
+      <h2>
+        Форма выпуска, упаковка и состав препарата
+        <span v-html="data.rusName"></span>
+      </h2>
 
       <div v-html="data.composition"></div>
-      <div v-html="data.childrens.length ? data.childrens[0].composition: ''"></div>
 
+      <div v-for="children in childrens" :key="children.id">
+        <div v-html="children.composition"></div>
+      </div>
+      
       <h2>Клинико-фармакологическая группа</h2>
-      <p>{{ data.ClPhGroups[0].name }}</p>
+      <p v-for="clPhGroup in clPhGroups" :key="clPhGroup.name">
+        {{ clPhGroup.name }}
+      </p>
 
       <h2>Фармако-терапевтическая группа</h2>
-      <p>{{ data.phthgroups[0].code }}</p>
+      <p v-for="phThGroup in phThGroups" :key="phThGroup.code">
+        {{ phThGroup.code }}
+      </p>
 
       <h2>Фармакологическое действие</h2>
       <div v-html="data.document.phInfluence"></div>
 
-      <h2>Показания препарата Аспирин</h2>
+      <h2>
+        Показания препарата
+        <span v-html="data.rusName"></span>
+      </h2>
       <div v-html="data.document.indication"></div>
 
       <h2>Режим дозирования</h2>
@@ -118,10 +145,16 @@
       <h2>Лекарственное взаимодействие</h2>
       <div v-html="data.document.interaction"></div>
 
-      <h2>Условия хранения препарата Аспирин</h2>
+      <h2>
+        Условия хранения препарата
+        <span v-html="data.rusName"></span>
+      </h2>
       <div v-html="data.document.storageCondition"></div>
 
-      <h2>Срок годности препарата Аспирин</h2>
+      <h2>
+        Срок годности препарата
+        <span v-html="data.rusName"></span>
+      </h2>
       <div v-html="data.document.storageTime"></div>
 
       <h2>Условия реализации</h2>
@@ -131,9 +164,15 @@
 </template>
 
 <script setup>
-  defineProps({
+  const props = defineProps({
     data: Object,
   });
+
+  const atcCodes = props.data.atcCodes;
+  const childrens = props.data.childrens;
+  const moleculeNames = props.data.moleculeNames;
+  const clPhGroups = props.data.ClPhGroups;
+  const phThGroups = props.data.phthgroups;
 </script>
 
 <style lang="less">

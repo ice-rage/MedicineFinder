@@ -16,7 +16,7 @@ public class Company
     [JsonPropertyName("rusName")]
     public string RussianName { get; set; }
 
-    [JsonPropertyName("engName")]
+    [JsonPropertyName("rusAddress")]
     public string RussianAddress { get; set; }
 
     [JsonPropertyName("country")]
