@@ -14,12 +14,14 @@
         v-model="isImageLoaderVisible"
         :icon="SvgImage"
         :text="'Выберите файл'"
+        @update:modelValue="(toggleSearchBtn(null, modelValue))"
       />
       <OptionButton
         class="main-block__option-btn"
         v-model="isWebCameraVisible"
         :icon="SvgCamera"
         :text="'Сделайте снимок'"
+        @update:modelValue="(toggleSearchBtn(null, modelValue))"
       />
     </div>
 
@@ -94,8 +96,8 @@
   const clearError = () => errorCode.value = "";
 
   const toggleSearchBtn = (loadedImage, toggleValue) => {
-    hasImageToProcess.value = toggleValue;
     imageToProcess.value = loadedImage;
+    hasImageToProcess.value = toggleValue;
   }
       
   const showDataLoading = () => {

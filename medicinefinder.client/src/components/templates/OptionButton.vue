@@ -4,7 +4,7 @@
     :class="isActive 
       ? 'option-btn--active' 
       : 'option-btn'"
-    @click="isActive = !isActive"
+    @click="emit('update:modelValue', isActive = !isActive)"
   >
     <component 
       :is="icon" 
@@ -21,6 +21,8 @@
   const isActive = defineModel();
 
   defineProps(["icon", "text"]);
+
+  const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <style lang="less">

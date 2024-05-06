@@ -7,6 +7,7 @@
         spellcheck="false"
         class="search-form__textbox"
         placeholder=""
+        @keyup.enter="detectPressingEnter()"
       />
       <span class="search-form__textbox-placeholder">
         Введите название...
@@ -38,6 +39,12 @@
   const searchBtn = ref();
 
   const isRequestEmpty = computed(() => !/\S{3,}/.test(text.value));
+
+  const detectPressingEnter = () => {
+    if (!isRequestEmpty.value) {
+      fetchMedicineData(text.value)
+    }
+  }
 
   const fetchMedicineData = (medicineName) => {
     emit("showDataLoadingEvent");

@@ -151,7 +151,7 @@
     justify-content: center;
 
     &__container {
-      max-width: 600px;
+      max-width: 520px;
     }
 
     &__drag-area {

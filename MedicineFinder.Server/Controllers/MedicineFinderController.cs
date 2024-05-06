@@ -1,5 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using MedicineFinder.Server.Interfaces;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
+using MedicineFinder.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Tesseract;
@@ -10,8 +11,6 @@ namespace MedicineFinder.Server.Controllers
     [Route("[controller]")]
     public class MedicineFinderController : Controller
     {
-        private const int MaxRequestPerSecond = 4;
-
         private readonly IVidalService _vidalService;
 
         private readonly ILogger _logger;
@@ -51,6 +50,9 @@ namespace MedicineFinder.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImage([FromForm]string encodedImage)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var contentString = encodedImage[(encodedImage.LastIndexOf(',') + 1)..];
             var decodedImage = Convert.FromBase64String(contentString);
 
@@ -70,51 +72,66 @@ namespace MedicineFinder.Server.Controllers
                     _logger.LogInformation(
                         "{DT}: успешно получен результат по тексту на изображении", 
                         DateTime.UtcNow.ToLongTimeString());
-                    
+
+                    MeasureTime(stopwatch);
+
                     return Ok(((OkObjectResult)response).Value);
                 }
 
                 statusCodes.Add(statusCode);
+
+                await Task.Delay(1000);
             }
 
             if (statusCodes.Any(statusCode => statusCode == 400)) 
             {
+                MeasureTime(stopwatch);
+
                 return BadRequest();
             }
 
             _logger.LogInformation(
                 "{DT}: не удалось получить результат по тексту на изображении", 
                 DateTime.UtcNow.ToLongTimeString());
-            
+
+            MeasureTime(stopwatch);
+
             return NotFound();
         }
 
         private static List<string> RecognizeText(byte[] imageBytes)
         {
             var engine = new TesseractEngine("./tessdata", "rus", EngineMode.Default);
+            engine.SetVariable("tessedit_write_images", true);
             var image = Pix.LoadFromMemory(imageBytes);
-            var page = engine.Process(image);
+            var page = engine.Process(image, PageSegMode.Auto);
             var text = page
                 .GetText()
-                .Split("\n\n")
+                .Split('\n')
                 .ToList();
+
+            for (var i = 0; i < text.Count; i++)
+            {
+                text[i] = Regex.Replace(text[i], @"\b\w{1,3}\b", string.Empty);
+                text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]{1,3}", string.Empty);
+            }
+
             text.RemoveAll(string.IsNullOrWhiteSpace);
 
-            for (var i = 0; i < text.Count; i++) 
-            {
-                text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]", string.Empty);
-            }
-
-            if (text.Count > MaxRequestPerSecond)
-            {
-                text.RemoveRange(MaxRequestPerSecond - 1, text.Count - MaxRequestPerSecond);
-            }
-            
             image.Dispose();
             page.Dispose();
             engine.Dispose();
 
             return text;
+        }
+
+        private void MeasureTime(Stopwatch stopwatch)
+        {
+            stopwatch.Stop();
+
+            _logger.LogInformation(
+                "{DT}: Операция выполнялась {seconds} секунд",
+                DateTime.UtcNow.ToLongTimeString(), stopwatch.Elapsed.Seconds);
         }
     }
 }

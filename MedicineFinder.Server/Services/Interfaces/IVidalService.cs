@@ -1,6 +1,6 @@
 ﻿using MedicineFinder.Server.Models;
 
-namespace MedicineFinder.Server.Interfaces
+namespace MedicineFinder.Server.Services.Interfaces
 {
     public interface IVidalService
     {

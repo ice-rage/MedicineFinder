@@ -1,4 +1,4 @@
-using MedicineFinder.Server.Interfaces;
+using MedicineFinder.Server.Services.Interfaces;
 using MedicineFinder.Server.Services;
 
 namespace MedicineFinder.Server

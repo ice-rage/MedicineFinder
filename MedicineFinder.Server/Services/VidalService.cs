@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using MedicineFinder.Server.Interfaces;
+using MedicineFinder.Server.Services.Interfaces;
 using MedicineFinder.Server.Models;
 
 namespace MedicineFinder.Server.Services
