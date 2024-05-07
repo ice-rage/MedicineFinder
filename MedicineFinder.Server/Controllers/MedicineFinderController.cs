@@ -1,15 +1,17 @@
-﻿using MedicineFinder.Server.Services.Interfaces;
+﻿using System.Text.RegularExpressions;
+using MedicineFinder.Server.Enums;
+using MedicineFinder.Server.Enums.Extensions;
+using MedicineFinder.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using OnBarcode.Barcode.BarcodeScanner;
 using Tesseract;
-using static System.Text.RegularExpressions.Regex;
 
 namespace MedicineFinder.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public partial class MedicineFinderController : Controller
+    public class MedicineFinderController : Controller
     {
         private readonly IVidalService _vidalService;
 
@@ -23,11 +25,13 @@ namespace MedicineFinder.Server.Controllers
         }
 
         [HttpGet("{value}")]
-        public async Task<IActionResult> GetMedicineInfo(string value, string filter = "name")
+        public async Task<IActionResult> GetMedicineInfo(string value, string? filter)
         {
             try
             {
-                var result = await _vidalService.GetMedicineInfo(value, filter);
+                var currentFilter = filter ?? RequestFilterType.Name.GetDescription();
+
+                var result = await _vidalService.GetMedicineInfo(value, currentFilter);
 
                 if (result != null && result.Products.Count != 0) {
                     _logger.LogInformation("{DT}: данные по запросу успешно получены", 
@@ -60,7 +64,7 @@ namespace MedicineFinder.Server.Controllers
             var statusCodes = new List<int?>();
 
             var searchByNameResponse = await HandleTextResults(statusCodes, 
-                words, "name");
+                words, RequestFilterType.Name.GetDescription());
 
             var responseStatusCode = ((IStatusCodeActionResult)searchByNameResponse)
                 .StatusCode;
@@ -73,11 +77,12 @@ namespace MedicineFinder.Server.Controllers
             statusCodes.Clear();
 
             var barcodes = ReadBarcode(decodedImage);
-            return await HandleTextResults(statusCodes, barcodes, "barCode");
+            return await HandleTextResults(statusCodes, barcodes, 
+                RequestFilterType.Barcode.GetDescription());
         }
 
         private async Task<IActionResult> HandleTextResults(ICollection<int?> statusCodes, 
-            IEnumerable<string> textResults, string filter)
+            IEnumerable<string> textResults, string? filter)
         {
             foreach (var textResult in textResults)
             {
@@ -124,9 +129,10 @@ namespace MedicineFinder.Server.Controllers
 
             for (var i = 0; i < text.Count; i++)
             {
-                text[i] = AtLeastThreeCharactersRegex().Replace(text[i], 
+                text[i] = Regex.Replace(text[i], @"\b\w{1,3}\b", 
                     string.Empty);
-                text[i] = NonAlphanumericCharactersRegex().Replace(text[i], string.Empty);
+                text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]{1,3}",
+                    string.Empty);
             }
 
             text.RemoveAll(string.IsNullOrWhiteSpace);
@@ -143,13 +149,5 @@ namespace MedicineFinder.Server.Controllers
             using var memoryStream = new MemoryStream(barcodeImage);
             return BarcodeScanner.Scan(memoryStream, BarcodeType.All);
         }
-
-        [System.Text.RegularExpressions.GeneratedRegex(@"\b\w{1,3}\b")]
-        private static partial System.Text.RegularExpressions.Regex 
-            AtLeastThreeCharactersRegex();
-
-        [System.Text.RegularExpressions.GeneratedRegex("[^а-яА-Я0-9]{1,3}")]
-        private static partial System.Text.RegularExpressions.Regex 
-            NonAlphanumericCharactersRegex();
     }
 }
