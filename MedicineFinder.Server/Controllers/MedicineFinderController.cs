@@ -118,8 +118,9 @@ namespace MedicineFinder.Server.Controllers
         private static IEnumerable<string> RecognizeText(byte[] packingImage)
         {
             var engine = new TesseractEngine("./tessdata", "rus", 
-                EngineMode.Default);
-            //engine.SetVariable("tessedit_write_images", true);
+                EngineMode.LstmOnly);
+            
+            engine.SetVariable("tessedit_write_images", true);
             var pixImage = Pix.LoadFromMemory(packingImage);
             var page = engine.Process(pixImage, PageSegMode.Auto);
             var text = page

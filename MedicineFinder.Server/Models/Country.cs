@@ -8,5 +8,5 @@ public class Country
     public string Code { get; set; }
 
     [JsonPropertyName("rusName")]
-    public string RussianName { get; set; }
+    public string Name { get; set; }
 }

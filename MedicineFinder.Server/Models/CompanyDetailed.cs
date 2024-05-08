@@ -2,7 +2,7 @@
 
 namespace MedicineFinder.Server.Models;
 
-public class Company
+public class CompanyDetailed
 {
     [JsonPropertyName("isRegistrationCertificate")]
     public bool HasRegistrationCertificate { get; set; }
@@ -11,14 +11,8 @@ public class Company
     public bool IsManufacturer { get; set; }
 
     [JsonPropertyName("company")]
-    public CompanyDetailedInfo CompanyDetailedInfo { get; set; }
-
-    [JsonPropertyName("rusName")]
-    public string RussianName { get; set; }
+    public CompanyMain CompanyMain { get; set; }
 
     [JsonPropertyName("rusAddress")]
-    public string RussianAddress { get; set; }
-
-    [JsonPropertyName("country")]
-    public Country Country { get; set; }
+    public string Address { get; set; }
 }

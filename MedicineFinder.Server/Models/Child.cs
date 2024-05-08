@@ -2,7 +2,7 @@
 
 namespace MedicineFinder.Server.Models;
 
-public class Children
+public class Child
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
@@ -14,5 +14,5 @@ public class Children
     public string Composition { get; set; }
 
     [JsonPropertyName("companies")]
-    public List<Company> Companies { get; set; }
+    public List<CompanyDetailed> Companies { get; set; }
 }

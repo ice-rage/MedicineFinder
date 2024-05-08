@@ -8,13 +8,13 @@ public class Product
     public List<AtcCode> AtcCodes { get; set; }
 
     [JsonPropertyName("phthgroups")]
-    public List<PharmacotherapeuticGroup> phthgroups { get; set; }
+    public List<PharmacotherapeuticGroup> PharmacotherapeuticGroups { get; set; }
 
     [JsonPropertyName("ClPhGroups")]
-    public List<ClinicalPharmacologicalGroup> ClPhGroups { get; set; }
+    public List<ClinicalPharmacologicalGroup> ClinicalPharmacologicalGroups { get; set; }
 
     [JsonPropertyName("moleculeNames")]
-    public List<ActiveComponentName> activeComponentNames { get; set; }
+    public List<ActiveComponentName> ActiveComponentNames { get; set; }
 
     [JsonPropertyName("rusName")]
     public string RussianName { get; set; }
@@ -29,11 +29,11 @@ public class Product
     public string Composition { get; set; }
 
     [JsonPropertyName("companies")]
-    public List<Company> Companies { get; set; }
+    public List<CompanyDetailed> Companies { get; set; }
 
     [JsonPropertyName("document")]
     public Instruction Instruction { get; set; }
 
     [JsonPropertyName("childrens")]
-    public List<Children> Childrens { get; set; }
+    public List<Child> Children { get; set; }
 }

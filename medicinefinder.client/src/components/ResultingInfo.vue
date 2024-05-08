@@ -53,16 +53,23 @@
     </p>
 
     <h2 class="resulting-info__section-title">Стандарт качества</h2>
-    <p
+    <div
       class="resulting-info__paragraph"
       v-for="moleculeName in moleculeNames"
       :key="moleculeName.id"
     >
-      {{ moleculeName.molecule.GNParent.GNParent }}
-      <span class="resulting-info__parentheses">
-        ({{ moleculeName.molecule.GNParent.description }})
+      <span
+        v-html="moleculeName.molecule.GNParent.GNParent" 
+        v-if="moleculeName.molecule.GNParent">
       </span>
-    </p>
+      <span 
+        class="resulting-info__parentheses" 
+        v-if="moleculeName.molecule.GNParent">
+        ({{ moleculeName.molecule.GNParent 
+              ? moleculeName.molecule.GNParent.description
+              : "" }})
+      </span>
+    </div>
 
     <h2 class="resulting-info__section-title">Активные вещества</h2>
     <p 
@@ -93,18 +100,18 @@
       <div v-html="data.composition"></div>
 
       <div v-for="children in childrens" :key="children.id">
-        <div v-html="children.composition"></div>
+        <p v-html="children.composition"></p>
       </div>
       
       <h2>Клинико-фармакологическая группа</h2>
-      <p v-for="clPhGroup in clPhGroups" :key="clPhGroup.name">
-        {{ clPhGroup.name }}
-      </p>
+      <div v-for="clPhGroup in clPhGroups" :key="clPhGroup.name">
+        <p v-html="clPhGroup.name"></p>
+      </div>
 
       <h2>Фармако-терапевтическая группа</h2>
-      <p v-for="phThGroup in phThGroups" :key="phThGroup.code">
-        {{ phThGroup.code }}
-      </p>
+      <div v-for="phThGroup in phThGroups" :key="phThGroup.code">
+        <p v-html="phThGroup.code"></p>
+      </div>
 
       <h2>Фармакологическое действие</h2>
       <div v-html="data.document.phInfluence"></div>

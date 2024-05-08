@@ -11,7 +11,7 @@ public class Instruction
     public string StorageLife { get; set; }
 
     [JsonPropertyName("companies")]
-    public List<Company> Companies { get; set; }
+    public List<CompanyDetailed> Companies { get; set; }
 
     [JsonPropertyName("phInfluence")]
     public string PharmacologicalEffect { get; set; }
@@ -44,16 +44,16 @@ public class Instruction
     public string SpecialInstructions { get; set; }
 
     [JsonPropertyName("renalInsuf")]
-    public object RenalImpairedUsage { get; set; }
+    public string RenalImpairedUsage { get; set; }
 
     [JsonPropertyName("hepatoInsuf")]
-    public object HepaticImpairedUsage { get; set; }
+    public string HepaticImpairedUsage { get; set; }
 
     [JsonPropertyName("pharmDelivery")]
-    public string ImplementationTerms { get; set; }
+    public string ImplementationTermsImplementationTerms { get; set; }
 
     [JsonPropertyName("elderlyInsuf")]
-    public object ElderyUsage { get; set; }
+    public string ElderyUsage { get; set; }
 
     [JsonPropertyName("childInsuf")]
     public string ChildrenUsage { get; set; }

@@ -2,7 +2,7 @@
 
 namespace MedicineFinder.Server.Models;
 
-public class CompanyDetailedInfo
+public class CompanyMain
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }
