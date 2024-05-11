@@ -13,33 +13,52 @@
       </span>)
     </div>
 
-    <h2 class="resulting-info__section-title">
-      Владелец регистрационного удостоверения
-    </h2>
-    <p class="resulting-info__paragraph">
-      {{ data.companies[0].company.name }}
-      <span class="resulting-info__parentheses">
-        ({{ data.companies[0].company.country.rusName }})
-      </span>
-    </p>
+    <div 
+      class="resulting-info__companies" 
+      v-for="(company, companyIndex) in productCompanies" :key="companyIndex"
+    >
+      <section 
+        class="resulting-info__owner-company" 
+        v-if="company.isRegistrationCertificate"
+      >
+        <h2 class="resulting-info__section-title">
+          Владелец регистрационного удостоверения
+        </h2>
 
-    <h2 class="resulting-info__section-title">Произведено</h2>
-    <p class="resulting-info__paragraph" v-if="data.companies[1]">
-      {{ data.companies[1]
-        ? data.companies[1].company.name
-        : "" }}
-      <span class="resulting-info__parentheses">
-        ({{ data.companies[1]
-          ? data.companies[1].company.country.rusName
-          : "" }})
-      </span>
-    </p>
+        <p class="resulting-info__paragraph">
+          {{ company.company.name }}
 
-    <h2 class="resulting-info__section-title">Контакты для обращений</h2>
-    <div v-html="data.document.companies.length
-      ? data.document.companies[0].rusAddress 
-      : ''"></div>
+          <span class="resulting-info__parentheses">
+            ({{ company.company.country.rusName }})
+          </span>
+        </p>
+      </section>
 
+      <section 
+        class="resulting-info__manufacturing-company" 
+        v-if="company.isManufacturer"
+      >
+        <h2 class="resulting-info__section-title">Произведено</h2>
+
+        <p class="resulting-info__paragraph">
+          {{ company.company.name }}
+
+          <span class="resulting-info__parentheses">
+            ({{ company.company.country.rusName }})
+          </span>
+        </p>
+      </section>
+    </div>
+
+    <section class="resulting-info__contacts" v-if="data.document.companies.length">
+      <h2 class="resulting-info__section-title">Контакты для обращений</h2>
+      <p
+        v-for="(company, companyIndex) in documentCompanies" 
+        :key="companyIndex"
+        v-html="company.rusAddress"
+      ></p>
+    </section>
+    
     <h2 class="resulting-info__section-title">Коды АТХ</h2>
     <p
       class="resulting-info__paragraph"
@@ -172,9 +191,15 @@
 
 <script setup>
   const props = defineProps({
-    data: Object,
+    data: {
+      type: Object,
+      required: true,
+      default: () => {},
+    }
   });
 
+  const productCompanies = props.data.companies;
+  const documentCompanies = props.data.document.companies;
   const atcCodes = props.data.atcCodes;
   const childrens = props.data.childrens;
   const moleculeNames = props.data.moleculeNames;

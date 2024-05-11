@@ -9,19 +9,41 @@ using Tesseract;
 
 namespace MedicineFinder.Server.Controllers
 {
+    //public static class GrayscaleCoefficients
+    //{
+    //    public static double Red => 0.2125;
+
+    //    public static double Green => 0.7154;
+
+    //    public static double Blue => 0.0721;
+    //}
+
     [ApiController]
     [Route("[controller]")]
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public class MedicineFinderController : Controller
     {
+        //private const int ThresholdValue = 128;
+
         private readonly IVidalService _vidalService;
 
         private readonly ILogger _logger;
+
+        //private readonly AdaptiveSmoothing _adaptiveSmoothingFilter;
+
+        //private readonly Grayscale _grayscaleFilter;
+
+        //private readonly Threshold _thresholdFilter;
 
         public MedicineFinderController(IVidalService vidalService, 
             ILogger<MedicineFinderController> logger)
         {
             _vidalService = vidalService;
             _logger = logger;
+            //_adaptiveSmoothingFilter = new AdaptiveSmoothing();
+            //_grayscaleFilter = new Grayscale(GrayscaleCoefficients.Red, 
+            //    GrayscaleCoefficients.Green, GrayscaleCoefficients.Blue);
+            //_thresholdFilter = new Threshold(ThresholdValue);
         }
 
         [HttpGet("{value}")]
@@ -60,6 +82,8 @@ namespace MedicineFinder.Server.Controllers
             _logger.LogInformation("{DT}: изображение успешно получено", 
                         DateTime.UtcNow.ToLongTimeString());
 
+            //var preprocessedImage = PreprocessImage(decodedImage);
+
             var words = RecognizeText(decodedImage);
             var statusCodes = new List<int?>();
 
@@ -77,6 +101,7 @@ namespace MedicineFinder.Server.Controllers
             statusCodes.Clear();
 
             var barcodes = ReadBarcode(decodedImage);
+
             return await HandleTextResults(statusCodes, barcodes, 
                 RequestFilterType.Barcode.GetDescription());
         }
@@ -115,13 +140,14 @@ namespace MedicineFinder.Server.Controllers
             return NotFound();
         }
 
-        private static IEnumerable<string> RecognizeText(byte[] packingImage)
+        private IEnumerable<string> RecognizeText(byte[] packingImage)
         {
             var engine = new TesseractEngine("./tessdata", "rus", 
-                EngineMode.LstmOnly);
-            
+                EngineMode.Default);
             engine.SetVariable("tessedit_write_images", true);
+
             var pixImage = Pix.LoadFromMemory(packingImage);
+
             var page = engine.Process(pixImage, PageSegMode.Auto);
             var text = page
                 .GetText()
@@ -130,7 +156,7 @@ namespace MedicineFinder.Server.Controllers
 
             for (var i = 0; i < text.Count; i++)
             {
-                text[i] = Regex.Replace(text[i], @"\b\w{1,3}\b", 
+                text[i] = Regex.Replace(text[i], @"\b\w{1,3}\b",
                     string.Empty);
                 text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]{1,3}",
                     string.Empty);
@@ -150,5 +176,23 @@ namespace MedicineFinder.Server.Controllers
             using var memoryStream = new MemoryStream(barcodeImage);
             return BarcodeScanner.Scan(memoryStream, BarcodeType.All);
         }
+
+        //private byte[] PreprocessImage(byte[] imageBytes)
+        //{
+        //    Bitmap originalBitmapImage;
+
+        //    using (var memoryStream = new MemoryStream(imageBytes))
+        //    {
+        //        originalBitmapImage = new Bitmap(memoryStream);
+        //    }
+
+        //    _adaptiveSmoothingFilter.ApplyInPlace(originalBitmapImage);
+        //    //var grayscaleBitmapImage = _grayscaleFilter.Apply(originalBitmapImage);
+
+        //    //_thresholdFilter.ApplyInPlace(grayscaleBitmapImage);
+
+        //    var converter = new ImageConverter();
+        //    return (byte[])converter.ConvertTo(originalBitmapImage, typeof(byte[]));
+        //}
     }
 }
