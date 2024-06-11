@@ -9,41 +9,20 @@ using Tesseract;
 
 namespace MedicineFinder.Server.Controllers
 {
-    //public static class GrayscaleCoefficients
-    //{
-    //    public static double Red => 0.2125;
-
-    //    public static double Green => 0.7154;
-
-    //    public static double Blue => 0.0721;
-    //}
-
     [ApiController]
     [Route("[controller]")]
     [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public class MedicineFinderController : Controller
     {
-        //private const int ThresholdValue = 128;
-
         private readonly IVidalService _vidalService;
 
         private readonly ILogger _logger;
-
-        //private readonly AdaptiveSmoothing _adaptiveSmoothingFilter;
-
-        //private readonly Grayscale _grayscaleFilter;
-
-        //private readonly Threshold _thresholdFilter;
 
         public MedicineFinderController(IVidalService vidalService, 
             ILogger<MedicineFinderController> logger)
         {
             _vidalService = vidalService;
             _logger = logger;
-            //_adaptiveSmoothingFilter = new AdaptiveSmoothing();
-            //_grayscaleFilter = new Grayscale(GrayscaleCoefficients.Red, 
-            //    GrayscaleCoefficients.Green, GrayscaleCoefficients.Blue);
-            //_thresholdFilter = new Threshold(ThresholdValue);
         }
 
         [HttpGet("{value}")]
@@ -81,8 +60,6 @@ namespace MedicineFinder.Server.Controllers
 
             _logger.LogInformation("{DT}: изображение успешно получено", 
                         DateTime.UtcNow.ToLongTimeString());
-
-            //var preprocessedImage = PreprocessImage(decodedImage);
 
             var words = RecognizeText(decodedImage);
             var statusCodes = new List<int?>();
@@ -174,25 +151,8 @@ namespace MedicineFinder.Server.Controllers
         private static IEnumerable<string> ReadBarcode(byte[] barcodeImage)
         {
             using var memoryStream = new MemoryStream(barcodeImage);
+
             return BarcodeScanner.Scan(memoryStream, BarcodeType.All);
         }
-
-        //private byte[] PreprocessImage(byte[] imageBytes)
-        //{
-        //    Bitmap originalBitmapImage;
-
-        //    using (var memoryStream = new MemoryStream(imageBytes))
-        //    {
-        //        originalBitmapImage = new Bitmap(memoryStream);
-        //    }
-
-        //    _adaptiveSmoothingFilter.ApplyInPlace(originalBitmapImage);
-        //    //var grayscaleBitmapImage = _grayscaleFilter.Apply(originalBitmapImage);
-
-        //    //_thresholdFilter.ApplyInPlace(grayscaleBitmapImage);
-
-        //    var converter = new ImageConverter();
-        //    return (byte[])converter.ConvertTo(originalBitmapImage, typeof(byte[]));
-        //}
     }
 }

@@ -15,14 +15,14 @@
         type="button"
         title="Удалить"
         class="processed-image__remove-btn"
-        @click="removeImage()"
+        @click="removeImage"
       ></button>
 
       <button
         type="button"
         :title="renewBtnTitle"
         class="processed-image__renew-btn"
-        @click="renewImage()"
+        @click="renewImage"
       ></button>
     </div>
   </div>

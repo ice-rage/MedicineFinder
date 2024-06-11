@@ -13,7 +13,7 @@
           <i class="drag-area__icon fas fa-images"></i>
         </div>
 
-        <span class="drag-area__select-btn" @click="openFileDialog()">
+        <span class="drag-area__select-btn" @click="openFileDialog">
           Выберите изображение
         </span>
 
@@ -36,14 +36,14 @@
     </div>
 
     <ProcessedImage
+      v-if="loadedImageUrl !== ''"
       :imageSrc="loadedImageUrl"
       imageAlt="Загруженное изображение"
       :imageName="fileName"
       renewBtnTitle="Выбрать другое"
       class="image-loader__processed-image"
-      @renewImageEvent="openFileDialog()"
-      @removeImageEvent="resetView()"
-      v-if="loadedImageUrl !== ''"
+      @renewImageEvent="openFileDialog"
+      @removeImageEvent="resetView"
     />
   </div>
 </template>

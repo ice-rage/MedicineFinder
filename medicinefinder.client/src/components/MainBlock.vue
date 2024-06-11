@@ -3,7 +3,6 @@
     <SearchBox 
       class="main-block__search-form"
       @showDataLoadingEvent="showDataLoading"
-      @showResultEvent="showResult"
     />
 
     <h3 class="main-block__option-title">Или</h3>
@@ -26,49 +25,50 @@
     </div>
 
     <ImageLoader 
+      v-if="isImageLoaderVisible"
       class="main-block__image-uploader"
       @hideSiblingEvent="isWebCameraVisible = false"
       @toggleSearchBtnEvent="toggleSearchBtn"
-      v-if="isImageLoaderVisible"
     />
 
     <WebCamera 
+      v-if="isWebCameraVisible"
       class="main-block__web-camera"
       @hideSiblingEvent="isImageLoaderVisible = false"
       @toggleSearchBtnEvent="toggleSearchBtn"
-      v-if="isWebCameraVisible"
     />
 
     <button 
+      v-if="hasImageToProcess"
       type="button" 
       class="main-block__search-btn"
-      @click="uploadImage()"
-      v-if="hasImageToProcess"
+      @click="uploadImage"
     >
       Искать
     </button>
 
-    <div class="main-block__loader" v-if="isDataLoading"></div>
+    <div v-if="store.medicineData.isLoading" class="main-block__loader"></div>
 
     <ResultingInfo 
+      v-if="store.hasMedicineData"
       class="main-block__resulting-info"
-      :data="medicineInfo"
-      v-if="medicineInfo && !isDataLoading && !hasError"/>
+    />
 
     <ErrorMessage
-      :message="errorMessage" 
+      v-if="store.hasError"
+      :message="store.error.message" 
       class="main-block__error-message" 
-      v-if="hasError"/>
+    />
   </div>
 </template>
 
 <script setup>
   import { ref, computed } from "vue";
-  import axios from "axios";
+  // import axios from "axios";
   import config from "@/configs";
   import _ from "lodash";
 
-  import SearchBox from "@/components/SearchBox.vue";
+  import SearchBox from "@/components/search/SearchBox.vue";
   import ImageLoader from "@/components/ImageLoader.vue";
   import WebCamera from "@/components/WebCamera.vue";
   import OptionButton from "@/components//templates/OptionButton.vue";
@@ -77,23 +77,26 @@
   import ResultingInfo from "@/components/ResultingInfo.vue";
   import ErrorMessage from "@/components/ErrorMessage.vue";
 
-  const errorCode = ref("");
+  const store = useStore();
+
+  const { setError, clearError } = store;
+
+  // const errorCode = ref("");
   const isImageLoaderVisible = ref();
   const isWebCameraVisible = ref();
   const hasImageToProcess = ref();
   const imageToProcess = ref();
-  const isDataLoading = ref();
-  const medicineInfo = ref();
+  // const medicineData = ref();
 
-  const hasError = computed(() => errorCode.value !== "");
+  // const hasError = computed(() => errorCode.value !== "");
 
-  const errorMessage = computed(() => errorCode.value !== "" 
-    ? _.find(config.errors, { code: errorCode.value }).message
-    : "");
+  // const errorMessage = computed(() => errorCode.value !== "" 
+  //   ? _.find(config.errors, { code: errorCode.value }).message
+  //   : "");
 
-  const setError = (code) => errorCode.value = code;
+  // const setError = (code) => errorCode.value = code;
 
-  const clearError = () => errorCode.value = "";
+  // const clearError = () => errorCode.value = "";
 
   const toggleSearchBtn = (loadedImage, toggleValue) => {
     imageToProcess.value = loadedImage;
@@ -102,16 +105,8 @@
   }
       
   const showDataLoading = () => {
-    isDataLoading.value = true;
+    store.medicineData.isLoading = true;
     clearError();
-  }
-
-  const showResult = (promise) => {
-    promise
-      .then(response => {
-        medicineInfo.value = response.data;
-      }, error => setError(error.response.status.toString()))
-      .then(() => isDataLoading.value = false);
   }
 
   const uploadImage = () => {
@@ -120,15 +115,15 @@
     const uploadingData = new FormData();
     uploadingData.append("encodedImage", imageToProcess.value);
 
-    showResult(new Promise((resolve, reject) => {
-      axios
-        .post("medicinefinder", uploadingData)
-          .then(response => {
-            resolve(response);
-          }, error =>  {
-            reject(error);
-          });
-    }));
+    // showResult(new Promise((resolve, reject) => {
+    //   axios
+    //     .post("medicinefinder", uploadingData)
+    //       .then(response => {
+    //         resolve(response);
+    //       }, error =>  {
+    //         reject(error);
+    //       });
+    // }));
   }
 </script>
 

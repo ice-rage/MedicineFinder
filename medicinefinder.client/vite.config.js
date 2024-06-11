@@ -1,11 +1,13 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import Vue from '@vitejs/plugin-vue';
 import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
+import Components from "unplugin-vue-components/vite";
+import AutoImport from "unplugin-auto-import/vite";
 
 const baseFolder =
     env.APPDATA !== undefined && env.APPDATA !== ''
@@ -39,14 +41,48 @@ export default defineConfig({
         preprocessorOptions: {
             less: {
                 additionalData: `
-          @import "@/styles/global/variables.less";
-          @import "@/styles/global/fonts.less";
-          @import "@/styles/global/mixins.less";
-        `,
+                    @import "@/styles/global/variables.less";
+                    @import "@/styles/global/fonts.less";
+                    @import "@/styles/global/mixins.less";
+                    `,
             },
         },
     },
-    plugins: [vue()],
+    plugins: [
+        Components({
+            deep: true,
+            directives: true,
+            dirs: ["src/components"],
+            extensions: ["vue"],
+        }),
+        AutoImport({
+            eslintrc: {
+              enabled: true,
+            },
+            dirs: ["src/composables"],
+            imports: [
+              "vue",
+              {
+                axios: [
+                  ["default", "axios"],
+                ],
+              },
+              {
+                pinia: ["defineStore", "storeToRefs"],
+              },
+              {
+                lodash: ["_"],
+              },
+            ],
+            include: [
+              /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+              /\.vue$/,
+              /\.vue\?vue/, // .vue
+              /\.md$/, // .md
+            ],
+        }),
+        Vue(),
+    ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))

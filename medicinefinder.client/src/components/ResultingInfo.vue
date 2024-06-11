@@ -190,21 +190,17 @@
 </template>
 
 <script setup>
-  const props = defineProps({
-    data: {
-      type: Object,
-      required: true,
-      default: () => {},
-    }
-  });
+  const store = useStore();
 
-  const productCompanies = props.data.companies;
-  const documentCompanies = props.data.document.companies;
-  const atcCodes = props.data.atcCodes;
-  const childrens = props.data.childrens;
-  const moleculeNames = props.data.moleculeNames;
-  const clPhGroups = props.data.ClPhGroups;
-  const phThGroups = props.data.phthgroups;
+  const data = store.medicineData.data;
+
+  const productCompanies = data.companies;
+  const documentCompanies = data.document.companies;
+  const atcCodes = data.atcCodes;
+  const childrens = data.childrens;
+  const moleculeNames = data.moleculeNames;
+  const clPhGroups = data.ClPhGroups;
+  const phThGroups = data.phthgroups;
 </script>
 
 <style lang="less">

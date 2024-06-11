@@ -50,8 +50,6 @@
         </ol>
 
         <blockquote>Здесь содержится цитата</blockquote>
-
-        <img alt="Подпись картинки">
       </div>
     </div>
   </article>

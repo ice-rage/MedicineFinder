@@ -8,7 +8,7 @@
             title="Сделать снимок"
             :disabled="webCamStates[currentWebCamState]['captureBtnDisabled']"
             class="web-camera__capture-btn capture-btn"
-            @click="captureFrame()"
+            @click="captureFrame"
           >
           <SvgCamera class="capture-btn__icon"/>
         </button>
@@ -23,18 +23,18 @@
           ? 'web-camera__toggle-btn web-camera__toggle-btn--stop' 
           : 'web-camera__toggle-btn'"
         :disabled="webCamStates[currentWebCamState]['toggleBtnDisabled']"
-        @click="toggleWebCameraVideo()"  
+        @click="toggleWebCameraVideo"  
       >{{ webCamStates[currentWebCamState]['toggleBtnText'] }}</button>
     </div>
     
     <ProcessedImage
+      v-if="isFrameCaptured"
       :imageSrc="snapshotUrl"
       imageAlt="Снимок"
       renewBtnTitle="Переснять"
       class="web-camera__processed-image"
       @removeImageEvent="toggleView(false)"
-      @renewImageEvent="reshoot()"
-      v-if="isFrameCaptured"
+      @renewImageEvent="reshoot"
     />
   </div>
 </template>
