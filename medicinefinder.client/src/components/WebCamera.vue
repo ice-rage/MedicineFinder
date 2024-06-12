@@ -40,10 +40,6 @@
 </template>
 
 <script setup>
-  import { onMounted, reactive, ref } from "vue";
-  import SvgCamera from "@/components/icons/SvgCamera.vue";
-  import ProcessedImage from "@/components/ProcessedImage.vue";
-
   const emit = defineEmits(["hideSiblingEvent", "toggleSearchBtnEvent"]);
 
   const video = ref();

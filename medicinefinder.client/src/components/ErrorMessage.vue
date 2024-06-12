@@ -5,7 +5,13 @@
 </template>
 
 <script setup>
-  defineProps(["message"]);
+  const { message } = defineProps({
+    message: {
+      type: String,
+      default: "",
+      required: true,
+    },
+  });
 </script>
 
 <style lang="less">

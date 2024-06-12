@@ -25,3 +25,7 @@
     </g>
   </svg>
 </template>
+
+<script setup></script>
+
+<style lang="less"></style>

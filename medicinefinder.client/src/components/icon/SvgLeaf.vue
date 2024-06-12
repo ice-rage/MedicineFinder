@@ -24,6 +24,8 @@
   </svg>
 </template>
 
+<script setup></script>
+
 <style lang="less">
   .leaf {
     &:hover {

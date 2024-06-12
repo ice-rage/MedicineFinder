@@ -29,8 +29,6 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
-
   defineProps(["imageSrc", "imageAlt", "imageName", "renewBtnTitle"]);
 
   const emit = defineEmits(["removeImageEvent", "renewImageEvent"]);

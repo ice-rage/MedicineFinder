@@ -12,9 +12,7 @@
   </header>
 </template>
 
-<script setup>
-  import SvgLeaf from "@/components/icons/SvgLeaf.vue";
-</script>
+<script setup></script>
 
 <style lang="less">
 

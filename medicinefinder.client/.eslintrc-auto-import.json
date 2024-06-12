@@ -73,6 +73,7 @@
     "errorMessages": true,
     "err": true,
     "config": true,
-    "errors": true
+    "errors": true,
+    "toastr": true
   }
 }

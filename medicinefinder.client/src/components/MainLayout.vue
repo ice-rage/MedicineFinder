@@ -1,134 +1,80 @@
 <template>
-  <div class="main-block">
-    <SearchBox 
-      class="main-block__search-form"
-      @showDataLoadingEvent="showDataLoading"
-    />
+  <div class="main-layout">
+    <SearchBox class="main-layout__search-form"/>
 
-    <h3 class="main-block__option-title">Или</h3>
+    <h3 class="main-layout__option-title">Или</h3>
 
-    <div class="main-block__option-btns">
+    <div class="main-layout__option-btns">
       <OptionButton
-        class="main-block__option-btn"
-        v-model="isImageLoaderVisible"
+        class="main-layout__option-btn"
+        :isActive="store.isOptionVisible('imageLoader')"
         :icon="SvgImage"
-        :text="'Выберите файл'"
-        @update:modelValue="(toggleSearchBtn(null, modelValue))"
+        text="Выберите файл"
+        @click="toggleOption('imageLoader')"
       />
       <OptionButton
-        class="main-block__option-btn"
-        v-model="isWebCameraVisible"
+        class="main-layout__option-btn"
+        :isActive="store.isOptionVisible('webCamera')"
         :icon="SvgCamera"
-        :text="'Сделайте снимок'"
-        @update:modelValue="(toggleSearchBtn(null, modelValue))"
+        text="Сделайте снимок"
+        @click="toggleOption('webCamera')"
       />
     </div>
 
     <ImageLoader 
-      v-if="isImageLoaderVisible"
-      class="main-block__image-uploader"
-      @hideSiblingEvent="isWebCameraVisible = false"
-      @toggleSearchBtnEvent="toggleSearchBtn"
+      v-if="store.isOptionVisible('imageLoader')"
+      class="main-layout__image-loader"
     />
 
     <WebCamera 
-      v-if="isWebCameraVisible"
-      class="main-block__web-camera"
-      @hideSiblingEvent="isImageLoaderVisible = false"
-      @toggleSearchBtnEvent="toggleSearchBtn"
+      v-if="store.isOptionVisible('webCamera')"
+      class="main-layout__web-camera"
     />
 
     <button 
-      v-if="hasImageToProcess"
+      v-if="store.hasImage"
       type="button" 
-      class="main-block__search-btn"
+      class="main-layout__search-btn"
       @click="uploadImage"
     >
       Искать
     </button>
 
-    <div v-if="store.medicineData.isLoading" class="main-block__loader"></div>
+    <div v-if="store.isDataLoading" class="main-layout__loader"></div>
 
     <ResultingInfo 
       v-if="store.hasMedicineData"
-      class="main-block__resulting-info"
+      class="main-layout__resulting-info"
     />
 
     <ErrorMessage
       v-if="store.hasError"
-      :message="store.error.message" 
-      class="main-block__error-message" 
+      :message="store.getErrorMessage" 
+      class="main-layout__error-message" 
     />
   </div>
 </template>
 
 <script setup>
-  import { ref, computed } from "vue";
-  // import axios from "axios";
-  import config from "@/configs";
-  import _ from "lodash";
-
-  import SearchBox from "@/components/search/SearchBox.vue";
-  import ImageLoader from "@/components/ImageLoader.vue";
-  import WebCamera from "@/components/WebCamera.vue";
-  import OptionButton from "@/components//templates/OptionButton.vue";
-  import SvgImage from "@/components/icons/SvgImage.vue";
-  import SvgCamera from "@/components/icons/SvgCamera.vue";
-  import ResultingInfo from "@/components/ResultingInfo.vue";
-  import ErrorMessage from "@/components/ErrorMessage.vue";
+  import SvgImage from "./icon/SvgImage.vue";
+  import SvgCamera from "./icon/SvgCamera.vue";
 
   const store = useStore();
 
-  const { setError, clearError } = store;
+  const { toggleOption } = store;
 
-  // const errorCode = ref("");
-  const isImageLoaderVisible = ref();
-  const isWebCameraVisible = ref();
-  const hasImageToProcess = ref();
   const imageToProcess = ref();
-  // const medicineData = ref();
-
-  // const hasError = computed(() => errorCode.value !== "");
-
-  // const errorMessage = computed(() => errorCode.value !== "" 
-  //   ? _.find(config.errors, { code: errorCode.value }).message
-  //   : "");
-
-  // const setError = (code) => errorCode.value = code;
-
-  // const clearError = () => errorCode.value = "";
-
-  const toggleSearchBtn = (loadedImage, toggleValue) => {
-    imageToProcess.value = loadedImage;
-    hasImageToProcess.value = toggleValue;
-    clearError();
-  }
-      
-  const showDataLoading = () => {
-    store.medicineData.isLoading = true;
-    clearError();
-  }
 
   const uploadImage = () => {
     showDataLoading();
 
     const uploadingData = new FormData();
     uploadingData.append("encodedImage", imageToProcess.value);
-
-    // showResult(new Promise((resolve, reject) => {
-    //   axios
-    //     .post("medicinefinder", uploadingData)
-    //       .then(response => {
-    //         resolve(response);
-    //       }, error =>  {
-    //         reject(error);
-    //       });
-    // }));
   }
 </script>
 
 <style lang="less">
-  .main-block {
+  .main-layout {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -180,7 +126,7 @@
     }
 
     &__web-camera,
-    &__image-uploader {
+    &__image-loader {
       margin: 30px 0;
     }
 

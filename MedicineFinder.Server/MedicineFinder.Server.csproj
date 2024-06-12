@@ -31,16 +31,10 @@
     <Reference Include="OnBarcode.Barcode.BarcodeScanner">
       <HintPath>OnBarcode.Barcode.BarcodeScanner.dll</HintPath>
     </Reference>
-    <Reference Include="OnBarcode.Barcode.BarcodeScanner.Skia">
-      <HintPath>OnBarcode.Barcode.BarcodeScanner.Skia.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="OnBarcode.Barcode.BarcodeScanner.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="OnBarcode.Barcode.BarcodeScanner.Skia.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="tessdata\rus.traineddata">

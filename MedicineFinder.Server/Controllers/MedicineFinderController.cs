@@ -48,7 +48,7 @@ namespace MedicineFinder.Server.Controllers
             {
                 _logger.LogInformation("{DT}: неизвестная ошибка сервера: {message}",
                     DateTime.UtcNow.ToLongTimeString(), exception.Message);
-                return BadRequest();
+                return StatusCode(500);
             }
         }
 
@@ -64,15 +64,14 @@ namespace MedicineFinder.Server.Controllers
             var words = RecognizeText(decodedImage);
             var statusCodes = new List<int?>();
 
-            var searchByNameResponse = await HandleTextResults(statusCodes, 
-                words, RequestFilterType.Name.GetDescription());
+            var response = await HandleTextResults(statusCodes, words, 
+                RequestFilterType.Name.GetDescription());
 
-            var responseStatusCode = ((IStatusCodeActionResult)searchByNameResponse)
-                .StatusCode;
+            var responseStatusCode = ((IStatusCodeActionResult)response).StatusCode;
 
             if (responseStatusCode == 200)
             {
-                return searchByNameResponse;
+                return response;
             }
 
             statusCodes.Clear();
@@ -105,9 +104,9 @@ namespace MedicineFinder.Server.Controllers
                 await Task.Delay(1000);
             }
 
-            if (statusCodes.Any(statusCode => statusCode == 400))
+            if (statusCodes.Any(statusCode => statusCode == 500))
             {
-                return BadRequest();
+                return StatusCode(500);
             }
 
             _logger.LogInformation(
@@ -126,10 +125,7 @@ namespace MedicineFinder.Server.Controllers
             var pixImage = Pix.LoadFromMemory(packingImage);
 
             var page = engine.Process(pixImage, PageSegMode.Auto);
-            var text = page
-                .GetText()
-                .Split('\n')
-                .ToList();
+            var text = page.GetText().Split('\n').ToList();
 
             for (var i = 0; i < text.Count; i++)
             {

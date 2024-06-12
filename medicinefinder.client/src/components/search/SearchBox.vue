@@ -22,11 +22,9 @@
 </template>
 
 <script setup>
-  import { ref, computed } from "vue";
-  import SearchBtn from "./SearchBtn.vue";
-  // import axios from "axios";
+  const store = useStore();
 
-  const emit = defineEmits(["showDataLoadingEvent", "showResultEvent"]);
+  const { fetchMedicineData } = store;
 
   const inputText = ref("");
 
@@ -37,20 +35,6 @@
       fetchMedicineData(inputText.value)
     }
   }
-
-  // const fetchMedicineData = (medicineName) => {
-  //   emit("showDataLoadingEvent");
-
-  //   emit("showResultEvent", new Promise((resolve, reject) => {
-  //     axios
-  //       .get(`medicinefinder/${medicineName}`)
-  //       .then(response => {
-  //         resolve(response);
-  //       }, error => {
-  //         reject(error);
-  //       });
-  //   }));
-  // }
 </script>
 
 <style lang="less">
