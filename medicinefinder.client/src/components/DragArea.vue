@@ -1,29 +1,30 @@
 <template>
   <div
     class="drag-area"
-    :class="{ 'drag-area--active' : dragText }"
+    :class="{ 'drag-area--active' : store.isDragAreaActive }"
     @dragover="enterDragArea($event)"
-    @dragleave="leaveDragArea($event)"
+    @dragleave="clearDragArea"
     @drop="dropFile($event)"
   >
     <div class="drag-area__icon-wrapper">
       <i class="drag-area__icon fas fa-images"></i>
     </div>
 
-    <span class="drag-area__select-btn" @click="openFileDialog">
+    <span 
+      class="drag-area__select-btn" 
+      @click="openFileDialog(imageInput)"
+    >
       Выберите изображение
     </span>
 
-    <span class="drag-area__drag-text">
-      {{ dragText ? dragText : "или перетащите файл сюда" }}
-    </span>
+    <span class="drag-area__drag-text">{{ store.dragAreaText }}</span>
 
     <input
       ref="imageInput"
       type="file"
       class="drag-area__image-input"
-      accept="image/jpeg, image/png"
-      @change="selectFile($event)"
+      :accept="store.acceptedImageFormats"
+      @change="loadImageFile($event.target.files)"
     />
 
     <span class="drag-area__supported-formats">
@@ -33,82 +34,18 @@
 </template>
 
 <script setup>
-  import toastr from "toastr";
-  
-  toastr.options = {
-    "positionClass": "toast-bottom-left",
-  };
-  
-  const dragText = ref();
+  const store = useStore();
+
   const imageInput = ref();
-  const loadedImageUrl = ref("");
-  const isImageLoaded = ref(false);
-  const fileName = ref("");
 
-  const enterDragArea = (event) => {
-    event.preventDefault();
-    dragText.value = "Отпустите для загрузки";
-  }
+  defineExpose({ imageInput });
 
-  const leaveDragArea = () => clearDragText();
-
-  const clearDragText = () => dragText.value = "";
-
-  const dropFile = (event) => {
-    event.preventDefault();
-
-    if (!checkImageLoading(event.dataTransfer.files)) {
-      clearDragText();
-    }
-  }
-
-  const checkImageLoading = (selectedFiles) => {
-    loadFile(selectedFiles)
-      .then(function(data) {
-        loadedImageUrl.value = data;
-        isImageLoaded.value = true;
-
-        return true;
-      },  function(error) {
-        console.log(error);
-
-        return false;
-    });
-  }
-
-  const loadFile = (selectedFiles) => {
-    return new Promise(function(resolve, reject) {
-      if (FileReader && selectedFiles && selectedFiles.length) {
-        const fileReader = new FileReader();
-        const selectedFile = selectedFiles[0];
-
-        let validExtensions = ["image/jpeg", "image/png"];
-
-        let selectedFileExtension = selectedFile.type;
-
-        if (validExtensions.includes(selectedFileExtension)) {
-          fileName.value = selectedFile.name;
-
-          fileReader.onload = () => resolve(fileReader.result);
-
-          fileReader.onerror = () => {
-            reject(`Произошла ошибка: ${fileReader.error}`);
-          }
-
-          fileReader.readAsDataURL(selectedFile);
-        } else {
-          reject(toastr.error("Файлы данного формата запрещены", 
-            "Ошибка загрузки"));
-        }
-      }
-    });
-  }
-
-  const openFileDialog = () => imageInput.value.click();
-
-  const selectFile = (event) => {
-    checkImageLoading(event.target.files);
-  };
+  const { 
+    enterDragArea, 
+    clearDragArea,
+    dropFile,
+    openFileDialog,
+    loadImageFile } = store;
 </script>
 
 <style lang="less">

@@ -49,7 +49,7 @@
 
     <ErrorMessage
       v-if="store.hasError"
-      :message="store.getErrorMessage" 
+      :message="store.errorMessage"
       class="main-layout__error-message" 
     />
   </div>
@@ -62,15 +62,6 @@
   const store = useStore();
 
   const { toggleOption } = store;
-
-  const imageToProcess = ref();
-
-  const uploadImage = () => {
-    showDataLoading();
-
-    const uploadingData = new FormData();
-    uploadingData.append("encodedImage", imageToProcess.value);
-  }
 </script>
 
 <style lang="less">

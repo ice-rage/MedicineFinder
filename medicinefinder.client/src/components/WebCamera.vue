@@ -1,12 +1,12 @@
 <template>
-  <div class="web-camera">
-    <div class="web-camera__video" v-show="!isFrameCaptured">
+  <div class="web-camera" >
+    <div class="web-camera__video" v-if="!store.isFrameCaptured">
       <div class="web-camera__video-container">
         <video ref="video" class="web-camera__video-element"></video>
           <button
             type="button" 
             title="Сделать снимок"
-            :disabled="webCamStates[currentWebCamState]['captureBtnDisabled']"
+            :disabled="store.isFrameCaptureBtnDisabled"
             class="web-camera__capture-btn capture-btn"
             @click="captureFrame"
           >
@@ -19,147 +19,46 @@
       <button 
         type="button" 
         ref="toggleBtn"
-        :class="currentWebCamState === 'stop' 
-          ? 'web-camera__toggle-btn web-camera__toggle-btn--stop' 
-          : 'web-camera__toggle-btn'"
-        :disabled="webCamStates[currentWebCamState]['toggleBtnDisabled']"
+        class="web-camera__toggle-btn"
+        :class="{ 
+          'web-camera__toggle-btn--stop' : 
+          store.currentWebCameraState === 'stop' 
+        }"
+        :disabled="store.isWebCameraToggleBtnDisabled"
         @click="toggleWebCameraVideo"  
-      >{{ webCamStates[currentWebCamState]['toggleBtnText'] }}</button>
+      >
+        {{ store.toggleBtnText }}
+      </button>
     </div>
     
     <ProcessedImage
-      v-if="isFrameCaptured"
-      :imageSrc="snapshotUrl"
+      v-if="store.isFrameCaptured"
+      ref="processedImage"
+      :imageSrc="store.webCamera.snapshotUrl"
       imageAlt="Снимок"
-      renewBtnTitle="Переснять"
+      updateBtnTitle="Переснять"
       class="web-camera__processed-image"
-      @removeImageEvent="toggleView(false)"
-      @renewImageEvent="reshoot"
+      @remove="removeImage(processedImage.image, 'snapshot')"
+      @update="reshoot"
     />
   </div>
 </template>
 
 <script setup>
-  const emit = defineEmits(["hideSiblingEvent", "toggleSearchBtnEvent"]);
+  const store = useStore();
 
   const video = ref();
   const toggleBtn = ref();
-  const webCamPermissionStatus = ref();
   const canvas = ref();
-  const snapshotUrl = ref();
-  const isFrameCaptured = ref(false);
+  const processedImage = ref();
 
-  const webCamStates = reactive({
-    play: {
-      toggleBtnText: "Остановить",
-      toggleBtnDisabled: false,
-      captureBtnDisabled: false,
-    },
-    stop: {
-      toggleBtnText: "Запустить",
-      toggleBtnDisabled: false,
-      captureBtnDisabled: true,
-    },
-    unavailable: {
-      toggleBtnText: "Веб-камера недоступна",
-      toggleBtnDisabled: true,
-      captureBtnDisabled: true,
-    },
-  });
+  const { 
+    setUpWebCamera, 
+    captureFrame, 
+    removeImage, 
+    reshoot } = store;
 
-  const currentWebCamState = ref("play");
-
-  onMounted(() => {
-    emit("hideSiblingEvent");
-
-    navigator.permissions
-    .query({ name: "camera" })
-    .then((permissionStatus) => {
-      webCamPermissionStatus.value = permissionStatus.state;
-
-      permissionStatus.onchange = () => 
-        checkWebCameraPermission(permissionStatus.state);
-    });
-
-    startWebCameraVideo();
-  });
-
-  const checkWebCameraPermission = permissionState => {
-    webCamPermissionStatus.value = permissionState;
-
-    switch(webCamPermissionStatus.value) {
-      case "denied":
-        currentWebCamState.value = "unavailable";
-        break;
-      case "granted":
-        startWebCameraVideo();
-        break;
-      default:
-        return;
-    }
-  }
-
-  const startWebCameraVideo = () => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then(function(stream) {
-      video.value.srcObject = stream;
-      video.value.play();
-      
-      currentWebCamState.value = "play";
-    })
-    .catch(function(error) {
-      console.log(`Произошла ошибка: ${error}`);
-      currentWebCamState.value = "unavailable";
-    });
-  }
-
-  const stopWebCameraVideo = () => {
-    video.value.srcObject.getVideoTracks()
-    .forEach(videoTrack => videoTrack.stop());
-
-    currentWebCamState.value = "stop";
-  }
-
-  const toggleWebCameraVideo = () => {
-    const hasLiveVideoTracks = detectLiveVideoTracks();
-
-    if (hasLiveVideoTracks) {
-      stopWebCameraVideo();
-    } else {
-      startWebCameraVideo();
-    }
-  }
-
-  const detectLiveVideoTracks = () => 
-    video.value.srcObject.getVideoTracks().some(videoTrack => 
-      videoTrack.enabled && videoTrack.readyState === "live");
-
-  function captureFrame() {
-    const context = canvas.value.getContext("2d");
-    const imageWidth = video.value.offsetWidth;
-    const imageHeight = video.value.offsetHeight;
-
-    if (imageWidth && imageHeight) {
-      canvas.value.width = imageWidth;
-      canvas.value.height = imageHeight;
-      context.drawImage(video.value, 0, 0, imageWidth, imageHeight);
-
-      snapshotUrl.value = canvas.value.toDataURL("image/jpeg");
-      
-      stopWebCameraVideo();
-      toggleView(true);
-    }
-  }
-
-  const toggleView = (value) => {
-    isFrameCaptured.value = value;
-    emit("toggleSearchBtnEvent", snapshotUrl.value, isFrameCaptured.value);
-  }
-
-  const reshoot = () => {
-    toggleView(false);
-    startWebCameraVideo();
-  }
+  onMounted(() => setUpWebCamera(video, canvas));
 </script>
 
 <style lang="less">

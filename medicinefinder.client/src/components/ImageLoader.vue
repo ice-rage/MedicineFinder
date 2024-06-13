@@ -1,37 +1,33 @@
 <template>
   <div class="image-loader">
-    <div class="image-loader__container" v-show="loadedImageUrl === ''">
-      <DragArea class="image-loader__drag-area"/>
+    <div class="image-loader__container" v-if="!store.hasImage">
+      <DragArea ref="dragArea" class="image-loader__drag-area"/>
     </div>
 
     <ProcessedImage
-      v-if="loadedImageUrl !== ''"
-      :imageSrc="loadedImageUrl"
+      v-if="store.hasImage"
+      ref="processedImage"
+      :imageSrc="store.loadedImageUrl"
       imageAlt="Загруженное изображение"
-      :imageName="fileName"
-      renewBtnTitle="Выбрать другое"
+      :imageName="store.loadedImageFileName"
+      updateBtnTitle="Выбрать другое"
       class="image-loader__processed-image"
-      @renewImageEvent="openFileDialog"
-      @removeImageEvent="resetView"
+      @remove="removeImage(processedImage.image, 'loaded')"
+      @update="openFileDialog(inputElement)"
     />
   </div>
 </template>
 
 <script setup>
-  const dragText = ref();
-  const loadedImageUrl = ref("");
-  const isImageLoaded = ref(false);
-  const fileName = ref("");
+  const store = useStore();
 
-  const clearDragText = () => dragText.value = "";
+  const dragArea = ref();
+  const processedImage = ref();
+  const inputElement = ref("");
 
-  const resetView = () => {
-    loadedImageUrl.value = "";
-    fileName.value = "";
-    isImageLoaded.value = false;
+  const { removeImage, openFileDialog } = store;
 
-    clearDragText();
-  }
+  onMounted(() => inputElement.value = dragArea.value.imageInput);
 </script>
 
 <style lang="less">

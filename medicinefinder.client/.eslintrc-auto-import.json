@@ -74,6 +74,14 @@
     "err": true,
     "config": true,
     "errors": true,
-    "toastr": true
+    "toastr": true,
+    "webCameraStates": true,
+    "wb": true,
+    "webCameraStates: [\r\n    \r\n  ]": true,
+    "webCameraStates: {": true,
+    "captureBtnDisabled: false": true,
+    "toggleBtnDisabled: false": true,
+    "webCameraStates: {\r\n    play: {\r\n      toggleBtnText: \"Остановить\"": true,
+    "webCameraStates = {\r\n    play: {\r\n      toggleBtnText: \"Остановить\"": true
   }
 }

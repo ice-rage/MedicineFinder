@@ -192,7 +192,7 @@
 <script setup>
   const store = useStore();
 
-  const data = store.medicineData.data;
+  const data = store.medicineData;
 
   const productCompanies = data.companies;
   const documentCompanies = data.document.companies;

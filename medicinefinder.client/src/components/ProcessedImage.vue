@@ -2,11 +2,12 @@
   <div class="processed-image">
     <div class="processed-image__picture-wrapper">
       <picture class="processed-image__picture">
-        <img 
-          ref="image" 
-          :src="imageSrc"
+        <img
+          ref="image"
+          :src="imageSrc" 
           :alt="imageAlt" 
-          class="processed-image__image"/>
+          class="processed-image__image"
+        />
       </picture>
 
       <span class="processed-image__image-name">{{ imageName }}</span>
@@ -15,34 +16,51 @@
         type="button"
         title="Удалить"
         class="processed-image__remove-btn"
-        @click="removeImage"
+        @click="emit('remove')"
       ></button>
 
       <button
         type="button"
-        :title="renewBtnTitle"
-        class="processed-image__renew-btn"
-        @click="renewImage"
+        :title="updateBtnTitle"
+        class="processed-image__update-btn"
+        @click="emit('update')"
       ></button>
     </div>
   </div>
 </template>
 
 <script setup>
-  defineProps(["imageSrc", "imageAlt", "imageName", "renewBtnTitle"]);
-
-  const emit = defineEmits(["removeImageEvent", "renewImageEvent"]);
+  const {
+    imageSrc, 
+    imageAlt, 
+    imageName, 
+    updateBtnTitle } = defineProps({
+      imageSrc: {
+        type: String,
+        default: "",
+        required: true,
+      },
+      imageAlt: {
+        type: String,
+        default: "",
+        required: true,
+      },
+      imageName: {
+        type: String,
+        default: "",
+      },
+      updateBtnTitle: {
+        type: String,
+        default: "",
+        required: true,
+      },
+    });
 
   const image = ref();
 
-  const removeImage = () => {
-    if (image.value) {
-      image.value.setAttribute("src", "");
-      emit("removeImageEvent");
-    }
-  };
+  defineExpose({ image });
 
-  const renewImage = () => emit("renewImageEvent");
+  const emit = defineEmits(["remove", "update"]);
 </script>
 
 <style lang="less">
@@ -64,13 +82,13 @@
       &:hover {
         @media (hover: hover) {
           .processed-image__remove-btn,
-          .processed-image__renew-btn,
+          .processed-image__update-btn,
           .processed-image__image-name {
             opacity: 1;
           }
 
           .processed-image__remove-btn,
-          .processed-image__renew-btn {
+          .processed-image__update-btn {
             top: 10px;
             
             @media @bw768 {
@@ -181,7 +199,7 @@
       }
     }
 
-    &__renew-btn {
+    &__update-btn {
       position: absolute;
       top: -25px;
       right: 25px;
