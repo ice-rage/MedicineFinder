@@ -1,6 +1,6 @@
 <template>
   <div class="web-camera" >
-    <div class="web-camera__video" v-if="!store.isFrameCaptured">
+    <div v-if="!store.hasImageToProcess" class="web-camera__video">
       <div class="web-camera__video-container">
         <video ref="video" class="web-camera__video-element"></video>
           <button
@@ -17,28 +17,27 @@
       <canvas ref="canvas" class="web-camera__canvas"></canvas>
 
       <button 
-        type="button" 
-        ref="toggleBtn"
+        type="button"
         class="web-camera__toggle-btn"
         :class="{ 
           'web-camera__toggle-btn--stop' : 
           store.currentWebCameraState === 'stop' 
         }"
         :disabled="store.isWebCameraToggleBtnDisabled"
-        @click="toggleWebCameraVideo"  
+        @click="toggleWebCameraState"  
       >
         {{ store.toggleBtnText }}
       </button>
     </div>
     
     <ProcessedImage
-      v-if="store.isFrameCaptured"
+      v-if="store.hasImageToProcess"
       ref="processedImage"
-      :imageSrc="store.webCamera.snapshotUrl"
+      :imageSrc="store.imageToProcessUrl"
       imageAlt="Снимок"
       updateBtnTitle="Переснять"
       class="web-camera__processed-image"
-      @remove="removeImage(processedImage.image, 'snapshot')"
+      @remove="removeImage(processedImage.image)"
       @update="reshoot"
     />
   </div>
@@ -54,7 +53,8 @@
 
   const { 
     setUpWebCamera, 
-    captureFrame, 
+    captureFrame,
+    toggleWebCameraState, 
     removeImage, 
     reshoot } = store;
 

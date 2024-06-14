@@ -32,7 +32,7 @@
     />
 
     <button 
-      v-if="store.hasImage"
+      v-if="store.hasImageToProcess"
       type="button" 
       class="main-layout__search-btn"
       @click="uploadImage"
@@ -61,7 +61,7 @@
 
   const store = useStore();
 
-  const { toggleOption } = store;
+  const { toggleOption, uploadImage } = store;
 </script>
 
 <style lang="less">

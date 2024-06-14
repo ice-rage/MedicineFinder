@@ -1,4 +1,22 @@
 export default {
+  initialDragText: "или перетащите файл сюда",
+  webCameraStates: {
+    play: {
+      isCaptureBtnDisabled: false,
+      isToggleBtnDisabled: false,
+      toggleBtnText: "Остановить",
+    },
+    stop: {
+      isCaptureBtnDisabled: true,
+      isToggleBtnDisabled: false,
+      toggleBtnText: "Запустить",
+    },
+    unavailable: {
+      isCaptureBtnDisabled: true,
+      isToggleBtnDisabled: true,
+      toggleBtnText: "Веб-камера недоступна",
+    },
+  },
   errors: [
     {
       code: "404",

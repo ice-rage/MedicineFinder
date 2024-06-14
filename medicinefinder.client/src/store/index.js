@@ -1,11 +1,5 @@
 import toastr from "toastr";
 
-toastr.options = {
-  "positionClass": "toast-bottom-left",
-};
-
-const initialDragText = "или перетащите файл сюда";
-
 export const useStore = defineStore("index", {
   state: () => ({
     options: {
@@ -17,41 +11,20 @@ export const useStore = defineStore("index", {
       },
     },
     dragArea: {
-      text: initialDragText,
+      text: config.initialDragText,
       isActive: false,
     },
-    imageTypes: {
-      loaded: {
-        url: "",
-        fileName: "",
-        validExtensions: ["image/jpeg", "image/png"],
-      },
-      snapshot: {
-        url: "",
-      },
+    loadedImage: {
+      fileName: "",
+      validExtensions: ["image/jpeg", "image/png"],
     },
     webCamera: {
       videoElement: {},
       canvasElement: {},
-      states: {
-        play: {
-          isCaptureBtnDisabled: false,
-          isToggleBtnDisabled: false,
-          toggleBtnText: "Остановить",
-        },
-        stop: {
-          isCaptureBtnDisabled: true,
-          isToggleBtnDisabled: false,
-          toggleBtnText: "Запустить",
-        },
-        unavailable: {
-          isCaptureBtnDisabled: true,
-          isToggleBtnDisabled: true,
-          toggleBtnText: "Веб-камера недоступна",
-        },
-      },
+      states: config.webCameraStates,
       currentState: "play",
     },
+    imageToProcessUrl: "",
     medicine: {
       isLoading: false,
       data: {},
@@ -67,23 +40,21 @@ export const useStore = defineStore("index", {
         ? state.options[option].isVisible 
         : undefined,
     isDataLoading: (state) => state.medicine.isLoading,
-    acceptedImageFormats: (state) => 
-      state.imageTypes.loaded.validExtensions.join(),
+    acceptedImageFormats: (state) => state.loadedImage.validExtensions,
     isFileDialogOpened: (state) => state.fileDialog.isOpened,
     isDragAreaActive: (state) => state.dragArea.isActive,
     dragAreaText: (state) => state.dragArea.text,
-    hasImage: (state) => state.imageTypes.loaded.url !== "" || 
-      state.imageTypes.snapshot.url !== "",
-    loadedImageUrl: (state) => state.imageTypes.loaded.url,
-    loadedImageFileName: (state) => state.imageTypes.loaded.fileName,
+    hasImageToProcess: (state) => state.imageToProcessUrl !== "",
+    loadedImageFileName: (state) => state.loadedImage.fileName,
+    videoElement: (state) => state.webCamera.videoElement,
+    canvasElement: (state) => state.webCamera.canvasElement,
     isFrameCaptureBtnDisabled: (state) => 
       state.webCamera.states[state.webCamera.currentState].isCaptureBtnDisabled,
     isWebCameraToggleBtnDisabled: (state) => 
       state.webCamera.states[state.webCamera.currentState].isToggleBtnDisabled,
     toggleBtnText: (state) => 
       state.webCamera.states[state.webCamera.currentState].toggleBtnText,
-    currentWebCameraState: (state) => state.webCamera.currenState,
-    isFrameCaptured: (state) => state.imageTypes.snapshot.url !== "",
+    currentWebCameraState: (state) => state.webCamera.currentState,
     hasMedicineData: (state) => !_.isEmpty(state.medicineData),
     medicineData: (state) => state.medicine.data,
     hasError: (state) => state.error.code !== "",
@@ -92,17 +63,26 @@ export const useStore = defineStore("index", {
   actions: {
     fetchMedicineData(medicineName) {
       this.resetView();
-      this.medicine.isLoading = true;
+      this.resetImageToProcessUrl();
 
-      axios
-        .get(`medicinefinder/${medicineName}`)
-        .then(response => this.medicine.data = response.data)
+      this.options.imageLoader.isVisible = false;
+      this.options.webCamera.isVisible = false;
+
+      this.callApi("get", { parameter: medicineName });
+    },
+    callApi(methodType, queryDetails) {
+      axios({
+        method: methodType,
+        url: queryDetails.parameter
+          ? `medicinefinder/${queryDetails.parameter}` 
+          : "medicinefinder",
+        data: queryDetails.data || {},
+      }).then(response => this.medicine.data = response.data)
         .catch(error => this.setError(error.response.status.toString()))
         .then(() => this.medicine.isLoading = false);
     },
     resetView() {
-      this.options.imageLoader.isVisible = false;
-      this.options.webCamera.isVisible = false;
+      this.medicine.isLoading = true;
 
       Object.keys(this.medicineData).forEach(key => 
         delete this.medicineData[key]);
@@ -125,10 +105,21 @@ export const useStore = defineStore("index", {
 
         if (option === 'imageLoader') {
           this.options.webCamera.isVisible = false;
+
+          if (this.detectLiveVideoTracks()) {
+            console.log("Has live tracks");
+            this.stopWebCameraVideo();
+          }
         } else {
           this.options.imageLoader.isVisible = false;
         }
+
+        this.resetImageToProcessUrl();
+        this.clearError();
       }
+    },
+    resetImageToProcessUrl() {
+      this.imageToProcessUrl = "";
     },
     openFileDialog(inputElement) {
       inputElement.click();
@@ -140,7 +131,7 @@ export const useStore = defineStore("index", {
       this.dragArea.isActive = true;
     },
     clearDragArea() {
-      this.dragArea.text = initialDragText;
+      this.dragArea.text = config.initialDragText;
       this.dragArea.isActive = false;
     },
     dropFile(event) {
@@ -156,10 +147,11 @@ export const useStore = defineStore("index", {
         const selectedFile = selectedFiles[0];
         const selectedFileExtension = selectedFile.type;
   
-        if (this.imageTypes.loaded.validExtensions.includes(selectedFileExtension)) {
-          this.imageTypes.loaded.fileName = selectedFile.name;
+        if (this.acceptedImageFormats.includes(selectedFileExtension)) {
+          this.loadedImage.fileName = selectedFile.name;
   
-          fileReader.onload = () => this.imageTypes.loaded.url = fileReader.result;
+          fileReader.onload = () => this.imageToProcessUrl = 
+            fileReader.result;
   
           fileReader.onerror = () => {
             console.log(`Произошла ошибка: ${fileReader.error}`);
@@ -177,49 +169,42 @@ export const useStore = defineStore("index", {
         }
       }
     },
-    removeImage(imageElement, type) {
-      if (imageElement) {
-        imageElement.setAttribute("src", "");
+    removeImage(imageElement) {
+      imageElement.setAttribute("src", "");
 
-        if (this.imageTypes.hasOwnProperty(type)) {
-          this.imageTypes[type].url = "";
-
-          if (type === 'loaded') {
-            this.clearDragArea();
-          }
-        }
-      }
+      this.resetImageToProcessUrl();
     },
     setUpWebCamera(videoElement, canvasElement) {
       this.webCamera.videoElement = videoElement;
       this.webCamera.canvasElement = canvasElement;
 
-      console.log(this.webCamera.videoElement);
-      console.log(this.webCamera.canvasElement);
-
       navigator.permissions
         .query({ name: "camera" })
         .then(permissionStatus => {
-          permissionStatus.onchange = () => 
-            this.onWebCameraPermissionChange(permissionStatus.state);
+          permissionStatus.onchange = () => {
+            const permissionState = permissionStatus.state;
+
+            if (permissionState === "granted") {
+              this.startWebCameraVideo();
+            } else if (permissionState === "denied") {
+              this.webCamera.currentState = "unavailable";
+            }
+          }
         });  
         
         this.startWebCameraVideo();
-    },
-    onWebCameraPermissionChange(permissionState) {
-      if (permissionState === "granted") {
-        this.startWebCameraVideo();
-      } else if (permissionState === "denied") {
-        this.webCamera.currenState = "unavailable";
-      }
     },
     startWebCameraVideo() {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: false })
         .then(stream => {
-          this.webCamera.videoElement.srcObject = stream;
-          this.webCamera.videoElement.play();
-          
+          this.videoElement.srcObject = stream;
+
+          return new Promise(resolve => this.videoElement.oncanplay = 
+            resolve);
+        })
+        .then(() => {
+          this.videoElement.play();
           this.webCamera.currentState = "play";
         })
         .catch(error => {
@@ -228,46 +213,57 @@ export const useStore = defineStore("index", {
         });
     },
     stopWebCameraVideo() {
-      this.webCamera.videoElement.srcObject.getVideoTracks()
+      console.log(this.videoElement.srcObject.getVideoTracks());
+
+      this.videoElement.srcObject.getVideoTracks()
         .forEach(videoTrack => videoTrack.stop());
   
       this.webCamera.currentState = "stop";
     },
     toggleWebCameraState() {
-      const hasLiveVideoTracks = detectLiveVideoTracks();
-  
-      if (hasLiveVideoTracks) {
+      if (this.detectLiveVideoTracks()) {
         this.stopWebCameraVideo();
       } else {
         this.startWebCameraVideo();
       }
     },
     detectLiveVideoTracks() {
-      this.webCamera.videoElement.srcObject
-        .getVideoTracks()
-        .some(videoTrack => 
+      const srcObject = this.videoElement.srcObject;
+
+      if (srcObject) {
+        return srcObject.getVideoTracks().some(videoTrack => 
           videoTrack.enabled && videoTrack.readyState === "live");
+      }
+      
+      return false;
     },
     captureFrame() {
-      const context = this.webCamera.canvasElement.getContext("2d");
-      const imageWidth = this.webCamera.videoElement.offsetWidth;
-      const imageHeight = this.webCamera.videoElement.offsetHeight;
+      const context = this.canvasElement.getContext("2d");
+      const imageWidth = this.videoElement.offsetWidth;
+      const imageHeight = this.videoElement.offsetHeight;
   
       if (imageWidth && imageHeight) {
-        this.webCamera.canvasElement.width = imageWidth;
-        this.webCamera.canvasElement.height = imageHeight;
-        context.drawImage(this.webCamera.videoElement, 0, 0, imageWidth, 
+        this.canvasElement.width = imageWidth;
+        this.canvasElement.height = imageHeight;
+        context.drawImage(this.videoElement, 0, 0, imageWidth, 
           imageHeight);
   
-        this.imageTypes.snapshot.url = this.webCamera.canvasElement.toDataURL("image/jpeg");
+        this.imageToProcessUrl = this.canvasElement.toDataURL("image/jpeg");
         
         this.stopWebCameraVideo();
       }
     },
     reshoot() {
-      this.imageTypes.snapshot.url = "";
-
+      this.resetImageToProcessUrl();
       this.startWebCameraVideo();
+    },
+    uploadImage() {
+      this.resetView();
+      this.medicine.isLoading = true;
+      const imageData = new FormData();
+      imageData.append("encodedImage", this.imageToProcessUrl);
+
+      this.callApi("post", { data: imageData });
     },
   },
 });

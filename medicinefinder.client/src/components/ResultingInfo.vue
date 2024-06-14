@@ -4,24 +4,30 @@
 
     <div class="resulting-info__title">
       <span 
+        v-if="data.rusName"
         class="resulting-info__inner-title" 
         v-html="data.rusName">
       </span>
       (<span 
+        v-if="data.engName"
         class="resulting-info__inner-title" 
         v-html="data.engName">
       </span>)
     </div>
 
     <div 
+      v-for="(company, companyIndex) in productCompanies" 
+      :key="companyIndex"
       class="resulting-info__companies" 
-      v-for="(company, companyIndex) in productCompanies" :key="companyIndex"
     >
       <section 
-        class="resulting-info__owner-company" 
         v-if="company.isRegistrationCertificate"
+        class="resulting-info__owner-company"
       >
-        <h2 class="resulting-info__section-title">
+        <h2 
+          v-if="company.company" 
+          class="resulting-info__section-title"
+        >
           Владелец регистрационного удостоверения
         </h2>
 
@@ -35,11 +41,15 @@
       </section>
 
       <section 
-        class="resulting-info__manufacturing-company" 
         v-if="company.isManufacturer"
+        class="resulting-info__manufacturing-company"
       >
-        <h2 class="resulting-info__section-title">Произведено</h2>
-
+        <h2 
+          v-if="company.company" 
+          class="resulting-info__section-title"
+        >
+          Произведено
+        </h2>
         <p class="resulting-info__paragraph">
           {{ company.company.name }}
 
@@ -50,8 +60,16 @@
       </section>
     </div>
 
-    <section class="resulting-info__contacts" v-if="data.document.companies.length">
-      <h2 class="resulting-info__section-title">Контакты для обращений</h2>
+    <section 
+      v-if="data.document.companies.length" 
+      class="resulting-info__contacts"
+    >
+      <h2 
+        v-if="documentCompanies.length"
+        class="resulting-info__section-title"
+      >
+        Контакты для обращений
+      </h2>
       <p
         v-for="(company, companyIndex) in documentCompanies" 
         :key="companyIndex"
@@ -59,11 +77,16 @@
       ></p>
     </section>
     
-    <h2 class="resulting-info__section-title">Коды АТХ</h2>
+    <h2 
+      v-if="atcCodes.length"
+      class="resulting-info__section-title"
+    >
+      Коды АТХ
+    </h2>
     <p
-      class="resulting-info__paragraph"
       v-for="atcCode in atcCodes" 
       :key="atcCode.code"
+      class="resulting-info__paragraph"
     >
       {{ atcCode.code }}
       <span class="resulting-info__parentheses">
@@ -71,31 +94,43 @@
       </span>
     </p>
 
-    <h2 class="resulting-info__section-title">Стандарт качества</h2>
+    <h2 
+      v-if="moleculeNames.length" 
+      class="resulting-info__section-title"
+    >
+      Стандарт качества
+    </h2>
     <div
-      class="resulting-info__paragraph"
       v-for="moleculeName in moleculeNames"
       :key="moleculeName.id"
+      class="resulting-info__paragraph"
     >
       <span
+        v-if="moleculeName.molecule.GNParent"
         v-html="moleculeName.molecule.GNParent.GNParent" 
-        v-if="moleculeName.molecule.GNParent">
+      >
       </span>
       <span 
+        v-if="moleculeName.molecule.GNParent"
         class="resulting-info__parentheses" 
-        v-if="moleculeName.molecule.GNParent">
+      >
         ({{ moleculeName.molecule.GNParent 
               ? moleculeName.molecule.GNParent.description
               : "" }})
       </span>
     </div>
 
-    <h2 class="resulting-info__section-title">Активные вещества</h2>
+    <h2 
+      v-if="moleculeNames.length" 
+      class="resulting-info__section-title"
+    >
+      Активные вещества
+    </h2>
     <p 
-      class="resulting-info__paragraph"
       v-for="moleculeName in moleculeNames"
       :key="moleculeName.id"
-      >
+      class="resulting-info__paragraph"
+    >
       {{ moleculeName.molecule.rusName }}
       <span class="resulting-info__parentheses">
         ({{moleculeName.molecule.latName }})
@@ -103,7 +138,7 @@
     </p>
 
     <div class="resulting-info__content content">
-      <h2>Лекарственные формы</h2>
+      <h2 v-if="data.zipInfo">Лекарственные формы</h2>
       <ul>
         <li>{{ data.zipInfo }}</li>
         <li v-for="children in childrens" :key="children.id">
@@ -113,7 +148,7 @@
 
       <h2>
         Форма выпуска, упаковка и состав препарата
-        <span v-html="data.rusName"></span>
+        <span v-if="data.rusName" v-html="data.rusName"></span>
       </h2>
 
       <div v-html="data.composition"></div>
@@ -122,68 +157,88 @@
         <p v-html="children.composition"></p>
       </div>
       
-      <h2>Клинико-фармакологическая группа</h2>
+      <h2 v-if="clPhGroups.length">
+        Клинико-фармакологическая группа
+      </h2>
       <div v-for="clPhGroup in clPhGroups" :key="clPhGroup.name">
         <p v-html="clPhGroup.name"></p>
       </div>
 
-      <h2>Фармако-терапевтическая группа</h2>
+      <h2 v-if="phThGroups.length">
+        Фармако-терапевтическая группа
+      </h2>
       <div v-for="phThGroup in phThGroups" :key="phThGroup.code">
         <p v-html="phThGroup.code"></p>
       </div>
 
-      <h2>Фармакологическое действие</h2>
+      <h2 v-if="data.document.phInfluence">
+        Фармакологическое действие
+      </h2>
       <div v-html="data.document.phInfluence"></div>
 
-      <h2>
+      <h2 v-if="data.document.indication">
         Показания препарата
         <span v-html="data.rusName"></span>
       </h2>
       <div v-html="data.document.indication"></div>
 
-      <h2>Режим дозирования</h2>
+      <h2 v-if="data.document.dosage">Режим дозирования</h2>
       <div v-html="data.document.dosage"></div>
 
-      <h2>Побочное действие</h2>
+      <h2 v-if="data.document.sideEffects">Побочное действие</h2>
       <div v-html="data.document.sideEffects"></div>
 
-      <h2>Противопоказания к применению</h2>
+      <h2 v-if="data.document.contraIndication">
+        Противопоказания к применению
+      </h2>
       <div v-html="data.document.contraIndication"></div>
 
-      <h2>Применение при беременности и кормлении грудью</h2>
+      <h2 v-if="data.document.lactation">
+        Применение при беременности и кормлении грудью
+      </h2>
       <div v-html="data.document.lactation"></div>
 
-      <h2>Применение при нарушениях функции печени</h2>
+      <h2 v-if="data.document.hepatoInsuf">
+        Применение при нарушениях функции печени
+      </h2>
       <div v-html="data.document.hepatoInsuf"></div>
 
-      <h2>Применение при нарушениях функции почек</h2>
+      <h2 v-if="data.document.renalInsuf">
+        Применение при нарушениях функции почек
+      </h2>
       <div v-html="data.document.renalInsuf"></div>
 
-      <h2>Применение у детей</h2>
+      <h2 v-if="data.document.childInsuf">Применение у детей</h2>
       <div v-html="data.document.childInsuf"></div>
 
-      <h2>Особые указания</h2>
+      <h2 v-if="data.document.specialInstruction">
+        Особые указания
+      </h2>
       <div v-html="data.document.specialInstruction"></div>
 
-      <h2>Передозировка</h2>
+      <h2 v-if="data.document.overDosage">Передозировка</h2>
       <div v-html="data.document.overDosage"></div>
 
-      <h2>Лекарственное взаимодействие</h2>
+      <h2 v-if="data.document.interaction">
+        Лекарственное взаимодействие
+      </h2>
       <div v-html="data.document.interaction"></div>
 
-      <h2>
+      <h2 v-if="data.document.storageCondition">
         Условия хранения препарата
         <span v-html="data.rusName"></span>
       </h2>
       <div v-html="data.document.storageCondition"></div>
 
-      <h2>
+      <h2 v-if="data.document.storageTime">
         Срок годности препарата
         <span v-html="data.rusName"></span>
       </h2>
       <div v-html="data.document.storageTime"></div>
 
-      <h2>Условия реализации</h2>
+      <h2 v-if="data.document.pharmDelivery">
+        Условия реализации
+      </h2>
       <div v-html="data.document.pharmDelivery"></div>
     </div>
   </section>

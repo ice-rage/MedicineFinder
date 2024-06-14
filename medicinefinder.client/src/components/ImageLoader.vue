@@ -1,18 +1,21 @@
 <template>
   <div class="image-loader">
-    <div class="image-loader__container" v-if="!store.hasImage">
+    <div 
+      v-if="!store.hasImageToProcess" 
+      class="image-loader__container"
+    >
       <DragArea ref="dragArea" class="image-loader__drag-area"/>
     </div>
 
     <ProcessedImage
-      v-if="store.hasImage"
+      v-if="store.hasImageToProcess"
       ref="processedImage"
-      :imageSrc="store.loadedImageUrl"
+      :imageSrc="store.imageToProcessUrl"
       imageAlt="Загруженное изображение"
       :imageName="store.loadedImageFileName"
       updateBtnTitle="Выбрать другое"
       class="image-loader__processed-image"
-      @remove="removeImage(processedImage.image, 'loaded')"
+      @remove="removeLoadedImage"
       @update="openFileDialog(inputElement)"
     />
   </div>
@@ -23,11 +26,16 @@
 
   const dragArea = ref();
   const processedImage = ref();
-  const inputElement = ref("");
+  const inputElement = ref();
 
-  const { removeImage, openFileDialog } = store;
+  const { removeImage, openFileDialog, clearDragArea } = store;
 
   onMounted(() => inputElement.value = dragArea.value.imageInput);
+
+  const removeLoadedImage = () => {
+    removeImage(processedImage.value.image);
+    clearDragArea();
+  }
 </script>
 
 <style lang="less">
