@@ -7,6 +7,7 @@
     <SpaRoot>..\medicinefinder.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>
+    <GenerateProgramFile>false</GenerateProgramFile>
     <UserSecretsId>cb8f06b8-1896-46d2-8aeb-8c1d7930cfbb</UserSecretsId>
   </PropertyGroup>
 
@@ -17,14 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BarCode" Version="2024.6.1" />
-    <PackageReference Include="Emgu.CV" Version="4.9.0.5494" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
-    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
     <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
 
