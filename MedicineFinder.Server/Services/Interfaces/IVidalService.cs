@@ -4,6 +4,6 @@ namespace MedicineFinder.Server.Services.Interfaces
 {
     public interface IVidalService
     {
-        Task<MedicineInfo?> GetMedicineInfo(string value, string? filter);
+        Task<MedicineInfo> GetMedicineInfo(string value, string filter);
     }
 }

@@ -10,7 +10,7 @@ namespace MedicineFinder.Server.Services
 
         public VidalService(HttpClient httpClient) => _httpClient = httpClient;
 
-        public async Task<MedicineInfo?> GetMedicineInfo(string value, string? filter)
+        public async Task<MedicineInfo> GetMedicineInfo(string value, string filter)
         {
             var response = await _httpClient.GetAsync(
                 $"/api/rest/v1/product/list?filter[{filter}]={value}");

@@ -11,7 +11,6 @@ namespace MedicineFinder.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public class MedicineFinderController : Controller
     {
         private readonly IVidalService _vidalService;
@@ -26,13 +25,14 @@ namespace MedicineFinder.Server.Controllers
         }
 
         [HttpGet("{value}")]
-        public async Task<IActionResult> GetMedicineInfo(string value, string? filter)
+        public async Task<IActionResult> GetMedicineInfo(string value, string filter)
         {
             try
             {
                 var currentFilter = filter ?? RequestFilterType.Name.GetDescription();
 
-                var result = await _vidalService.GetMedicineInfo(value, currentFilter);
+                var result = await _vidalService.GetMedicineInfo(value, 
+                    currentFilter);
 
                 if (result != null && result.Products.Count != 0) {
                     _logger.LogInformation("{DT}: данные по запросу успешно получены", 
@@ -62,7 +62,7 @@ namespace MedicineFinder.Server.Controllers
                         DateTime.UtcNow.ToLongTimeString());
 
             var words = RecognizeText(decodedImage);
-            var statusCodes = new List<int?>();
+            var statusCodes = new List<int>();
 
             var response = await HandleTextResults(statusCodes, words, 
                 RequestFilterType.Name.GetDescription());
@@ -82,8 +82,8 @@ namespace MedicineFinder.Server.Controllers
                 RequestFilterType.Barcode.GetDescription());
         }
 
-        private async Task<IActionResult> HandleTextResults(ICollection<int?> statusCodes, 
-            IEnumerable<string> textResults, string? filter)
+        private async Task<IActionResult> HandleTextResults(List<int> statusCodes, 
+            IEnumerable<string> textResults, string filter)
         {
             foreach (var textResult in textResults)
             {
@@ -99,7 +99,7 @@ namespace MedicineFinder.Server.Controllers
                     return Ok(((OkObjectResult)response).Value);
                 }
 
-                statusCodes.Add(statusCode);
+                statusCodes.Add(statusCode.GetValueOrDefault());
 
                 await Task.Delay(1000);
             }
@@ -116,39 +116,44 @@ namespace MedicineFinder.Server.Controllers
             return NotFound();
         }
 
-        private IEnumerable<string> RecognizeText(byte[] packingImage)
+        private static List<string> RecognizeText(byte[] packingImage)
         {
             var engine = new TesseractEngine("./tessdata", "rus", 
                 EngineMode.Default);
-            engine.SetVariable("tessedit_write_images", true);
 
             var pixImage = Pix.LoadFromMemory(packingImage);
 
             var page = engine.Process(pixImage, PageSegMode.Auto);
-            var text = page.GetText().Split('\n').ToList();
+            var words = page.GetText().Split('\n').ToList();
 
-            for (var i = 0; i < text.Count; i++)
+            // Обработка результатов распознавания текста.
+            for (var i = 0; i < words.Count; i++)
             {
-                text[i] = Regex.Replace(text[i], @"\b\w{1,3}\b",
+                // Заменяем слово пустой строкой, если его длина не более трех символов.
+                words[i] = Regex.Replace(words[i], @"\b\w{1,3}\b",
                     string.Empty);
-                text[i] = Regex.Replace(text[i], "[^а-яА-Я0-9]{1,3}",
+
+                // Заменяем слово пустой строкой, если оно содержит не алфавитно-
+                // цифровые символы (подразумевается русский алфавит).
+                words[i] = Regex.Replace(words[i], "[^а-яА-Я0-9]",
                     string.Empty);
             }
-
-            text.RemoveAll(string.IsNullOrWhiteSpace);
+            
+            // Удаляем все пустые или заполненные пробелами строки из результатов.
+            words.RemoveAll(string.IsNullOrWhiteSpace);
 
             pixImage.Dispose();
             page.Dispose();
             engine.Dispose();
 
-            return text;
+            return words;
         }
 
-        private static IEnumerable<string> ReadBarcode(byte[] barcodeImage)
+        private static List<string> ReadBarcode(byte[] barcodeImage)
         {
             using var memoryStream = new MemoryStream(barcodeImage);
 
-            return BarcodeScanner.Scan(memoryStream, BarcodeType.All);
+            return [.. BarcodeScanner.Scan(memoryStream, BarcodeType.All)];
         }
     }
 }
