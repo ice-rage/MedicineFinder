@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿#pragma warning disable CS0659
+
+using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
@@ -38,7 +40,7 @@ public class Instruction
     public string Indications { get; set; }
 
     [JsonPropertyName("contraIndication")]
-    public string Contraindication { get; set; }
+    public string Contraindications { get; set; }
 
     [JsonPropertyName("specialInstruction")]
     public string SpecialInstructions { get; set; }
@@ -50,11 +52,39 @@ public class Instruction
     public string HepaticImpairedUsage { get; set; }
 
     [JsonPropertyName("pharmDelivery")]
-    public string ImplementationTermsImplementationTerms { get; set; }
+    public string ImplementationTerms { get; set; }
 
     [JsonPropertyName("elderlyInsuf")]
-    public string ElderyUsage { get; set; }
+    public string ElderlyUsage { get; set; }
 
     [JsonPropertyName("childInsuf")]
     public string ChildrenUsage { get; set; }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
+    {
+        if (obj is not Instruction other)
+        {
+            return false;
+        }
+
+        return StorageCondition == other.StorageCondition &&
+               StorageLife == other.StorageLife &&
+               Companies.SequenceEqual(other.Companies) &&
+               PharmacologicalEffect == other.PharmacologicalEffect &&
+               Pharmacokinetics == other.Pharmacokinetics &&
+               DosageRegimen == other.DosageRegimen &&
+               Overdosage == other.Overdosage &&
+               Interaction == other.Interaction &&
+               Lactation == other.Lactation &&
+               SideEffects == other.SideEffects &&
+               Indications == other.Indications &&
+               Contraindications == other.Contraindications &&
+               SpecialInstructions == other.SpecialInstructions &&
+               RenalImpairedUsage == other.RenalImpairedUsage &&
+               HepaticImpairedUsage == other.HepaticImpairedUsage &&
+               ImplementationTerms == other.ImplementationTerms &&
+               ElderlyUsage == other.ElderlyUsage &&
+               ChildrenUsage == other.ChildrenUsage;
+    }
 }
