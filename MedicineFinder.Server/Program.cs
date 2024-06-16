@@ -5,7 +5,7 @@ namespace MedicineFinder.Server
 {
     public class Program
     {
-        private const string VidalApi = "VidalApi";
+        private const string VidalApiKey = "VidalApi";
 
         private const string AccessTokenName = "x-token";
 
@@ -18,12 +18,7 @@ namespace MedicineFinder.Server
 
             builder.Services.AddHttpClient<IVidalService, VidalService>(client =>
             {
-                if (builder.Configuration[VidalApi] != null)
-                {
-                    client.BaseAddress = new Uri(builder.Configuration[VidalApi]);
-                }
-                
-                
+                client.BaseAddress = new Uri(builder.Configuration[VidalApiKey]!);
                 client.DefaultRequestHeaders.Add(AccessTokenName,
                     builder.Configuration[AccessTokenName]);
             });

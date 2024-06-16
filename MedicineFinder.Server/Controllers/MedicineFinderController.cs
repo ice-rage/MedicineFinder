@@ -69,7 +69,7 @@ namespace MedicineFinder.Server.Controllers
 
             var responseStatusCode = ((IStatusCodeActionResult)response).StatusCode;
 
-            if (responseStatusCode == 200)
+            if (responseStatusCode is 200 or 500)
             {
                 return response;
             }

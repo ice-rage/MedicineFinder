@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
-public class PharmacotherapeuticGroup
+public class PharmacotherapeuticGroup : ICloneable
 {
     [JsonPropertyName("code")]
     public string Code { get; set; }
@@ -19,4 +19,7 @@ public class PharmacotherapeuticGroup
 
         return Code == other.Code;
     }
+
+    /// <inheritdoc/>
+    public object Clone() => MemberwiseClone();
 }

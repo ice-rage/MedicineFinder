@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
-public class Country
+public class Country : ICloneable
 {
     [JsonPropertyName("code")]
     public string Code { get; set; }
@@ -22,4 +22,7 @@ public class Country
 
         return Code == other.Code && Name == other.Name;
     }
+
+    /// <inheritdoc/>
+    public object Clone() => MemberwiseClone();
 }

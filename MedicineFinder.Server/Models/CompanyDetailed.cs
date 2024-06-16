@@ -1,10 +1,11 @@
 ﻿#pragma warning disable CS0659
 
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
-public class CompanyDetailed
+public class CompanyDetailed : ICloneable
 {
     [JsonPropertyName("isRegistrationCertificate")]
     public bool HasRegistrationCertificate { get; set; }
@@ -31,5 +32,13 @@ public class CompanyDetailed
                IsManufacturer == other.IsManufacturer &&
                Equals(CompanyMain, other.CompanyMain) &&
                Address == other.Address;
+    }
+
+    /// <inheritdoc/>
+    public object Clone()
+    {
+        var serialized = JsonSerializer.Serialize(this);
+
+        return JsonSerializer.Deserialize<CompanyDetailed>(serialized);
     }
 }

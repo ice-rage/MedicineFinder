@@ -1,10 +1,11 @@
 ﻿#pragma warning disable CS0659
 
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
-public class Instruction
+public class Instruction : ICloneable
 {
     [JsonPropertyName("storageCondition")]
     public string StorageCondition { get; set; }
@@ -86,5 +87,13 @@ public class Instruction
                ImplementationTerms == other.ImplementationTerms &&
                ElderlyUsage == other.ElderlyUsage &&
                ChildrenUsage == other.ChildrenUsage;
+    }
+
+    /// <inheritdoc/>
+    public object Clone()
+    {
+        var serialized = JsonSerializer.Serialize(this);
+
+        return JsonSerializer.Deserialize<Instruction>(serialized);
     }
 }

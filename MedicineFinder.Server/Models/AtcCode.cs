@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
-public class AtcCode
+public class AtcCode : ICloneable
 {
     [JsonPropertyName("code")]
     public string Code { get; set; }
@@ -22,4 +22,7 @@ public class AtcCode
 
         return Code == other.Code && Name == other.Name;
     }
+
+    /// <inheritdoc/>
+    public object Clone() => MemberwiseClone();
 }

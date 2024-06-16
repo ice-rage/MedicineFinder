@@ -1,10 +1,11 @@
 ﻿#pragma warning disable CS0659
 
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
-public class ActiveComponent
+public class ActiveComponent : ICloneable
 {
     [JsonPropertyName("latName")]
     public string LatinName { get; set; }
@@ -26,5 +27,14 @@ public class ActiveComponent
         return LatinName == other.LatinName &&
                RussianName == other.RussianName &&
                Equals(QualityStandard, other.QualityStandard);
+    }
+
+    /// <inheritdoc/>
+    public object Clone()
+    {
+        var serialized = JsonSerializer.Serialize(this);
+
+        return JsonSerializer.Deserialize<ActiveComponent>(
+            serialized);
     }
 }
