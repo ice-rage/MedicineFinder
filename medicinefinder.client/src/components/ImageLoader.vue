@@ -30,7 +30,7 @@
 
   const { removeImage, openFileDialog, clearDragArea } = store;
 
-  onMounted(() => inputElement.value = dragArea.value.imageInput);
+  //onMounted(() => inputElement.value = dragArea.value.imageInput);
 
   const removeLoadedImage = () => {
     removeImage(processedImage.value.image);

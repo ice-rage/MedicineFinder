@@ -107,7 +107,6 @@ export const useStore = defineStore("index", {
           this.options.webCamera.isVisible = false;
 
           if (this.detectLiveVideoTracks()) {
-            console.log("Has live tracks");
             this.stopWebCameraVideo();
           }
         } else {
@@ -213,8 +212,6 @@ export const useStore = defineStore("index", {
         });
     },
     stopWebCameraVideo() {
-      console.log(this.videoElement.srcObject.getVideoTracks());
-
       this.videoElement.srcObject.getVideoTracks()
         .forEach(videoTrack => videoTrack.stop());
   
@@ -228,11 +225,13 @@ export const useStore = defineStore("index", {
       }
     },
     detectLiveVideoTracks() {
-      const srcObject = this.videoElement.srcObject;
+      if (this.videoElement) {
+        const srcObject = this.videoElement.srcObject;
 
-      if (srcObject) {
-        return srcObject.getVideoTracks().some(videoTrack => 
-          videoTrack.enabled && videoTrack.readyState === "live");
+        if (srcObject) {
+          return srcObject.getVideoTracks().some(videoTrack => 
+            videoTrack.enabled && videoTrack.readyState === "live");
+        }
       }
       
       return false;

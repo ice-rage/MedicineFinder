@@ -56,8 +56,8 @@
 </template>
 
 <script setup>
-  import SvgImage from "./icon/SvgImage.vue";
-  import SvgCamera from "./icon/SvgCamera.vue";
+  import SvgImage from "./svg/SvgImage.vue";
+  import SvgCamera from "./svg/SvgCamera.vue";
 
   const store = useStore();
 
