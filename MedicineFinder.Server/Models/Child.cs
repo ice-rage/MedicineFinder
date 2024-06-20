@@ -5,17 +5,32 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
+/// <summary>
+/// Класс для хранения данных о других лекарственных формах лекарственного препарата.
+/// </summary>
 public class Child : ICloneable
 {
+    /// <summary>
+    /// Идентификатор.
+    /// </summary>
     [JsonPropertyName("id")] 
     public int Id { get; set; }
 
+    /// <summary>
+    /// Описание.
+    /// </summary>
     [JsonPropertyName("zipInfo")] 
     public string Summary { get; set; }
 
+    /// <summary>
+    /// Состав.
+    /// </summary>
     [JsonPropertyName("composition")] 
     public string Composition { get; set; }
 
+    /// <summary>
+    /// Список компаний-владельцев регистрационного удостоверения и компаний-производителей.
+    /// </summary>
     [JsonPropertyName("companies")] 
     public List<CompanyDetailed> Companies { get; set; }
 

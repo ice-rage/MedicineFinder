@@ -5,11 +5,21 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
+/// <summary>
+/// Класс для хранения основной информации о компаниях-владельцах регистрационного удостоверения
+/// и компаниях-производителях лекарственного препарата.
+/// </summary>
 public class CompanyMain : ICloneable
 {
+    /// <summary>
+    /// Наименование компании.
+    /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Страна компании.
+    /// </summary>
     [JsonPropertyName("country")]
     public Country Country { get; set; }
 

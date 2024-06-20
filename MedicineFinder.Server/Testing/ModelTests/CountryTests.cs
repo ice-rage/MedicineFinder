@@ -18,8 +18,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
             Name = "Россия"
         };
 
-        [TestCase(TestName = "При сравнении различных объектов " +
-                             "возвращается false")]
+        [TestCase(TestName = "При сравнении различных объектов возвращается false")]
         public void TestEquals_DifferentObjects_ReturnsFalse()
         {
             // Arrange
@@ -28,14 +27,14 @@ namespace MedicineFinder.Server.Testing.ModelTests
             // Act
             var actual = (Country)expected.Clone();
             actual.Name = "Европейская фармакопея";
+
             var isEqual = actual.Equals(expected);
 
             // Assert
             Assert.That(isEqual, Is.False);
         }
 
-        [TestCase(TestName = "При сравнении объекта с null возвращается " +
-                             "false")]
+        [TestCase(TestName = "При сравнении объекта с null возвращается false")]
         public void TestEquals_NullObject_ReturnsFalse()
         {
             // Arrange
@@ -43,6 +42,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
 
             // Act
             var actual = (Country)expected.Clone();
+
             var isEqual = actual.Equals(null);
 
             // Assert

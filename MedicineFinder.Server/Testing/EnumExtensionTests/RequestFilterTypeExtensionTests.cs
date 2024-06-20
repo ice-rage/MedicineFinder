@@ -5,8 +5,7 @@ using NUnit.Framework;
 namespace MedicineFinder.Server.Testing.EnumExtensionTests
 {
     /// <summary>
-    /// Класс, содержащий модульные тесты для класса
-    /// <see cref="RequestFilterTypeExtensionTests"/>.
+    /// Класс, содержащий модульные тесты для класса <see cref="RequestFilterTypeExtensionTests"/>.
     /// </summary>
     [TestFixture]
     public class RequestFilterTypeExtensionTests
@@ -20,11 +19,10 @@ namespace MedicineFinder.Server.Testing.EnumExtensionTests
             "возвращаться строка {1}";
 
         [TestCaseSource(nameof(GetDescriptionTestCases))]
-        public void TestGetDescription_ReturnsValue(RequestFilterType type, 
-            string expected)
+        public void TestGetDescription_ReturnsValue(RequestFilterType filterType, string expected)
         {
             // Act
-            var actual = type.GetDescription();
+            var actual = filterType.GetDescription();
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -34,8 +32,7 @@ namespace MedicineFinder.Server.Testing.EnumExtensionTests
         /// Метод-источник тестовых случаев для тестирования метода
         /// <see cref="RequestFilterTypeExtension.GetDescription"/>.
         /// </summary>
-        /// <returns> Перечисление тестовых случаев <see cref="TestCaseData"/>.
-        /// </returns>
+        /// <returns> Перечисление тестовых случаев <see cref="TestCaseData"/>.</returns>
         private static IEnumerable<TestCaseData> GetDescriptionTestCases()
         {
             yield return new TestCaseData(RequestFilterType.Name, "name")

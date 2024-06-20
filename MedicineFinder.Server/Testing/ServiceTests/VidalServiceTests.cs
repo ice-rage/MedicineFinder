@@ -22,23 +22,19 @@ namespace MedicineFinder.Server.Testing.ServiceTests
         private const string VidalApiKey = "VidalApi";
 
         /// <summary>
-        /// Задержка между запросами, выраженная в миллисекундах (связана
-        /// с ограничением доступа к API Видаль, при котором возможно
-        /// совершать не более одного запроса в секунду).
+        /// Задержка между запросами, выраженная в миллисекундах (связана с ограничением доступа
+        /// к API Видаль, при котором возможно совершать не более одного запроса в секунду).
         /// </summary>
         private const int RequestDelayMilliseconds = 1000;
 
         /// <summary>
-        /// Тестовая конфигурация серверной части приложения (используется для
-        /// доступа к секретам пользователя, где хранится токен доступа к API
-        /// Видаль).
+        /// Тестовая конфигурация серверной части приложения, используемая для извлечения токена
+        /// доступа к API Видаль.
         /// </summary>
-        private static readonly IConfiguration TestConfiguration = 
-            InitializeConfiguration();
+        private static readonly IConfiguration TestConfiguration = InitializeConfiguration();
 
         /// <summary>
-        /// Тестовый объект сервиса <see cref="VidalService"/>, обеспечивающего
-        /// доступ к API Видаль.
+        /// Тестовый объект сервиса <see cref="VidalService"/>, обеспечивающего доступ к API Видаль.
         /// </summary>
         private readonly VidalService _testVidalService = new(
             new HttpClient
@@ -225,26 +221,26 @@ namespace MedicineFinder.Server.Testing.ServiceTests
         };
 
         [TestCase(
-            "Флоксал", 
-            "name", 
+            "name",
+            "Флоксал",
             TestName = "Если value содержит название препарата, а filter - " +
-                       "строку \"name\", то должен быть получен соответствующий" +
-                       "объект MedicineInfo")]
+                       "строку \"name\", должен быть получен объект " +
+                       "MedicineInfo")]
         [TestCase(
-            "4030571000020", 
-            "barCode", 
+            "barCode",
+            "4030571000020",
             TestName = "Если value содержит штрихкод препарата, а filter - " + 
-                       "строку \"barCode\", то должен быть получен соответствующий" +
-                       "объект MedicineInfo")]
-        public async Task TestGetMedicineInfo_VaryParams_ReturnsCorrectMedicineInfoObj(
-            string value, string filter)
+                       "строку \"barCode\", должен быть получен объект " +
+                       "MedicineInfo")]
+        public async Task TestGetMedicineInfo_DifferentParams_ReturnsCorrectMedicineInfo(
+            string filter, string value)
         {
             // Arrange
             var expected = _testMedicineInfo;
 
             // Act
-            var actual = await _testVidalService.GetMedicineInfo(
-                "Флоксал", "name");
+            var actual = await _testVidalService.GetMedicineInfo("name", 
+                "Флоксал");
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -255,9 +251,7 @@ namespace MedicineFinder.Server.Testing.ServiceTests
         /// <summary>
         /// Метод для создания и настройки конфигурации серверной части приложения.
         /// </summary>
-        /// <returns>
-        /// Созданная конфигурация.
-        /// </returns>
+        /// <returns> Созданная конфигурация.</returns>
         private static IConfiguration InitializeConfiguration()
         {
             var configuration = new ConfigurationBuilder()

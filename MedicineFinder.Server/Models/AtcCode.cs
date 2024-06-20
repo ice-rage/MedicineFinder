@@ -4,11 +4,21 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
+/// <summary>
+/// Класс для хранения кода анатомо-терапевтически-химической (АТХ) классификации лекарственного
+/// препарата.
+/// </summary>
 public class AtcCode : ICloneable
 {
+    /// <summary>
+    /// Код АТХ.
+    /// </summary>
     [JsonPropertyName("code")]
     public string Code { get; set; }
 
+    /// <summary>
+    /// Наименование препарата по классификации АТХ.
+    /// </summary>
     [JsonPropertyName("rusName")]
     public string Name { get; set; }
 

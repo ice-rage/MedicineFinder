@@ -4,8 +4,14 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
+/// <summary>
+/// Класс для хранения клинико-фармакологической группы лекарственного препарата.
+/// </summary>
 public class ClinicalPharmacologicalGroup : ICloneable
 {
+    /// <summary>
+    /// Наименование клинико-фармакологической группы.
+    /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; }
 

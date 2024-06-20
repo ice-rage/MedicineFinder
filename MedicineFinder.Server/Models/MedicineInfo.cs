@@ -5,8 +5,15 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models
 {
+    /// <summary>
+    /// Класс для хранения информации обо всех лекарственных препаратах, удовлетворяющих условиям
+    /// поиска.
+    /// </summary>
     public class MedicineInfo
     {
+        /// <summary>
+        /// Список лекарственных препаратов (продуктов), соответствующих результату поиска.
+        /// </summary>
         [JsonPropertyName("products")]
         public List<Product> Products { get; set; }
 

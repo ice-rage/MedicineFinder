@@ -18,8 +18,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
             Name = "Офлоксацин"
         };
 
-        [TestCase(TestName = "При сравнении различных объектов " +
-                             "возвращается false")]
+        [TestCase(TestName = "При сравнении различных объектов возвращается false")]
         public void TestEquals_DifferentObjects_ReturnsFalse()
         {
             // Arrange
@@ -27,15 +26,15 @@ namespace MedicineFinder.Server.Testing.ModelTests
 
             // Act
             var actual = (AtcCode)expected.Clone();
-            actual.Code = "T12BD12";
+            actual.Code = "C07AB12";
+
             var isEqual = actual.Equals(expected);
 
             // Assert
             Assert.That(isEqual, Is.False);
         }
 
-        [TestCase(TestName = "При сравнении объекта с null возвращается " +
-                             "false")]
+        [TestCase(TestName = "При сравнении объекта с null возвращается false")]
         public void TestEquals_NullObject_ReturnsFalse()
         {
             // Arrange
@@ -43,6 +42,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
 
             // Act
             var actual = (AtcCode)expected.Clone();
+
             var isEqual = actual.Equals(null);
 
             // Assert

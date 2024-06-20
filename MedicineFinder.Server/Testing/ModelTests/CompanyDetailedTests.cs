@@ -4,8 +4,7 @@ using NUnit.Framework;
 namespace MedicineFinder.Server.Testing.ModelTests
 {
     /// <summary>
-    /// Класс, содержащий модульные тесты для класса
-    /// <see cref="CompanyDetailed"/>.
+    /// Класс, содержащий модульные тесты для класса <see cref="CompanyDetailed"/>.
     /// </summary>
     [TestFixture]
     public class CompanyDetailedTests
@@ -28,8 +27,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
             }
         };
 
-        [TestCase(TestName = "При сравнении различных объектов " +
-                             "возвращается false")]
+        [TestCase(TestName = "При сравнении различных объектов возвращается false")]
         public void TestEquals_DifferentObjects_ReturnsFalse()
         {
             // Arrange
@@ -38,14 +36,14 @@ namespace MedicineFinder.Server.Testing.ModelTests
             // Act
             var actual = (CompanyDetailed)expected.Clone();
             actual.IsManufacturer = true;
+
             var isEqual = actual.Equals(expected);
 
             // Assert
             Assert.That(isEqual, Is.False);
         }
 
-        [TestCase(TestName = "При сравнении объекта с null возвращается " +
-                             "false")]
+        [TestCase(TestName = "При сравнении объекта с null возвращается false")]
         public void TestEquals_NullObject_ReturnsFalse()
         {
             // Arrange
@@ -53,6 +51,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
 
             // Act
             var actual = (CompanyDetailed)expected.Clone();
+
             var isEqual = actual.Equals(null);
 
             // Assert

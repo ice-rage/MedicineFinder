@@ -5,17 +5,33 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
+/// <summary>
+/// Класс для хранения подробной информации о компаниях-владельцах регистрационного удостоверения
+/// и компаниях-производителях лекарственного препарата.
+/// </summary>
 public class CompanyDetailed : ICloneable
 {
+    /// <summary>
+    /// Показывает, есть у компании регистрационное удостоверение.
+    /// </summary>
     [JsonPropertyName("isRegistrationCertificate")]
     public bool HasRegistrationCertificate { get; set; }
 
+    /// <summary>
+    /// Показывает, является ли компания производителем.
+    /// </summary>
     [JsonPropertyName("isManufacturer")]
     public bool IsManufacturer { get; set; }
 
+    /// <summary>
+    /// Основная информация о компании.
+    /// </summary>
     [JsonPropertyName("company")]
     public CompanyMain CompanyMain { get; set; }
 
+    /// <summary>
+    /// Адрес компании.
+    /// </summary>
     [JsonPropertyName("rusAddress")]
     public string Address { get; set; }
 

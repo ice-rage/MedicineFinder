@@ -5,11 +5,21 @@ using System.Text.Json.Serialization;
 
 namespace MedicineFinder.Server.Models;
 
+/// <summary>
+/// Класс для хранения списка активных веществ <see cref="ActiveComponent"/> лекарственного
+/// препарата.
+/// </summary>
 public class ActiveComponentName : ICloneable
 {
+    /// <summary>
+    /// Идентификатор активного вещества.
+    /// </summary>
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
+    /// <summary>
+    /// Активное вещество.
+    /// </summary>
     [JsonPropertyName("molecule")]
     public ActiveComponent ActiveComponent { get; set; }
 

@@ -4,8 +4,7 @@ using NUnit.Framework;
 namespace MedicineFinder.Server.Testing.ModelTests
 {
     /// <summary>
-    /// Класс, содержащий модульные тесты для класса
-    /// <see cref="ActiveComponentName"/>.
+    /// Класс, содержащий модульные тесты для класса <see cref="ActiveComponentName"/>.
     /// </summary>
     [TestFixture]
     public class ActiveComponentNameTests
@@ -13,8 +12,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
         /// <summary>
         /// Тестовый объект <see cref="ActiveComponentName"/>.
         /// </summary>
-        private readonly ActiveComponentName 
-            _testActiveComponentName = new()
+        private readonly ActiveComponentName _testActiveComponentName = new()
         {
             Id = 270,
             ActiveComponent = new ActiveComponent
@@ -27,10 +25,9 @@ namespace MedicineFinder.Server.Testing.ModelTests
                     Description = "зарегистрированное ВОЗ"
                 }
             }
-            };
+        };
 
-        [TestCase(TestName = "При сравнении различных объектов " +
-                             "возвращается false")]
+        [TestCase(TestName = "При сравнении различных объектов возвращается false")]
         public void TestEquals_DifferentObjects_ReturnsFalse()
         {
             // Arrange
@@ -39,14 +36,14 @@ namespace MedicineFinder.Server.Testing.ModelTests
             // Act
             var actual = (ActiveComponentName)expected.Clone();
             actual.Id = 1111;
+
             var isEqual = actual.Equals(expected);
 
             // Assert
             Assert.That(isEqual, Is.False);
         }
 
-        [TestCase(TestName = "При сравнении объекта с null возвращается " +
-                             "false")]
+        [TestCase(TestName = "При сравнении объекта с null возвращается false")]
         public void TestEquals_NullObject_ReturnsFalse()
         {
             // Arrange
@@ -54,6 +51,7 @@ namespace MedicineFinder.Server.Testing.ModelTests
 
             // Act
             var actual = (ActiveComponentName)expected.Clone();
+
             var isEqual = actual.Equals(null);
 
             // Assert
